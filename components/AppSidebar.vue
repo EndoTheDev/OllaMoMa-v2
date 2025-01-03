@@ -16,7 +16,7 @@ const fadeTransition = {
 <template>
 	<div
 		:class="[
-			'h-screen flex flex-col gap-1 p-1 bg-[var(--bg)] z-50 border-r border-[var(--ui-border)]',
+			'h-screen flex flex-col gap-1 p-1 bg-[var(--ui-bg)] z-50 border-r border-[var(--ui-border)]',
 			'transition-all duration-300',
 			settingsStore.sidebarOpen ? 'w-56' : 'w-14',
 		]">

@@ -45,11 +45,8 @@ const fadeTransition = {
 				</AppSidebar>
 				<!-- CONTENT -->
 				<div
-					:class="[
-						'fixed',
-						'transition-all duration-300',
-						isSmallViewport && settingsStore.sidebarOpen ? 'pl-56' : 'pl-14',
-					]">
+					class="fixed w-full flex justify-center transition-all duration-300 pl-14"
+					:class="[isSmallViewport && settingsStore.sidebarOpen ? 'md:pl-56' : 'md:pl-14']">
 					<NuxtPage />
 				</div>
 			</div>
