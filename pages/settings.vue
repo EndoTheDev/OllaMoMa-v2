@@ -1,5 +1,17 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import DarkMode from '~/components/settings/DarkMode.vue';
+</script>
 
 <template>
-	<div>Settings</div>
+	<BaseLayout>
+		<template #header>
+			<h1>Settings</h1>
+		</template>
+		<template #default>
+			<DarkMode />
+		</template>
+		<template #footer>
+			<h1>Footer</h1>
+		</template>
+	</BaseLayout>
 </template>
