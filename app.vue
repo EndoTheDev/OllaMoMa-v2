@@ -15,39 +15,44 @@ const fadeTransition = {
 
 <template>
 	<UApp>
-		<div class="flex">
-			<AppSidebar>
-				<template #default>
-					<UButton
-						:to="'/'"
-						class="h-10 flex w-full justify-center">
-						<UIcon
-							name="i-heroicons-chat-bubble-left-right"
-							class="fixed left-4 w-6 h-6" />
-						<Transition v-bind="fadeTransition">
-							<span v-if="settingsStore.sidebarOpen">Chat</span>
-						</Transition>
-					</UButton>
-				</template>
-				<template #footer>
-					<UButton
-						:to="'/settings'"
-						class="h-10 flex w-full justify-center">
-						<UIcon
-							name="i-heroicons-cog-6-tooth"
-							class="fixed left-4 w-6 h-6" />
-						<Transition v-bind="fadeTransition">
-							<span v-if="settingsStore.sidebarOpen">Settings</span>
-						</Transition>
-					</UButton>
-				</template>
-			</AppSidebar>
-			<!-- CONTENT -->
-			<div
-				class="fixed pl-14 transition-all duration-300"
-				:class="{ 'pl-56': isSmallViewport && settingsStore.sidebarOpen, 'pl-14': !settingsStore.sidebarOpen }">
-				<NuxtPage />
+		<ClientOnly>
+			<div class="flex">
+				<AppSidebar>
+					<template #default>
+						<UButton
+							:to="'/'"
+							class="h-10 flex w-full justify-center">
+							<UIcon
+								name="i-heroicons-chat-bubble-left-right"
+								class="fixed left-4 w-6 h-6" />
+							<Transition v-bind="fadeTransition">
+								<span v-if="settingsStore.sidebarOpen">Chat</span>
+							</Transition>
+						</UButton>
+					</template>
+					<template #footer>
+						<UButton
+							:to="'/settings'"
+							class="h-10 flex w-full justify-center">
+							<UIcon
+								name="i-heroicons-cog-6-tooth"
+								class="fixed left-4 w-6 h-6" />
+							<Transition v-bind="fadeTransition">
+								<span v-if="settingsStore.sidebarOpen">Settings</span>
+							</Transition>
+						</UButton>
+					</template>
+				</AppSidebar>
+				<!-- CONTENT -->
+				<div
+					:class="[
+						'fixed',
+						'transition-all duration-300',
+						isSmallViewport && settingsStore.sidebarOpen ? 'pl-56' : 'pl-14',
+					]">
+					<NuxtPage />
+				</div>
 			</div>
-		</div>
+		</ClientOnly>
 	</UApp>
 </template>

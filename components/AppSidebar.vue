@@ -15,8 +15,11 @@ const fadeTransition = {
 
 <template>
 	<div
-		class="transition-all duration-300 h-screen flex flex-col gap-1 p-1 bg-[var(--ui-bg)] z-50 border-r border-[var(--ui-border)]"
-		:class="{ 'w-56': settingsStore.sidebarOpen, 'w-14': !settingsStore.sidebarOpen }">
+		:class="[
+			'h-screen flex flex-col gap-1 p-1 bg-[var(--bg)] z-50 border-r border-[var(--ui-border)]',
+			'transition-all duration-300',
+			settingsStore.sidebarOpen ? 'w-56' : 'w-14',
+		]">
 		<UButton
 			@click="settingsStore.toggleSidebar"
 			class="h-10 flex w-full justify-center">
