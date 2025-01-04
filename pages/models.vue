@@ -55,10 +55,32 @@ onMounted(() => {
 								<ModelsActionMenu
 									:active-panel="getActivePanel(model.name)"
 									@update:active-panel="(panel) => setActivePanel(model.name, panel)" />
-								<ModelsInfoPanel
-									v-if="getActivePanel(model.name) === 'info'"
-									:model="model" />
-								<ModelsModelFile v-if="getActivePanel(model.name) === 'modelfile'" />
+								<div class="relative">
+									<Transition
+										mode="out-in"
+										:enter-active-class="'transition duration-200 ease-out'"
+										:enter-from-class="
+											getActivePanel(model.name) === 'info'
+												? 'opacity-0 -translate-x-4'
+												: 'opacity-0 translate-x-4'
+										"
+										:enter-to-class="'opacity-100 translate-x-0'"
+										:leave-active-class="'transition duration-150 ease-in'"
+										:leave-from-class="'opacity-100 translate-x-0'"
+										:leave-to-class="
+											getActivePanel(model.name) === 'info'
+												? 'opacity-0 translate-x-4'
+												: 'opacity-0 -translate-x-4'
+										">
+										<ModelsInfoPanel
+											v-if="getActivePanel(model.name) === 'info'"
+											:key="'info-' + model.name"
+											:model="model" />
+										<ModelsModelFile
+											v-else
+											:key="'modelfile-' + model.name" />
+									</Transition>
+								</div>
 							</template>
 						</UAccordion>
 					</li>
