@@ -1,11 +1,21 @@
 import { defineStore } from 'pinia'
 import ollama from 'ollama'
 
+interface ModelDetails {
+  parent_model: string
+  format: string
+  family: string
+  families: string[]
+  parameter_size: string
+  quantization_level: string
+}
+
 interface OllamaModel {
   name: string
-  modified_at: Date
+  modified_at: string
   size: number
   digest: string
+  details?: ModelDetails
 }
 
 interface OllamaState {
@@ -28,7 +38,10 @@ export const useOllamaStore = defineStore('ollama', {
       
       try {
         const response = await ollama.list()
-        this.models = response.models
+        this.models = response.models.map(model => ({
+          ...model,
+          modified_at: model.modified_at.toLocaleString()
+        }))
       } catch (err) {
         this.error = err instanceof Error ? err.message : 'Failed to fetch models'
         console.error('Error fetching Ollama models:', err)
