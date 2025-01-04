@@ -1,7 +1,7 @@
 <template>
 	<BaseLayout>
 		<template #header>
-			<h1>Settings</h1>
+			<h1>HEADER</h1>
 		</template>
 		<template #default>
 			<SettingsDarkMode />
@@ -9,7 +9,7 @@
 			<SettingsNeutralSelector />
 		</template>
 		<template #footer>
-			<h1>Footer</h1>
+			<h1>FOOTER</h1>
 		</template>
 	</BaseLayout>
 </template>

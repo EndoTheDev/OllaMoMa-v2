@@ -7,7 +7,7 @@
 		</div>
 		<div class="flex-1 border-y border-[var(--ui-border)] overflow-hidden">
 			<ScrollArea class="h-[calc(100vh-98px)]">
-				<div class="px-3 py-1 flex flex-col gap-1">
+				<div class="pl-1 pr-3 py-1 space-y-1">
 					<slot />
 				</div>
 			</ScrollArea>

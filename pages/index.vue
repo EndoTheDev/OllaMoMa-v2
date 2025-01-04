@@ -6,7 +6,7 @@
 			<h1>HEADER</h1>
 		</template>
 		<template #default>
-			<h1>chat</h1>
+			<h1>CHAT</h1>
 		</template>
 		<template #footer>
 			<h1>FOOTER</h1>
