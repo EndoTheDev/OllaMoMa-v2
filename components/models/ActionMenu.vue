@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { LazyModelsActionsConfirmDelete } from '#components';
+import { LazyModelsActionsConfirmDelete, LazyModelsActionsConfirmCopy } from '#components';
 
 const emit = defineEmits<{
 	(e: 'update:activePanel', value: 'info' | 'modelfile'): void;
@@ -16,6 +16,33 @@ const ollamaStore = useOllamaStore();
 
 const togglePanel = (panel: 'info' | 'modelfile') => {
 	emit('update:activePanel', panel);
+};
+
+const openCopyModal = () => {
+	modal.open(LazyModelsActionsConfirmCopy, {
+		modelName: props.modelName,
+		onConfirm: async (newName: string) => {
+			try {
+				await ollamaStore.copyModel(props.modelName, newName);
+				toast.add({
+					title: 'Model copied',
+					description: `Successfully copied ${props.modelName} to ${newName}`,
+					icon: 'i-heroicons-document-duplicate',
+					color: 'primary',
+				});
+			} catch (error) {
+				toast.add({
+					title: 'Error',
+					description: `Failed to copy ${props.modelName}`,
+					icon: 'i-heroicons-exclamation-triangle',
+					color: 'error',
+				});
+			}
+		},
+		onCancel: () => {
+			modal.close();
+		},
+	});
 };
 
 const openDeleteModal = () => {
@@ -77,7 +104,9 @@ const openDeleteModal = () => {
 				<span class="hidden md:inline">RENAME</span>
 			</UButton>
 			<!-- COPY MODAL -->
-			<UButton variant="ghost">
+			<UButton
+				variant="ghost"
+				@click="openCopyModal">
 				<UIcon
 					name="i-heroicons-document-duplicate"
 					class="w-5 h-5" />
