@@ -48,6 +48,36 @@ export const useOllamaStore = defineStore('ollama', {
       } finally {
         this.isLoading = false
       }
+    },
+
+    async copyModel(source: string, destination: string) {
+      this.isLoading = true
+      this.error = null
+      
+      try {
+        await ollama.copy({ source, destination })
+        await this.fetchModels() // Refresh model list after copy
+      } catch (err) {
+        this.error = err instanceof Error ? err.message : 'Failed to copy model'
+        console.error('Error copying Ollama model:', err)
+      } finally {
+        this.isLoading = false
+      }
+    },
+
+    async deleteModel(name: string) {
+      this.isLoading = true
+      this.error = null
+      
+      try {
+        await ollama.delete({ model: name })
+        await this.fetchModels() // Refresh model list after deletion
+      } catch (err) {
+        this.error = err instanceof Error ? err.message : 'Failed to delete model'
+        console.error('Error deleting Ollama model:', err)
+      } finally {
+        this.isLoading = false
+      }
     }
   },
 
