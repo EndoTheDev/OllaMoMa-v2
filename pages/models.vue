@@ -54,6 +54,7 @@ onMounted(() => {
 							<template #model-details>
 								<ModelsActionMenu
 									:active-panel="getActivePanel(model.name)"
+									:model-name="model.name"
 									@update:active-panel="(panel) => setActivePanel(model.name, panel)" />
 								<div class="relative">
 									<Transition
