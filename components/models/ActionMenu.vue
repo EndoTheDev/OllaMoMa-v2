@@ -28,7 +28,7 @@ const openDeleteModal = () => {
 					title: 'Model deleted',
 					description: `Successfully deleted ${props.modelName}`,
 					icon: 'i-heroicons-trash',
-					color: 'success',
+					color: 'primary',
 				});
 			} catch (error) {
 				toast.add({

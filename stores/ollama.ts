@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import ollama from 'ollama'
+import { Ollama } from 'ollama/browser'
 
 interface ModelDetails {
   parent_model: string
@@ -23,6 +23,11 @@ interface OllamaState {
   isLoading: boolean
   error: string | null
 }
+
+// Create an Ollama instance with your server configuration
+const ollama = new Ollama({
+  host: 'http://localhost:11434' // or your Ollama server URL
+})
 
 export const useOllamaStore = defineStore('ollama', {
   state: (): OllamaState => ({
@@ -56,7 +61,7 @@ export const useOllamaStore = defineStore('ollama', {
       
       try {
         await ollama.copy({ source, destination })
-        await this.fetchModels() // Refresh model list after copy
+        await this.fetchModels()
       } catch (err) {
         this.error = err instanceof Error ? err.message : 'Failed to copy model'
         console.error('Error copying Ollama model:', err)
@@ -71,7 +76,7 @@ export const useOllamaStore = defineStore('ollama', {
       
       try {
         await ollama.delete({ model: name })
-        await this.fetchModels() // Refresh model list after deletion
+        await this.fetchModels()
       } catch (err) {
         this.error = err instanceof Error ? err.message : 'Failed to delete model'
         console.error('Error deleting Ollama model:', err)
