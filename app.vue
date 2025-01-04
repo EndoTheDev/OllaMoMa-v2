@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const appConfig = useAppConfig();
 const settingsStore = useSettingsStore();
 const isSmallViewport = useMediaQuery('(min-width: 768px)');
 
@@ -13,8 +14,8 @@ const fadeTransition = {
 </script>
 
 <template>
-	<UApp>
-		<ClientOnly>
+	<ClientOnly>
+		<UApp :toaster="appConfig.toaster">
 			<div class="flex">
 				<AppSidebar>
 					<template #default>
@@ -53,6 +54,7 @@ const fadeTransition = {
 						</UButton>
 					</template>
 				</AppSidebar>
+
 				<!-- CONTENT -->
 				<div
 					class="fixed w-full flex justify-center transition-all duration-300 pl-14"
@@ -60,6 +62,6 @@ const fadeTransition = {
 					<NuxtPage />
 				</div>
 			</div>
-		</ClientOnly>
-	</UApp>
+		</UApp>
+	</ClientOnly>
 </template>

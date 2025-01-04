@@ -6,6 +6,11 @@ import { defineStore } from 'pinia';
 interface ThemeColors {
 	primary: string;
 	neutral: string;
+	error: string;
+	warning: string;
+	success: string;
+	info: string;
+	secondary: string;
 }
 
 interface SettingsState {
@@ -52,7 +57,12 @@ export const useSettingsStore = defineStore('settings', () => {
 	const updateThemeColors = (theme: SettingsState['theme'], neutral: SettingsState['neutral'] = settings.value.neutral): void => {
 		const colors: ThemeColors = {
 			primary: themeColorMap[theme],
-			neutral: neutralColorMap[neutral]
+			neutral: neutralColorMap[neutral],
+			error: 'red',
+			warning: 'yellow',
+			success: 'green',
+			info: 'blue',
+			secondary: 'gray'
 		};
 		appConfig.ui.colors = colors;
 	};
