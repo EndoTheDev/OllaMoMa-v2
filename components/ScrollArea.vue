@@ -10,7 +10,7 @@ interface Props {
 	maxHeight?: string;
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
 
 const container = ref<HTMLElement>();
 const content = ref<HTMLElement>();
@@ -21,40 +21,55 @@ let scrollTimeout: NodeJS.Timeout;
 let startY = 0;
 let startScrollTop = 0;
 
+// Add function to update thumb size and position
+const updateThumb = () => {
+	if (container.value && content.value && thumb.value) {
+		const containerHeight = container.value.clientHeight;
+		const contentHeight = content.value.scrollHeight;
+		const scrollPercentage = containerHeight / contentHeight;
+		const thumbHeight = Math.max(scrollPercentage * containerHeight, 32);
+		thumb.value.style.height = `${thumbHeight}px`;
+
+		// Update thumb position
+		const scrollPercent = container.value.scrollTop / (contentHeight - containerHeight);
+		const thumbPosition = scrollPercent * (containerHeight - thumbHeight);
+		thumb.value.style.transform = `translateY(${thumbPosition}px)`;
+	}
+};
+
 onMounted(() => {
-	watchEffect(() => {
-		if (container.value && content.value && thumb.value) {
-			const containerHeight = container.value.clientHeight;
-			const contentHeight = content.value.scrollHeight;
-			const scrollPercentage = containerHeight / contentHeight;
-			const thumbHeight = Math.max(scrollPercentage * containerHeight, 32); // minimum 32px
-			thumb.value.style.height = `${thumbHeight}px`;
-		}
+	// Initial update
+	nextTick(() => {
+		updateThumb();
 	});
+
+	// Watch for content changes
+	const observer = new ResizeObserver(() => {
+		updateThumb();
+	});
+
+	if (content.value) {
+		observer.observe(content.value);
+	}
 
 	// Add scroll event listener
 	container.value?.addEventListener('scroll', () => {
-		if (container.value && content.value && thumb.value) {
-			isScrolling.value = true;
-			clearTimeout(scrollTimeout);
+		isScrolling.value = true;
+		clearTimeout(scrollTimeout);
+		updateThumb();
 
-			const scrollPercentage =
-				container.value.scrollTop / (content.value.scrollHeight - container.value.clientHeight);
-			const thumbPosition = scrollPercentage * (container.value.clientHeight - thumb.value.clientHeight);
-			thumb.value.style.transform = `translateY(${thumbPosition}px)`;
-
-			scrollTimeout = setTimeout(() => {
-				isScrolling.value = false;
-			}, 1000);
-		}
+		scrollTimeout = setTimeout(() => {
+			isScrolling.value = false;
+		}, 1000);
 	});
-});
 
-// Add cleanup
-onUnmounted(() => {
-	clearTimeout(scrollTimeout);
-	document.removeEventListener('mousemove', onMouseMove);
-	document.removeEventListener('mouseup', onMouseUp);
+	// Cleanup observer
+	onUnmounted(() => {
+		if (content.value) {
+			observer.unobserve(content.value);
+		}
+		observer.disconnect();
+	});
 });
 
 // Handle thumb dragging
@@ -88,11 +103,12 @@ const onMouseUp = () => {
 </script>
 
 <template>
-	<div :class="['relative overflow-hidden group', $props.class]">
+	<div
+		:class="['relative overflow-hidden group', props.class]"
+		:style="maxHeight ? { height: maxHeight } : undefined">
 		<div
 			ref="container"
-			class="h-full overflow-auto scrollbar-none"
-			:style="maxHeight ? { maxHeight } : undefined">
+			class="h-full overflow-auto scrollbar-none">
 			<div
 				ref="content"
 				class="h-full">
