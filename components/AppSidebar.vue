@@ -16,7 +16,7 @@ const fadeTransition = {
 	<div
 		:class="[
 			'h-screen flex flex-col gap-1 p-1 bg-[var(--ui-bg)] z-50 border-r border-[var(--ui-border)]',
-			'transition-all duration-300',
+			'transition-[width] duration-300',
 			settingsStore.sidebarOpen ? 'w-56' : 'w-14',
 		]">
 		<UButton
