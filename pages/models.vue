@@ -1,5 +1,14 @@
 <script setup lang="ts">
 const ollamaStore = useOllamaStore();
+const activePanels = ref<Record<string, 'info' | 'modelfile'>>({});
+
+const getActivePanel = (modelName: string) => {
+	return activePanels.value[modelName] || 'info';
+};
+
+const setActivePanel = (modelName: string, panel: 'info' | 'modelfile') => {
+	activePanels.value[modelName] = panel;
+};
 
 onMounted(() => {
 	ollamaStore.fetchModels();
@@ -43,9 +52,13 @@ onMounted(() => {
 								trigger: 'text-base font-bold py-2 cursor-pointer',
 							}">
 							<template #model-details>
-								<ModelsActionPanel />
-								<ModelsInfoPanel :model="model" />
-								<ModelsModelFile />
+								<ModelsActionMenu
+									:active-panel="getActivePanel(model.name)"
+									@update:active-panel="(panel) => setActivePanel(model.name, panel)" />
+								<ModelsInfoPanel
+									v-if="getActivePanel(model.name) === 'info'"
+									:model="model" />
+								<ModelsModelFile v-if="getActivePanel(model.name) === 'modelfile'" />
 							</template>
 						</UAccordion>
 					</li>
