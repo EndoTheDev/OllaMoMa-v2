@@ -10,6 +10,22 @@ const setActivePanel = (modelName: string, panel: 'info' | 'modelfile') => {
 	activePanels.value[modelName] = panel;
 };
 
+const transitionClasses = {
+	enterActive: 'transition duration-200 ease-out',
+	leaveActive: 'transition duration-150 ease-in',
+	enterTo: 'opacity-100 translate-x-0',
+	leaveFrom: 'opacity-100 translate-x-0',
+};
+
+const getTransitionClasses = (modelName: string) => {
+	const isInfo = getActivePanel(modelName) === 'info';
+	return {
+		...transitionClasses,
+		enterFrom: isInfo ? 'opacity-0 -translate-x-4' : 'opacity-0 translate-x-4',
+		leaveTo: isInfo ? 'opacity-0 translate-x-4' : 'opacity-0 -translate-x-4',
+	};
+};
+
 onMounted(() => {
 	ollamaStore.fetchModels();
 });
@@ -59,20 +75,12 @@ onMounted(() => {
 								<div class="relative">
 									<Transition
 										mode="out-in"
-										:enter-active-class="'transition duration-200 ease-out'"
-										:enter-from-class="
-											getActivePanel(model.name) === 'info'
-												? 'opacity-0 -translate-x-4'
-												: 'opacity-0 translate-x-4'
-										"
-										:enter-to-class="'opacity-100 translate-x-0'"
-										:leave-active-class="'transition duration-150 ease-in'"
-										:leave-from-class="'opacity-100 translate-x-0'"
-										:leave-to-class="
-											getActivePanel(model.name) === 'info'
-												? 'opacity-0 translate-x-4'
-												: 'opacity-0 -translate-x-4'
-										">
+										:enter-active-class="getTransitionClasses(model.name).enterActive"
+										:enter-from-class="getTransitionClasses(model.name).enterFrom"
+										:enter-to-class="getTransitionClasses(model.name).enterTo"
+										:leave-active-class="getTransitionClasses(model.name).leaveActive"
+										:leave-from-class="getTransitionClasses(model.name).leaveFrom"
+										:leave-to-class="getTransitionClasses(model.name).leaveTo">
 										<ModelsInfoPanel
 											v-if="getActivePanel(model.name) === 'info'"
 											:key="'info-' + model.name"

@@ -9,6 +9,20 @@ const { isOpen, handleCancel, handleConfirm } = useConfirmationModal({
 	onConfirm: () => emit('confirm'),
 	onCancel: () => emit('cancel'),
 });
+
+const onKeyUp = (e: KeyboardEvent) => {
+	if (e.key === 'Enter') {
+		handleConfirm();
+	}
+};
+
+onMounted(() => {
+	document.addEventListener('keyup', onKeyUp);
+});
+
+onUnmounted(() => {
+	document.removeEventListener('keyup', onKeyUp);
+});
 </script>
 
 <template>
