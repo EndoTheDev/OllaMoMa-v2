@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import { LazyModelsActionsConfirmDelete, LazyModelsActionsConfirmCopy } from '#components';
+import {
+	LazyModelsActionsConfirmDelete,
+	LazyModelsActionsConfirmCopy,
+	LazyModelsActionsConfirmRename,
+} from '#components';
 
 const emit = defineEmits<{
 	(e: 'update:activePanel', value: 'info' | 'modelfile'): void;
@@ -10,9 +14,7 @@ const props = defineProps<{
 	modelName: string;
 }>();
 
-const modal = useModal();
-const toast = useToast();
-const ollamaStore = useOllamaStore();
+const { modal, copyModel, deleteModel, renameModel } = useModelActions();
 
 const togglePanel = (panel: 'info' | 'modelfile') => {
 	emit('update:activePanel', panel);
@@ -21,54 +23,24 @@ const togglePanel = (panel: 'info' | 'modelfile') => {
 const openCopyModal = () => {
 	modal.open(LazyModelsActionsConfirmCopy, {
 		modelName: props.modelName,
-		onConfirm: async (newName: string) => {
-			try {
-				await ollamaStore.copyModel(props.modelName, newName);
-				toast.add({
-					title: 'Model copied',
-					description: `Successfully copied ${props.modelName} to ${newName}`,
-					icon: 'i-heroicons-document-duplicate',
-					color: 'primary',
-				});
-			} catch (error) {
-				toast.add({
-					title: 'Error',
-					description: `Failed to copy ${props.modelName}`,
-					icon: 'i-heroicons-exclamation-triangle',
-					color: 'error',
-				});
-			}
-		},
-		onCancel: () => {
-			modal.close();
-		},
+		onConfirm: (newName: string) => copyModel(props.modelName, newName),
+		onCancel: () => modal.close(),
+	});
+};
+
+const openRenameModal = () => {
+	modal.open(LazyModelsActionsConfirmRename, {
+		modelName: props.modelName,
+		onConfirm: (newName: string) => renameModel(props.modelName, newName),
+		onCancel: () => modal.close(),
 	});
 };
 
 const openDeleteModal = () => {
 	modal.open(LazyModelsActionsConfirmDelete, {
 		modelName: props.modelName,
-		onConfirm: async () => {
-			try {
-				await ollamaStore.deleteModel(props.modelName);
-				toast.add({
-					title: 'Model deleted',
-					description: `Successfully deleted ${props.modelName}`,
-					icon: 'i-heroicons-trash',
-					color: 'primary',
-				});
-			} catch (error) {
-				toast.add({
-					title: 'Error',
-					description: `Failed to delete ${props.modelName}`,
-					icon: 'i-heroicons-exclamation-triangle',
-					color: 'error',
-				});
-			}
-		},
-		onCancel: () => {
-			modal.close();
-		},
+		onConfirm: () => deleteModel(props.modelName),
+		onCancel: () => modal.close(),
 	});
 };
 </script>
@@ -97,7 +69,9 @@ const openDeleteModal = () => {
 		</div>
 		<div class="flex gap-1">
 			<!-- RENAME MODAL -->
-			<UButton variant="ghost">
+			<UButton
+				variant="ghost"
+				@click="openRenameModal">
 				<UIcon
 					name="i-heroicons-pencil-square"
 					class="w-5 h-5" />

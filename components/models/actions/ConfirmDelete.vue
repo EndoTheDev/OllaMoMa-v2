@@ -1,14 +1,14 @@
 <script setup lang="ts">
-const modal = useModal();
-
-defineProps<{
-	modelName?: string;
-}>();
-
+const props = defineProps<{ modelName?: string }>();
 const emit = defineEmits<{
 	(e: 'confirm'): void;
 	(e: 'cancel'): void;
 }>();
+
+const { isOpen, handleCancel, handleConfirm } = useConfirmationModal({
+	onConfirm: () => emit('confirm'),
+	onCancel: () => emit('cancel'),
+});
 </script>
 
 <template>
@@ -23,10 +23,7 @@ const emit = defineEmits<{
 					<UButton
 						color="neutral"
 						variant="ghost"
-						@click="
-							emit('cancel');
-							modal.close();
-						">
+						@click="handleCancel">
 						<UIcon
 							name="i-heroicons-x-mark"
 							class="w-5 h-5" />
@@ -35,10 +32,7 @@ const emit = defineEmits<{
 					<UButton
 						color="error"
 						variant="ghost"
-						@click="
-							emit('confirm');
-							modal.close();
-						">
+						@click="handleConfirm">
 						<UIcon
 							name="i-heroicons-trash"
 							class="w-5 h-5" />

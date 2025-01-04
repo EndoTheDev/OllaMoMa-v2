@@ -2,21 +2,21 @@
 const ollama = useOllamaStore();
 const props = defineProps<{ modelName?: string }>();
 const emit = defineEmits<{
-	(e: 'confirm', destination: string): void;
+	(e: 'confirm', newName: string): void;
 	(e: 'cancel'): void;
 }>();
 
 const {
 	isOpen,
-	inputValue: destination,
+	inputValue: newName,
 	error,
 	handleCancel,
-	handleConfirm: handleCopy,
+	handleConfirm: handleRename,
 } = useConfirmationModal({
-	initialValue: props.modelName ? `${props.modelName}-copy` : '',
+	initialValue: props.modelName,
 	validateInput: (value) => {
-		if (!value) return 'Please enter a name for the new model';
-		if (value === props.modelName) return 'New name must be different from the source model';
+		if (!value) return 'Please enter a new name for the model';
+		if (value === props.modelName) return 'New name must be different from the current name';
 		if (ollama.getModelByName(value)) return 'A model with this name already exists';
 	},
 	onConfirm: (value) => emit('confirm', value!),
@@ -27,23 +27,23 @@ const {
 <template>
 	<UModal
 		v-model:open="isOpen"
-		:title="`Copy ${props.modelName || 'Model'}`"
+		:title="`Rename ${props.modelName || 'Model'}`"
 		:ui="{ overlay: 'fixed inset-0 bg-black/50 backdrop-blur-sm' }">
 		<template #body>
 			<div class="space-y-6">
 				<p class="text-sm text-[var(--ui-text-muted)]">
-					This will create an exact copy of
-					<span class="font-medium text-[var(--ui-text)]">{{ props.modelName }}</span> with all its parameters
-					and settings.
+					Enter a new name for
+					<span class="font-medium text-[var(--ui-text)]">{{ props.modelName }}</span
+					>.
 				</p>
 
 				<div class="space-y-4">
 					<UInput
-						v-model="destination"
+						v-model="newName"
 						placeholder="New model name"
 						:class="{ 'border-[var(--ui-error)]': error }"
 						autofocus
-						@keyup.enter="handleCopy" />
+						@keyup.enter="handleRename" />
 					<p
 						v-if="error"
 						class="text-sm text-[var(--ui-error)]">
@@ -64,11 +64,11 @@ const {
 					<UButton
 						color="primary"
 						variant="ghost"
-						@click="handleCopy">
+						@click="handleRename">
 						<UIcon
-							name="i-heroicons-document-duplicate"
+							name="i-heroicons-pencil-square"
 							class="w-5 h-5" />
-						<span>COPY</span>
+						<span>RENAME</span>
 					</UButton>
 				</div>
 			</div>
