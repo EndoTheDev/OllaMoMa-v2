@@ -12,17 +12,25 @@ interface SettingsState {
 	sidebarOpen: boolean;
 	colorMode: 'light' | 'dark';
 	theme: keyof typeof themeColorMap;
+	neutral: keyof typeof neutralColorMap;
 }
 
 const themeColorMap = {
-	red: 'rose',
+	red: 'red',
 	blue: 'blue',
 	green: 'green',
 	yellow: 'yellow',
 	purple: 'purple',
 	pink: 'pink',
 	indigo: 'indigo',
-	neutral: 'gray'
+} as const;
+
+const neutralColorMap = {
+	slate: 'slate',
+	gray: 'gray',
+	zinc: 'zinc',
+	neutral: 'neutral',
+	stone: 'stone',
 } as const;
 
 export const useSettingsStore = defineStore('settings', () => {
@@ -32,7 +40,8 @@ export const useSettingsStore = defineStore('settings', () => {
 	const settings = useLocalStorage<SettingsState>('app:settings', {
 		sidebarOpen: true,
 		colorMode: colorMode.preference as SettingsState['colorMode'],
-		theme: 'red'
+		theme: 'green',
+		neutral: 'neutral'
 	});
 
 	const initializeSettings = () => {
@@ -40,10 +49,10 @@ export const useSettingsStore = defineStore('settings', () => {
 		updateThemeColors(settings.value.theme);
 	};
 
-	const updateThemeColors = (theme: SettingsState['theme']): void => {
+	const updateThemeColors = (theme: SettingsState['theme'], neutral: SettingsState['neutral'] = settings.value.neutral): void => {
 		const colors: ThemeColors = {
 			primary: themeColorMap[theme],
-			neutral: 'gray'
+			neutral: neutralColorMap[neutral]
 		};
 		appConfig.ui.colors = colors;
 	};
@@ -52,6 +61,7 @@ export const useSettingsStore = defineStore('settings', () => {
 	const sidebarOpen = computed(() => settings.value.sidebarOpen);
 	const isDarkMode = computed(() => settings.value.colorMode === 'dark');
 	const currentTheme = computed(() => settings.value.theme);
+	const currentNeutral = computed(() => settings.value.neutral);
 
 	// Actions
 	const toggleSidebar = () => {
@@ -66,6 +76,11 @@ export const useSettingsStore = defineStore('settings', () => {
 	const setTheme = (theme: SettingsState['theme']) => {
 		settings.value.theme = theme;
 		updateThemeColors(theme);
+	};
+
+	const setNeutral = (neutral: SettingsState['neutral']) => {
+		settings.value.neutral = neutral;
+		updateThemeColors(settings.value.theme, neutral);
 	};
 
 	// Initialize settings
@@ -87,7 +102,9 @@ export const useSettingsStore = defineStore('settings', () => {
 		currentTheme,
 		toggleSidebar,
 		setColorMode,
-		setTheme
+		setTheme,
+		currentNeutral,
+		setNeutral
 	};
 });
 

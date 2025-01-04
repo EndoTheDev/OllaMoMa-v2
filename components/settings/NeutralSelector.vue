@@ -6,24 +6,21 @@ const settingsStore = useSettingsStore();
 	<div
 		class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border rounded-lg border-[var(--ui-border)] gap-4">
 		<div>
-			<h3 class="font-medium">Primary</h3>
-			<p class="text-sm text-[var(--ui-text-muted)]">Choose your preferred primary color</p>
+			<h3 class="font-medium">Neutral</h3>
+			<p class="text-sm text-[var(--ui-text-muted)]">Choose your preferred neutral color</p>
 		</div>
 		<URadioGroup
-			:model-value="settingsStore.currentTheme"
+			:model-value="settingsStore.currentNeutral"
 			orientation="horizontal"
 			:items="[
-				{ value: 'blue', class: 'bg-blue-500' },
-				{ value: 'green', class: 'bg-green-500' },
-				{ value: 'red', class: 'bg-red-500' },
-				{ value: 'yellow', class: 'bg-yellow-500' },
-				{ value: 'purple', class: 'bg-purple-500' },
-				{ value: 'pink', class: 'bg-pink-500' },
-				{ value: 'indigo', class: 'bg-indigo-500' },
+				{ value: 'slate', class: 'bg-slate-500' },
+				{ value: 'gray', class: 'bg-gray-500' },
+				{ value: 'zinc', class: 'bg-zinc-500' },
+				{ value: 'neutral', class: 'bg-neutral-500' },
+				{ value: 'stone', class: 'bg-stone-500' },
 			]"
 			@update:model-value="
-				(value: string) =>
-					settingsStore.setTheme(value as 'blue' | 'green' | 'red' | 'yellow' | 'purple' | 'pink' | 'indigo')
+				(value: string) => settingsStore.setNeutral(value as 'slate' | 'gray' | 'zinc' | 'neutral' | 'stone')
 			"
 			:ui="{
 				wrapper: 'inline-flex flex-wrap gap-4',

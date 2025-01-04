@@ -6,6 +6,7 @@
 		<template #default>
 			<SettingsDarkMode />
 			<SettingsThemeSelector />
+			<SettingsNeutralSelector />
 		</template>
 		<template #footer>
 			<h1>Footer</h1>
