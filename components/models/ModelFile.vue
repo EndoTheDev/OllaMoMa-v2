@@ -27,7 +27,6 @@ async function fetchModelDetails(name?: string) {
 	error.value = null;
 
 	try {
-		console.log('Fetching model details for:', modelName);
 		const response = await client.show({ model: modelName });
 
 		if (!response) {
@@ -47,7 +46,6 @@ async function fetchModelDetails(name?: string) {
 			parameter_size: response.details?.parameter_size || '',
 			quantization_level: response.details?.quantization_level || '',
 		};
-		console.log('Received model details:', modelDetails.value);
 	} catch (err) {
 		console.error('Error fetching model details:', err);
 		error.value = err instanceof Error ? err.message : 'Failed to fetch model details';
