@@ -2,55 +2,14 @@ import { useLocalStorage } from '@vueuse/core';
 import { computed, watch } from 'vue';
 import { useColorMode, useAppConfig } from '#imports';
 import { defineStore } from 'pinia';
-
-interface ThemeColors {
-	primary: string;
-	neutral: string;
-	error: string;
-	warning: string;
-	success: string;
-	info: string;
-	secondary: string;
-}
-
-interface SettingsState {
-	sidebarOpen: boolean;
-	colorMode: 'light' | 'dark';
-	theme: keyof typeof themeColorMap;
-	neutral: keyof typeof neutralColorMap;
-	radius: keyof typeof radiusMap;
-}
-
-const themeColorMap = {
-	red: 'red',
-	blue: 'blue',
-	green: 'green',
-	yellow: 'yellow',
-	purple: 'purple',
-	pink: 'pink',
-	indigo: 'indigo',
-} as const;
-
-const neutralColorMap = {
-	slate: 'slate',
-	gray: 'gray',
-	zinc: 'zinc',
-	neutral: 'neutral',
-	stone: 'stone',
-} as const;
-
-const radiusMap = {
-	'none': '0',
-	'xs': '0.125',
-	'sm': '0.25', 
-	'md': '0.375',
-	'lg': '0.5'
-} as const;
+import type { SettingsState, ThemeColors, ThemeOption, NeutralOption, RadiusOption } from '~/types/settings';
+import { themeColorMap, neutralColorMap, radiusMap } from '~/types/settings';
 
 export const useSettingsStore = defineStore('settings', () => {
 	const colorMode = useColorMode();
 	const appConfig = useAppConfig();
 
+	// State
 	const settings = useLocalStorage<SettingsState>('app:settings', {
 		sidebarOpen: true,
 		colorMode: colorMode.preference as SettingsState['colorMode'],
@@ -59,16 +18,18 @@ export const useSettingsStore = defineStore('settings', () => {
 		radius: 'md'
 	});
 
-	const initializeSettings = () => {
-		colorMode.preference = settings.value.colorMode;
-		updateThemeColors(settings.value.theme);
-	};
+	// Computed
+	const sidebarOpen = computed(() => settings.value.sidebarOpen);
+	const isDarkMode = computed(() => settings.value.colorMode === 'dark');
+	const currentTheme = computed(() => settings.value.theme);
+	const currentNeutral = computed(() => settings.value.neutral);
+	const currentRadius = computed(() => settings.value.radius);
 
-	const updateThemeColors = (
-		theme: SettingsState['theme'], 
-		neutral: SettingsState['neutral'] = settings.value.neutral,
-		radius: SettingsState['radius'] = settings.value.radius
-	): void => {
+	// Actions
+	function updateThemeColors(
+		theme: ThemeOption = settings.value.theme,
+		neutral: NeutralOption = settings.value.neutral
+	): void {
 		const colors: ThemeColors = {
 			primary: themeColorMap[theme],
 			neutral: neutralColorMap[neutral],
@@ -79,41 +40,36 @@ export const useSettingsStore = defineStore('settings', () => {
 			secondary: 'gray'
 		};
 		appConfig.ui.colors = colors;
-		};
+	}
 
-	// Computed state
-	const sidebarOpen = computed(() => settings.value.sidebarOpen);
-	const isDarkMode = computed(() => settings.value.colorMode === 'dark');
-	const currentTheme = computed(() => settings.value.theme);
-	const currentNeutral = computed(() => settings.value.neutral);
-	const currentRadius = computed(() => settings.value.radius);
-
-	// Actions
-	const toggleSidebar = () => {
+	function toggleSidebar(): void {
 		settings.value.sidebarOpen = !settings.value.sidebarOpen;
-	};
+	}
 
-	const setColorMode = (mode: SettingsState['colorMode']) => {
+	function setColorMode(mode: SettingsState['colorMode']): void {
 		settings.value.colorMode = mode;
 		colorMode.preference = mode;
-	};
+	}
 
-	const setTheme = (theme: SettingsState['theme']) => {
+	function setTheme(theme: ThemeOption): void {
 		settings.value.theme = theme;
 		updateThemeColors(theme);
-	};
+	}
 
-	const setNeutral = (neutral: SettingsState['neutral']) => {
+	function setNeutral(neutral: NeutralOption): void {
 		settings.value.neutral = neutral;
 		updateThemeColors(settings.value.theme, neutral);
-	};
+	}
 
-	const setRadius = (radius: SettingsState['radius']) => {
+	function setRadius(radius: RadiusOption): void {
 		settings.value.radius = radius;
-		updateThemeColors(settings.value.theme, settings.value.neutral, radius);
-	};
+	}
 
 	// Initialize settings
+	function initializeSettings(): void {
+		colorMode.preference = settings.value.colorMode;
+		updateThemeColors(settings.value.theme);
+	}
 	initializeSettings();
 
 	// Watch system color mode changes
@@ -127,15 +83,18 @@ export const useSettingsStore = defineStore('settings', () => {
 	);
 
 	return {
+		// State exports
 		sidebarOpen,
 		isDarkMode,
 		currentTheme,
+		currentNeutral,
+		currentRadius,
+
+		// Action exports
 		toggleSidebar,
 		setColorMode,
 		setTheme,
-		currentNeutral,
 		setNeutral,
-		currentRadius,
 		setRadius
 	};
 });
