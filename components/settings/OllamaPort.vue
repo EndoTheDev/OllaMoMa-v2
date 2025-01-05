@@ -54,19 +54,19 @@ const revertChanges = () => {
 					base: 'w-full sm:w-64',
 				}" />
 			<UButton
-				color="primary"
-				variant="solid"
-				icon="i-heroicons-check"
-				size="sm"
-				:disabled="!isDirty"
-				@click="applyChanges" />
-			<UButton
 				color="neutral"
 				variant="ghost"
 				icon="i-heroicons-arrow-path"
 				size="sm"
 				:disabled="!isDirty"
 				@click="revertChanges" />
+			<UButton
+				color="primary"
+				variant="solid"
+				icon="i-heroicons-check"
+				size="sm"
+				:disabled="!isDirty"
+				@click="applyChanges" />
 		</div>
 	</div>
 </template>
