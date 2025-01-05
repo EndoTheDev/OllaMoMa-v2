@@ -42,6 +42,7 @@ const getTransitionClasses = computed(() => {
 		}">
 		<template #model-details>
 			<ModelsActionMenu
+				class="py-2"
 				:active-panel="activePanel"
 				:model-name="model.name"
 				@update:active-panel="(panel) => $emit('update:activePanel', panel)" />

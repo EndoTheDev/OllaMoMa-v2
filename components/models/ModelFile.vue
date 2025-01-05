@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Ollama } from 'ollama/browser';
 import type { OllamaModelDetails } from '~/types/ollama';
+const { fadeTransition, radiusClasses } = useUIUtils();
 
 const props = defineProps<{
 	modelName?: string;
@@ -67,7 +68,7 @@ watch(
 </script>
 
 <template>
-	<div class="">
+	<div class="pb-2">
 		<!-- <div class="flex items-center justify-between mt-2">
 			<h1 class="text-lg font-semibold">Modelfile</h1>
 			<UButton
@@ -98,7 +99,8 @@ watch(
 		<ScrollArea
 			v-else-if="modelDetails"
 			max-height="400px"
-			class="bg-[var(--ui-code)] [&>div]:bg-[var(--ui-code-darker)] pb-2">
+			class="bg-[var(--ui-bg-muted)] border border-[var(--ui-border)]"
+			:class="radiusClasses">
 			<pre class="text-sm p-2 whitespace-pre-wrap break-words font-mono">{{ modelDetails.modelfile }}</pre>
 		</ScrollArea>
 	</div>

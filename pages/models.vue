@@ -43,7 +43,10 @@ onMounted(async () => {
 					<li
 						v-for="model in ollama.models.value"
 						:key="model.name"
-						:class="['border border-[var(--ui-border)] p-3 py-2', radiusClasses]">
+						:class="[
+							'p-3 py-2 border border-[var(--ui-border)] hover:bg-[var(--ui-bg-muted)]/50 hover:drop-shadow-sm transition-colors duration-500 ease-out',
+							radiusClasses,
+						]">
 						<ModelsModelAccordion
 							:model="model"
 							:active-panel="getActivePanel(model.name)"

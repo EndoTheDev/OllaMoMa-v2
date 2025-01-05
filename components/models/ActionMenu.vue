@@ -49,7 +49,7 @@ const openDeleteModal = () => {
 	<div class="flex justify-between">
 		<div class="flex gap-1">
 			<UButton
-				variant="link"
+				variant="ghost"
 				:color="activePanel === 'info' ? 'primary' : 'neutral'"
 				@click="togglePanel('info')">
 				<UIcon
@@ -58,7 +58,7 @@ const openDeleteModal = () => {
 				<span class="hidden md:inline">INFO</span>
 			</UButton>
 			<UButton
-				variant="link"
+				variant="ghost"
 				:color="activePanel === 'modelfile' ? 'primary' : 'neutral'"
 				@click="togglePanel('modelfile')">
 				<UIcon
