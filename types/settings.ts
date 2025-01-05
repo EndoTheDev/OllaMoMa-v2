@@ -40,6 +40,8 @@ export interface SettingsState {
 	theme: keyof typeof themeColorMap;
 	neutral: keyof typeof neutralColorMap;
 	radius: keyof typeof radiusMap;
+	ollamaHost: string;
+	ollamaPort: number;
 }
 
 export type ThemeOption = keyof typeof themeColorMap;

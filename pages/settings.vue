@@ -10,6 +10,8 @@
 			<SettingsNeutralSelector />
 			<SettingsBorderSelector />
 			<!-- todo: wrap in one accordion -->
+			<SettingsOllamaURL />
+			<SettingsOllamaPort />
 		</template>
 		<!-- <template #footer>
 			<h1>FOOTER</h1>

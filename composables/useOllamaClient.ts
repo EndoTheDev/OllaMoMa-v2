@@ -22,4 +22,4 @@ export function useOllamaClient(config: Partial<OllamaConfig> = {}) {
   const client = new Ollama(mergedConfig)
 
   return client
-} 
+}	

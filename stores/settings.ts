@@ -15,7 +15,9 @@ export const useSettingsStore = defineStore('settings', () => {
 		colorMode: colorMode.preference as SettingsState['colorMode'],
 		theme: 'green',
 		neutral: 'neutral',
-		radius: 'md'
+		radius: 'md',
+		ollamaHost: '127.0.0.1',
+		ollamaPort: 11434
 	});
 
 	// Computed
@@ -24,6 +26,8 @@ export const useSettingsStore = defineStore('settings', () => {
 	const currentTheme = computed(() => settings.value.theme);
 	const currentNeutral = computed(() => settings.value.neutral);
 	const currentRadius = computed(() => settings.value.radius);
+	const ollamaHost = computed(() => settings.value.ollamaHost);
+	const ollamaPort = computed(() => settings.value.ollamaPort);
 
 	// Actions
 	function updateThemeColors(
@@ -65,6 +69,14 @@ export const useSettingsStore = defineStore('settings', () => {
 		settings.value.radius = radius;
 	}
 
+	function setOllamaHost(host: string): void {
+		settings.value.ollamaHost = host;
+	}
+
+	function setOllamaPort(port: number): void {
+		settings.value.ollamaPort = port;
+	}
+
 	// Initialize settings
 	function initializeSettings(): void {
 		colorMode.preference = settings.value.colorMode;
@@ -89,13 +101,17 @@ export const useSettingsStore = defineStore('settings', () => {
 		currentTheme,
 		currentNeutral,
 		currentRadius,
+		ollamaHost,
+		ollamaPort,
 
 		// Action exports
 		toggleSidebar,
 		setColorMode,
 		setTheme,
 		setNeutral,
-		setRadius
+		setRadius,
+		setOllamaHost,
+		setOllamaPort
 	};
 });
 
