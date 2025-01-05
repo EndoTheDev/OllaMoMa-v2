@@ -29,7 +29,7 @@ const {
 		v-model:open="isOpen"
 		:title="`Rename ${props.modelName || 'Model'}`"
 		:description="`Enter a new name for ${props.modelName || 'this model'}`"
-		:ui="{ overlay: 'fixed inset-0 bg-black/50 backdrop-blur-sm' }">
+		:ui="{ overlay: 'fixed inset-0 bg-[var(--ui-bg)]/50 backdrop-blur-sm' }">
 		<template #body>
 			<div class="space-y-6">
 				<p class="text-sm text-[var(--ui-text-muted)]">

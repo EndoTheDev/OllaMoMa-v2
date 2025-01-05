@@ -33,6 +33,6 @@ const { fadeTransition, radiusClasses } = useUIUtils();
 		<div
 			@click="settingsStore.toggleSidebar"
 			v-show="settingsStore.sidebarOpen && !isSmallViewport"
-			class="fixed w-full h-full bg-black/50 backdrop-blur-sm z-40" />
+			class="fixed w-full h-full bg-[var(--ui-bg)]/50 backdrop-blur-sm z-40" />
 	</Transition>
 </template>

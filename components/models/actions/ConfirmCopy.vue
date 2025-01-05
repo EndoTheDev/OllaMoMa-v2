@@ -29,7 +29,7 @@ const {
 		v-model:open="isOpen"
 		:title="`Copy ${props.modelName || 'Model'}`"
 		:description="`Create a copy of ${props.modelName || 'this model'} with a new name`"
-		:ui="{ overlay: 'fixed inset-0 bg-black/50 backdrop-blur-sm' }">
+		:ui="{ overlay: 'fixed inset-0 bg-[var(--ui-bg)]/50 backdrop-blur-sm' }">
 		<template #body>
 			<div class="space-y-6">
 				<p class="text-sm text-[var(--ui-text-muted)]">
