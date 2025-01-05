@@ -7,6 +7,14 @@ export interface ModelDetails {
 	quantization_level: string;
 }
 
+export interface OllamaModelDetails extends ModelDetails {
+	license: string;
+	modelfile: string;
+	parameters: string;
+	template: string;
+	system: string;
+}
+
 export interface OllamaModel {
 	name: string;
 	modified_at: string;

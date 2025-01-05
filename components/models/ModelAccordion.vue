@@ -60,7 +60,8 @@ const getTransitionClasses = computed(() => {
 						:model="model" />
 					<ModelsModelFile
 						v-else
-						:key="'modelfile-' + model.name" />
+						:key="'modelfile-' + model.name"
+						:model-name="model.name" />
 				</Transition>
 			</div>
 		</template>

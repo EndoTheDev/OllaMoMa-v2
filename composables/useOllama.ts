@@ -1,6 +1,6 @@
 import { Ollama } from 'ollama/browser'
 import { useSettingsStore } from '~/stores/settings'
-import type { OllamaModel, OllamaState } from '~/types/ollama'
+import type { OllamaModel, OllamaState, OllamaModelDetails } from '~/types/ollama'
 import { OllamaError } from '~/types/ollama'
 
 interface OllamaConfig {
@@ -69,6 +69,40 @@ export const useOllama = (config: Partial<OllamaConfig> = {}) => {
     }
   }
 
+  async function showModel(name: string): Promise<OllamaModelDetails> {
+    state.value.isLoading = true
+    state.value.error = null
+    
+    try {
+      const response = await client.show({ model: name })
+      
+      if (!response) {
+        throw new Error('No model details returned from API')
+      }
+      
+      return {
+        license: response.license,
+        modelfile: response.modelfile,
+        parameters: response.parameters,
+        template: response.template,
+        system: response.system,
+        parent_model: response.details?.parent_model || '',
+        format: response.details?.format || '',
+        family: response.details?.family || '',
+        families: response.details?.families || [],
+        parameter_size: response.details?.parameter_size || '',
+        quantization_level: response.details?.quantization_level || ''
+      }
+    } catch (err) {
+      const error = new OllamaError(`Failed to fetch details for model ${name}`, err)
+      state.value.error = error.message
+      console.error(`Failed to fetch details for model ${name}:`, error)
+      throw error
+    } finally {
+      state.value.isLoading = false
+    }
+  }
+
   async function copyModel(source: string, destination: string): Promise<void> {
     state.value.isLoading = true
     state.value.error = null
@@ -116,6 +150,7 @@ export const useOllama = (config: Partial<OllamaConfig> = {}) => {
 
     // Action exports
     fetchModels,
+    showModel,
     copyModel,
     deleteModel
   }

@@ -8,7 +8,7 @@ defineProps<{
 </script>
 
 <template>
-	<div class="space-y-2 py-2">
+	<div class="space-y-2 px-2">
 		<div class="flex flex-wrap items-center gap-2">
 			<span class="text-base w-36">Model Family:</span>
 			<UBadge
