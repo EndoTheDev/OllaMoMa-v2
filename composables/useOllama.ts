@@ -1,8 +1,23 @@
+import { Ollama } from 'ollama/browser'
+import { useSettingsStore } from '~/stores/settings'
 import type { OllamaModel, OllamaState } from '~/types/ollama'
 import { OllamaError } from '~/types/ollama'
 
-export const useOllama = () => {
-  const client = useOllamaClient()
+interface OllamaConfig {
+  host: string
+}
+
+export const useOllama = (config: Partial<OllamaConfig> = {}) => {
+  const settingsStore = useSettingsStore()
+  
+  const defaultConfig: OllamaConfig = {
+    host: `http://${settingsStore.ollamaHost}:${settingsStore.ollamaPort}`
+  }
+  
+  const client = new Ollama({
+    ...defaultConfig,
+    ...config
+  })
 
   // State
   const state = useState<OllamaState>('ollama-state', () => ({
