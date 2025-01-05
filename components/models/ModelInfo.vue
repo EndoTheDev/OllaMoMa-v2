@@ -1,22 +1,9 @@
 <script setup lang="ts">
-interface ModelDetails {
-	families?: string[];
-	parameter_size?: string;
-	format?: string;
-	quantization_level?: string;
-}
-
-interface ModelProps {
-	name: string;
-	size: number;
-	modified_at: string;
-	digest: string;
-	details?: ModelDetails;
-}
+import type { OllamaModel } from '~/types/ollama';
 const { fadeTransition, radiusClasses } = useUIUtils();
 
 defineProps<{
-	model: ModelProps;
+	model: OllamaModel;
 }>();
 </script>
 
