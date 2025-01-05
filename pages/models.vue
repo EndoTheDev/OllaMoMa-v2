@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const ollamaStore = useOllamaStore();
+const { radiusClasses } = useUIUtils();
 const activePanels = ref<Record<string, 'info' | 'modelfile'>>({});
 
 const getActivePanel = (modelName: string) => {
@@ -54,7 +55,7 @@ onMounted(() => {
 					<li
 						v-for="model in ollamaStore.models"
 						:key="model.name"
-						class="border border-[var(--ui-border)] p-3 py-2 rounded-lg">
+						:class="['border border-[var(--ui-border)] p-3 py-2', radiusClasses]">
 						<UAccordion
 							:items="[
 								{

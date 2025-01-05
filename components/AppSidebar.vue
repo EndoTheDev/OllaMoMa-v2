@@ -1,15 +1,7 @@
 <script setup lang="ts">
 const settingsStore = useSettingsStore();
 const isSmallViewport = useMediaQuery('(min-width: 768px)');
-
-const fadeTransition = {
-	enterActiveClass: 'transition duration-300 ease-out',
-	enterFromClass: 'opacity-0',
-	enterToClass: 'opacity-100',
-	leaveActiveClass: 'transition duration-200 ease-in',
-	leaveFromClass: 'opacity-100',
-	leaveToClass: 'opacity-0',
-};
+const { fadeTransition, radiusClasses } = useUIUtils();
 </script>
 
 <template>
@@ -21,7 +13,7 @@ const fadeTransition = {
 		]">
 		<UButton
 			@click="settingsStore.toggleSidebar"
-			class="h-10 flex w-full justify-center">
+			:class="['h-10 flex w-full justify-center', radiusClasses]">
 			<UIcon
 				name="i-heroicons-bars-3"
 				class="fixed left-4 w-6 h-6" />

@@ -13,6 +13,7 @@ interface ModelProps {
 	digest: string;
 	details?: ModelDetails;
 }
+const { fadeTransition, radiusClasses } = useUIUtils();
 
 defineProps<{
 	model: ModelProps;
@@ -27,6 +28,7 @@ defineProps<{
 				v-for="family in model.details?.families"
 				:key="family"
 				:label="family"
+				:class="[radiusClasses]"
 				class="capitalize text-sm"
 				variant="soft"
 				color="primary" />
@@ -74,9 +76,10 @@ defineProps<{
 				{{ new Date(model.modified_at).toLocaleDateString() }}
 				<UBadge
 					:label="`${useTimeAgo(model.modified_at).value}`"
+					:class="[radiusClasses]"
+					class="text-xs"
 					variant="soft"
-					color="neutral"
-					class="text-xs" />
+					color="neutral" />
 			</span>
 		</div>
 

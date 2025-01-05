@@ -2,15 +2,7 @@
 const appConfig = useAppConfig();
 const settingsStore = useSettingsStore();
 const isSmallViewport = useMediaQuery('(min-width: 768px)');
-
-const fadeTransition = {
-	enterActiveClass: 'transition duration-300 ease-out',
-	enterFromClass: 'opacity-0',
-	enterToClass: 'opacity-100',
-	leaveActiveClass: 'transition duration-200 ease-in',
-	leaveFromClass: 'opacity-100',
-	leaveToClass: 'opacity-0',
-};
+const { fadeTransition, radiusClasses } = useUIUtils();
 </script>
 
 <template>
@@ -21,7 +13,7 @@ const fadeTransition = {
 					<template #default>
 						<UButton
 							:to="'/'"
-							class="h-10 flex w-full justify-center">
+							:class="['h-10 flex w-full justify-center', radiusClasses]">
 							<UIcon
 								name="i-heroicons-chat-bubble-left-right"
 								class="fixed left-4 w-6 h-6" />
@@ -31,7 +23,7 @@ const fadeTransition = {
 						</UButton>
 						<UButton
 							:to="'/models'"
-							class="h-10 flex w-full justify-center">
+							:class="['h-10 flex w-full justify-center', radiusClasses]">
 							<UIcon
 								name="i-heroicons-circle-stack"
 								class="fixed left-4 w-6 h-6" />
@@ -44,7 +36,7 @@ const fadeTransition = {
 					<template #footer>
 						<UButton
 							:to="'/settings'"
-							class="h-10 flex w-full justify-center">
+							:class="['h-10 flex w-full justify-center', radiusClasses]">
 							<UIcon
 								name="i-heroicons-cog-6-tooth"
 								class="fixed left-4 w-6 h-6" />

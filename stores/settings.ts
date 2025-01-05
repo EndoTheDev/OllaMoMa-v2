@@ -18,6 +18,7 @@ interface SettingsState {
 	colorMode: 'light' | 'dark';
 	theme: keyof typeof themeColorMap;
 	neutral: keyof typeof neutralColorMap;
+	radius: keyof typeof radiusMap;
 }
 
 const themeColorMap = {
@@ -38,6 +39,14 @@ const neutralColorMap = {
 	stone: 'stone',
 } as const;
 
+const radiusMap = {
+	'none': '0',
+	'xs': '0.125',
+	'sm': '0.25', 
+	'md': '0.375',
+	'lg': '0.5'
+} as const;
+
 export const useSettingsStore = defineStore('settings', () => {
 	const colorMode = useColorMode();
 	const appConfig = useAppConfig();
@@ -46,7 +55,8 @@ export const useSettingsStore = defineStore('settings', () => {
 		sidebarOpen: true,
 		colorMode: colorMode.preference as SettingsState['colorMode'],
 		theme: 'green',
-		neutral: 'neutral'
+		neutral: 'neutral',
+		radius: 'md'
 	});
 
 	const initializeSettings = () => {
@@ -54,7 +64,11 @@ export const useSettingsStore = defineStore('settings', () => {
 		updateThemeColors(settings.value.theme);
 	};
 
-	const updateThemeColors = (theme: SettingsState['theme'], neutral: SettingsState['neutral'] = settings.value.neutral): void => {
+	const updateThemeColors = (
+		theme: SettingsState['theme'], 
+		neutral: SettingsState['neutral'] = settings.value.neutral,
+		radius: SettingsState['radius'] = settings.value.radius
+	): void => {
 		const colors: ThemeColors = {
 			primary: themeColorMap[theme],
 			neutral: neutralColorMap[neutral],
@@ -65,13 +79,14 @@ export const useSettingsStore = defineStore('settings', () => {
 			secondary: 'gray'
 		};
 		appConfig.ui.colors = colors;
-	};
+		};
 
 	// Computed state
 	const sidebarOpen = computed(() => settings.value.sidebarOpen);
 	const isDarkMode = computed(() => settings.value.colorMode === 'dark');
 	const currentTheme = computed(() => settings.value.theme);
 	const currentNeutral = computed(() => settings.value.neutral);
+	const currentRadius = computed(() => settings.value.radius);
 
 	// Actions
 	const toggleSidebar = () => {
@@ -91,6 +106,11 @@ export const useSettingsStore = defineStore('settings', () => {
 	const setNeutral = (neutral: SettingsState['neutral']) => {
 		settings.value.neutral = neutral;
 		updateThemeColors(settings.value.theme, neutral);
+	};
+
+	const setRadius = (radius: SettingsState['radius']) => {
+		settings.value.radius = radius;
+		updateThemeColors(settings.value.theme, settings.value.neutral, radius);
 	};
 
 	// Initialize settings
@@ -114,7 +134,9 @@ export const useSettingsStore = defineStore('settings', () => {
 		setColorMode,
 		setTheme,
 		currentNeutral,
-		setNeutral
+		setNeutral,
+		currentRadius,
+		setRadius
 	};
 });
 
