@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const ollamaStore = useOllamaStore();
+const ollama = useOllama();
 const { radiusClasses } = useUIUtils();
 const activePanels = ref<Record<string, 'info' | 'modelfile'>>({});
 
@@ -27,8 +27,12 @@ const getTransitionClasses = (modelName: string) => {
 	};
 };
 
-onMounted(() => {
-	ollamaStore.fetchModels();
+onMounted(async () => {
+	try {
+		await ollama.fetchModels();
+	} catch (error) {
+		console.error('Failed to fetch models:', error);
+	}
 });
 </script>
 
@@ -39,21 +43,21 @@ onMounted(() => {
 		</template>
 		<template #default>
 			<div
-				v-if="ollamaStore.isLoading"
+				v-if="ollama.isLoading.value"
 				class="text-[var(--ui-text-dimmed)]">
 				Loading models...
 			</div>
 			<div
-				v-else-if="ollamaStore.error"
+				v-else-if="ollama.error.value"
 				class="text-[var(--ui-error)]">
-				{{ ollamaStore.error }}
+				{{ ollama.error.value }}
 			</div>
 			<div v-else>
 				<ul
-					v-if="ollamaStore.hasModels"
+					v-if="ollama.hasModels.value"
 					class="space-y-1">
 					<li
-						v-for="model in ollamaStore.models"
+						v-for="model in ollama.models.value"
 						:key="model.name"
 						:class="['border border-[var(--ui-border)] p-3 py-2', radiusClasses]">
 						<UAccordion

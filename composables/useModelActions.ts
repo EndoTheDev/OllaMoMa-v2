@@ -1,5 +1,4 @@
 import { useModal, useToast } from '#imports';
-import { useOllamaStore } from '~/stores/ollama';
 import type { OllamaError } from '~/types/ollama';
 
 interface ModelActionOptions {
@@ -9,7 +8,7 @@ interface ModelActionOptions {
 export function useModelActions() {
 	const modal = useModal();
 	const toast = useToast();
-	const ollamaStore = useOllamaStore();
+	const ollama = useOllama();
 
 	const handleSuccess = (title: string, description: string, options?: ModelActionOptions) => {
 		if (options?.silent) return;
@@ -37,7 +36,7 @@ export function useModelActions() {
 
 	const copyModel = async (modelName: string, newName: string, options?: ModelActionOptions) => {
 		try {
-			await ollamaStore.copyModel(modelName, newName);
+			await ollama.copyModel(modelName, newName);
 			handleSuccess(
 				'Model copied',
 				`Successfully copied ${modelName} to ${newName}`,
@@ -54,7 +53,7 @@ export function useModelActions() {
 
 	const deleteModel = async (modelName: string, options?: ModelActionOptions) => {
 		try {
-			await ollamaStore.deleteModel(modelName);
+			await ollama.deleteModel(modelName);
 			handleSuccess(
 				'Model deleted',
 				`Successfully deleted ${modelName}`,

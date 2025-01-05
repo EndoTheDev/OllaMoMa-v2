@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const ollama = useOllamaStore();
+const ollama = useOllama();
 const props = defineProps<{ modelName?: string }>();
 const emit = defineEmits<{
 	(e: 'confirm', destination: string): void;
@@ -17,7 +17,7 @@ const {
 	validateInput: (value) => {
 		if (!value) return 'Please enter a name for the new model';
 		if (value === props.modelName) return 'New name must be different from the source model';
-		if (ollama.getModelByName(value)) return 'A model with this name already exists';
+		if (ollama.getModelByName.value(value)) return 'A model with this name already exists';
 	},
 	onConfirm: (value) => emit('confirm', value!),
 	onCancel: () => emit('cancel'),
