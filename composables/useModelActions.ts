@@ -1,83 +1,94 @@
-import { useModal } from '#imports';
-import { useToast } from '#imports';
+import { useModal, useToast } from '#imports';
 import { useOllamaStore } from '~/stores/ollama';
+import type { OllamaError } from '~/stores/ollama';
+
+interface ModelActionOptions {
+	silent?: boolean;
+}
 
 export function useModelActions() {
 	const modal = useModal();
 	const toast = useToast();
 	const ollamaStore = useOllamaStore();
 
-	const copyModel = async (modelName: string, newName: string, silent = false) => {
+	const handleSuccess = (title: string, description: string, options?: ModelActionOptions) => {
+		if (options?.silent) return;
+
+		toast.add({
+			title,
+			description,
+			icon: 'i-heroicons-check-circle',
+			color: 'primary',
+		});
+	};
+
+	const handleError = (error: OllamaError, fallbackMessage: string, options?: ModelActionOptions) => {
+		if (options?.silent) return;
+
+		toast.add({
+			title: 'Error',
+			description: error.message || fallbackMessage,
+			icon: 'i-heroicons-exclamation-triangle',
+			color: 'error',
+		});
+
+		throw error;
+	};
+
+	const copyModel = async (modelName: string, newName: string, options?: ModelActionOptions) => {
 		try {
 			await ollamaStore.copyModel(modelName, newName);
-			if (!silent) {
-				toast.add({
-					title: 'Model copied',
-					description: `Successfully copied ${modelName} to ${newName}`,
-					icon: 'i-heroicons-document-duplicate',
-					color: 'primary',
-				});
-			}
-		} catch (error) {
-			if (!silent) {
-				toast.add({
-					title: 'Error',
-					description: `Failed to copy ${modelName}`,
-					icon: 'i-heroicons-exclamation-triangle',
-					color: 'error',
-				});
-			}
-			throw error;
+			handleSuccess(
+				'Model copied',
+				`Successfully copied ${modelName} to ${newName}`,
+				options
+			);
+		} catch (err) {
+			handleError(
+				err as OllamaError,
+				`Failed to copy ${modelName}`,
+				options
+			);
 		}
 	};
 
-	const deleteModel = async (modelName: string, silent = false) => {
+	const deleteModel = async (modelName: string, options?: ModelActionOptions) => {
 		try {
 			await ollamaStore.deleteModel(modelName);
-			if (!silent) {
-				toast.add({
-					title: 'Model deleted',
-					description: `Successfully deleted ${modelName}`,
-					icon: 'i-heroicons-trash',
-					color: 'primary',
-				});
-			}
-		} catch (error) {
-			if (!silent) {
-				toast.add({
-					title: 'Error',
-					description: `Failed to delete ${modelName}`,
-					icon: 'i-heroicons-exclamation-triangle',
-					color: 'error',
-				});
-			}
-			throw error;
+			handleSuccess(
+				'Model deleted',
+				`Successfully deleted ${modelName}`,
+				options
+			);
+		} catch (err) {
+			handleError(
+				err as OllamaError,
+				`Failed to delete ${modelName}`,
+				options
+			);
 		}
 	};
 
-	const renameModel = async (oldName: string, newName: string) => {
+	const renameModel = async (oldName: string, newName: string, options?: ModelActionOptions) => {
 		try {
-			await copyModel(oldName, newName, true);
+			await copyModel(oldName, newName, { silent: true });
 			try {
-				await deleteModel(oldName, true);
+				await deleteModel(oldName, { silent: true });
+				handleSuccess(
+					'Model renamed',
+					`Successfully renamed ${oldName} to ${newName}`,
+					options
+				);
 			} catch (deleteError) {
-				await deleteModel(newName, true);
+				await deleteModel(newName, { silent: true });
 				throw deleteError;
 			}
-			
-			toast.add({
-				title: 'Model renamed',
-				description: `Successfully renamed ${oldName} to ${newName}`,
-				icon: 'i-heroicons-pencil-square',
-				color: 'primary',
-			});
-		} catch (error) {
-			toast.add({
-				title: 'Error',
-				description: `Failed to rename ${oldName}`,
-				icon: 'i-heroicons-exclamation-triangle',
-				color: 'error',
-			});
+		} catch (err) {
+			handleError(
+				err as OllamaError,
+				`Failed to rename ${oldName}`,
+				options
+			);
 		}
 	};
 

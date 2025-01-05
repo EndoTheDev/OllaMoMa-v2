@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { Ollama } from 'ollama/browser'
+import { useOllamaClient } from '~/composables/useOllamaClient'
 
 interface ModelDetails {
 	parent_model: string
@@ -24,10 +24,12 @@ interface OllamaState {
 	error: string | null
 }
 
-// Create an Ollama instance with your server configuration
-const ollama = new Ollama({
-	host: 'http://localhost:11434' // or your Ollama server URL
-})
+export class OllamaError extends Error {
+	constructor(message: string, public override readonly cause?: unknown) {
+		super(message)
+		this.name = 'OllamaError'
+	}
+}
 
 export const useOllamaStore = defineStore('ollama', {
 	state: (): OllamaState => ({
@@ -38,48 +40,57 @@ export const useOllamaStore = defineStore('ollama', {
 
 	actions: {
 		async fetchModels() {
+			const client = useOllamaClient()
 			this.isLoading = true
 			this.error = null
 			
 			try {
-				const response = await ollama.list()
+				const response = await client.list()
 				this.models = response.models.map(model => ({
 					...model,
 					modified_at: model.modified_at.toLocaleString()
 				}))
 			} catch (err) {
-				this.error = err instanceof Error ? err.message : 'Failed to fetch models'
-				console.error('Error fetching Ollama models:', err)
+				const error = new OllamaError('Failed to fetch models', err)
+				this.error = error.message
+				console.error(error)
+				throw error
 			} finally {
 				this.isLoading = false
 			}
 		},
 
 		async copyModel(source: string, destination: string) {
+			const client = useOllamaClient()
 			this.isLoading = true
 			this.error = null
 			
 			try {
-				await ollama.copy({ source, destination })
+				await client.copy({ source, destination })
 				await this.fetchModels()
 			} catch (err) {
-				this.error = err instanceof Error ? err.message : 'Failed to copy model'
-				console.error('Error copying Ollama model:', err)
+				const error = new OllamaError(`Failed to copy model from ${source} to ${destination}`, err)
+				this.error = error.message
+				console.error(error)
+				throw error
 			} finally {
 				this.isLoading = false
 			}
 		},
 
 		async deleteModel(name: string) {
+			const client = useOllamaClient()
 			this.isLoading = true
 			this.error = null
 			
 			try {
-				await ollama.delete({ model: name })
+				await client.delete({ model: name })
 				await this.fetchModels()
 			} catch (err) {
-				this.error = err instanceof Error ? err.message : 'Failed to delete model'
-				console.error('Error deleting Ollama model:', err)
+				const error = new OllamaError(`Failed to delete model ${name}`, err)
+				this.error = error.message
+				console.error(error)
+				throw error
 			} finally {
 				this.isLoading = false
 			}
@@ -90,6 +101,11 @@ export const useOllamaStore = defineStore('ollama', {
 		getModelByName: (state) => {
 			return (name: string) => state.models.find(model => model.name === name)
 		},
-		hasModels: (state) => state.models.length > 0
+		hasModels: (state) => state.models.length > 0,
+		sortedModels: (state) => {
+			return [...state.models].sort((a, b) => {
+				return new Date(b.modified_at).getTime() - new Date(a.modified_at).getTime()
+			})
+		}
 	}
 })
