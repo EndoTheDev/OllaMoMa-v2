@@ -1,22 +1,20 @@
 import { Ollama } from 'ollama/browser'
-import { useRuntimeConfig } from '#imports'
+import { useSettingsStore } from '~/stores/settings'
 
 interface OllamaConfig {
   host: string
 }
 
-const defaultConfig: OllamaConfig = {
-  host: 'http://localhost:11434'
-}
-
 export function useOllamaClient(config: Partial<OllamaConfig> = {}) {
-  const runtimeConfig = useRuntimeConfig()
-  const ollamaHost = runtimeConfig.public?.ollamaHost as string | undefined
+  const settingsStore = useSettingsStore()
+  
+  const defaultConfig: OllamaConfig = {
+    host: `http://${settingsStore.ollamaHost}:${settingsStore.ollamaPort}`
+  }
   
   const mergedConfig: OllamaConfig = {
     ...defaultConfig,
-    ...config,
-    host: config.host || ollamaHost || defaultConfig.host
+    ...config
   }
 
   const client = new Ollama(mergedConfig)
