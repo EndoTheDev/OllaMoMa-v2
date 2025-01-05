@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref, onMounted, onUnmounted, nextTick } from 'vue';
+
 interface Props {
 	/**
 	 * The class to apply to the root element
@@ -17,43 +19,94 @@ const content = ref<HTMLElement>();
 const thumb = ref<HTMLElement>();
 const isScrolling = ref(false);
 const isDragging = ref(false);
+const showScrollbar = ref(false);
 let scrollTimeout: NodeJS.Timeout;
 let startY = 0;
 let startScrollTop = 0;
+let resizeObserver: ResizeObserver;
+
+// Add function to check if content overflows
+const checkOverflow = () => {
+	if (container.value && content.value) {
+		const containerHeight = container.value.clientHeight;
+		const contentHeight = content.value.scrollHeight;
+		showScrollbar.value = contentHeight > containerHeight;
+		return showScrollbar.value;
+	}
+	return false;
+};
 
 // Add function to update thumb size and position
 const updateThumb = () => {
-	if (container.value && content.value && thumb.value) {
-		const containerHeight = container.value.clientHeight;
-		const contentHeight = content.value.scrollHeight;
-		const scrollPercentage = containerHeight / contentHeight;
-		const thumbHeight = Math.max(scrollPercentage * containerHeight, 32);
-		thumb.value.style.height = `${thumbHeight}px`;
+	if (!checkOverflow() || !container.value || !content.value || !thumb.value) return;
 
-		// Update thumb position
-		const scrollPercent = container.value.scrollTop / (contentHeight - containerHeight);
-		const thumbPosition = scrollPercent * (containerHeight - thumbHeight);
-		thumb.value.style.transform = `translateY(${thumbPosition}px)`;
+	const containerHeight = container.value.clientHeight;
+	const contentHeight = content.value.scrollHeight;
+	const scrollPercentage = containerHeight / contentHeight;
+	const thumbHeight = Math.max(scrollPercentage * containerHeight, 32);
+	thumb.value.style.height = `${thumbHeight}px`;
+
+	// Update thumb position
+	const scrollPercent = container.value.scrollTop / (contentHeight - containerHeight);
+	const maxThumbPosition = containerHeight - thumbHeight;
+	const thumbPosition = scrollPercent * maxThumbPosition;
+	thumb.value.style.transform = `translateY(${thumbPosition}px)`;
+};
+
+// Function to observe all content changes
+const observeContent = () => {
+	if (!content.value || !resizeObserver) return;
+
+	// Observe the content element itself
+	resizeObserver.observe(content.value);
+
+	// Observe all child elements that might change size
+	const children = content.value.getElementsByTagName('*');
+	for (const child of children) {
+		resizeObserver.observe(child);
 	}
 };
 
 onMounted(() => {
 	// Initial update
 	nextTick(() => {
+		checkOverflow();
 		updateThumb();
 	});
 
 	// Watch for content changes
-	const observer = new ResizeObserver(() => {
-		updateThumb();
+	resizeObserver = new ResizeObserver(() => {
+		nextTick(() => {
+			checkOverflow();
+			updateThumb();
+		});
 	});
 
 	if (content.value) {
-		observer.observe(content.value);
+		observeContent();
+
+		// Create a MutationObserver to watch for DOM changes
+		const mutationObserver = new MutationObserver(() => {
+			// Re-observe all content when DOM changes
+			nextTick(() => {
+				observeContent();
+				checkOverflow();
+				updateThumb();
+			});
+		});
+
+		// Watch for changes in the content's DOM
+		mutationObserver.observe(content.value, {
+			childList: true,
+			subtree: true,
+			attributes: true,
+			attributeFilter: ['style', 'class'],
+		});
 	}
 
 	// Add scroll event listener
 	container.value?.addEventListener('scroll', () => {
+		if (!showScrollbar.value) return;
 		isScrolling.value = true;
 		clearTimeout(scrollTimeout);
 		updateThumb();
@@ -65,10 +118,9 @@ onMounted(() => {
 
 	// Cleanup observer
 	onUnmounted(() => {
-		if (content.value) {
-			observer.unobserve(content.value);
+		if (resizeObserver) {
+			resizeObserver.disconnect();
 		}
-		observer.disconnect();
 	});
 });
 
@@ -108,14 +160,16 @@ const onMouseUp = () => {
 		:style="maxHeight ? { height: maxHeight } : undefined">
 		<div
 			ref="container"
-			class="h-full overflow-auto scrollbar-none">
+			class="h-full overflow-y-auto overflow-x-hidden scrollbar-none">
 			<div
 				ref="content"
 				class="h-full">
 				<slot />
 			</div>
 		</div>
-		<div class="absolute right-0.5 top-0.5 h-[calc(100%-8px)] w-1.5 select-none">
+		<div
+			v-if="showScrollbar"
+			class="absolute right-0.5 top-0 h-full w-1.5 select-none bg-[var(--ui-text-dimmed)]/10">
 			<div
 				ref="thumb"
 				@mousedown="onMouseDown"
