@@ -1,6 +1,6 @@
 import { useModal, useToast } from '#imports';
 import { useOllamaStore } from '~/stores/ollama';
-import type { OllamaError } from '~/stores/ollama';
+import type { OllamaError } from '~/types/ollama';
 
 interface ModelActionOptions {
 	silent?: boolean;
