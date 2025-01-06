@@ -27,7 +27,7 @@ onUnmounted(() => {
 <template>
 	<UModal
 		:title="`Delete ${modelName || 'Model'}?`"
-		:description="`Confirm if you want to permanently delete ${modelName || 'this model'}`"
+		:description="' '"
 		:ui="{ overlay: 'fixed inset-0 bg-[var(--ui-bg)]/50 backdrop-blur-sm' }">
 		<template #body>
 			<div class="space-y-6">
