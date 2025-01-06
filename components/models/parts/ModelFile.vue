@@ -14,6 +14,21 @@ const client = new Ollama({
 const modelDetails = ref<OllamaModelDetails | null>(null);
 const isLoading = ref(true);
 const error = ref<string | null>(null);
+const isCopied = ref(false);
+
+const copyToClipboard = async () => {
+	if (modelDetails.value?.modelfile) {
+		try {
+			await navigator.clipboard.writeText(modelDetails.value.modelfile);
+			isCopied.value = true;
+			setTimeout(() => {
+				isCopied.value = false;
+			}, 2000);
+		} catch (err) {
+			console.error('Failed to copy:', err);
+		}
+	}
+};
 
 async function fetchModelDetails(name?: string) {
 	const modelName = name || props.modelName;
@@ -85,12 +100,23 @@ watch(
 				icon="i-heroicons-exclamation-triangle" />
 		</div>
 
-		<ScrollArea
+		<div
 			v-else-if="modelDetails"
-			max-height="400px"
-			class="bg-[var(--ui-bg-muted)] border border-[var(--ui-border)]"
-			:class="radiusClasses">
-			<pre class="text-sm p-2 whitespace-pre-wrap break-words font-mono">{{ modelDetails.modelfile }}</pre>
-		</ScrollArea>
+			class="relative">
+			<ScrollArea
+				max-height="400px"
+				class="bg-[var(--ui-bg-muted)] border border-[var(--ui-border)]"
+				:class="radiusClasses">
+				<pre class="text-sm p-2 whitespace-pre-wrap break-words font-mono">{{ modelDetails.modelfile }}</pre>
+			</ScrollArea>
+			<UButton
+				size="xl"
+				color="primary"
+				variant="solid"
+				square
+				:icon="isCopied ? 'i-heroicons-check' : 'i-heroicons-clipboard'"
+				class="absolute bottom-2 right-3 z-10 rounded-full opacity-80"
+				@click="copyToClipboard" />
+		</div>
 	</div>
 </template>
