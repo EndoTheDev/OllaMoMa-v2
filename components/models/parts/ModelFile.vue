@@ -16,16 +16,35 @@ const isLoading = ref(true);
 const error = ref<string | null>(null);
 const isCopied = ref(false);
 
+const toast = useToast();
+
 const copyToClipboard = async () => {
 	if (modelDetails.value?.modelfile) {
 		try {
 			await navigator.clipboard.writeText(modelDetails.value.modelfile);
 			isCopied.value = true;
+
+			// Add toast notification
+			toast.add({
+				title: 'Copied to clipboard',
+				description: 'Modelfile content has been copied',
+				icon: 'i-heroicons-clipboard-document-check',
+				color: 'primary',
+			});
+
 			setTimeout(() => {
 				isCopied.value = false;
 			}, 2000);
 		} catch (err) {
 			console.error('Failed to copy:', err);
+
+			// Add error toast
+			toast.add({
+				title: 'Copy failed',
+				description: 'Failed to copy modelfile content',
+				icon: 'i-heroicons-exclamation-triangle',
+				color: 'error',
+			});
 		}
 	}
 };
