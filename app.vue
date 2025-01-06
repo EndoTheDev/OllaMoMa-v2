@@ -11,7 +11,7 @@ const { fadeTransition, radiusClasses } = useUIUtils();
 			<div class="flex">
 				<AppSidebar>
 					<template #default>
-						<!-- <UButton
+						<UButton
 							:to="'/'"
 							:class="['h-10 flex w-full justify-center', radiusClasses]">
 							<UIcon
@@ -20,9 +20,9 @@ const { fadeTransition, radiusClasses } = useUIUtils();
 							<Transition v-bind="fadeTransition">
 								<span v-if="settingsStore.sidebarOpen">Chat</span>
 							</Transition>
-						</UButton> -->
+						</UButton>
 						<UButton
-							:to="'/'"
+							:to="'/models'"
 							:class="['h-10 flex w-full justify-center', radiusClasses]">
 							<UIcon
 								name="i-heroicons-circle-stack"
