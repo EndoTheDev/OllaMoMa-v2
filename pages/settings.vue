@@ -15,6 +15,8 @@
 				<!-- todo: wrap in one accordion -->
 				<SettingsOllamaURL />
 				<SettingsOllamaPort />
+				<!-- todo: wrap in one accordion -->
+				<SettingsResetSettings />
 			</div>
 		</template>
 		<template #footer>
