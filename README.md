@@ -1,5 +1,7 @@
 # Brain - Nuxt 3 + Nuxt UI v3 + Ollama Interface
 
+> ⚠️ **Work in Progress**: This project is under active development. Features and documentation may change frequently.
+
 A modern web interface for interacting with Ollama models, built with Nuxt 3 and Nuxt UI v3.
 
 ## Features
@@ -23,6 +25,24 @@ A modern web interface for interacting with Ollama models, built with Nuxt 3 and
 - [VueUse](https://vueuse.org/) - Collection of Vue Composition Utilities
 - [Ollama](https://ollama.ai/) - Run large language models locally
 
+## Project Structure
+
+```bash
+.
+├── assets/             # Static assets
+├── components/         # Vue components
+│   ├── models/         # models view related components
+│   │   ├── actions/
+│   │   └── parts/
+│   └── settings/       # settings view related components
+├── composables/        # Vue composables
+├── pages/             # File-based routing
+├── public/            # Static assets
+├── server/            # Server API routes
+├── stores/            # Pinia stores
+└── types/             # TypeScript types
+```
+
 ## Prerequisites
 
 - Node.js (v18+)
@@ -33,8 +53,8 @@ A modern web interface for interacting with Ollama models, built with Nuxt 3 and
 
 1. Clone the repository:
 ```bash
-git clone <your-repo-url>
-cd <your-repo-name>
+git clone https://github.com/EndoTheDev/OllaMoMa-v2.git
+cd OllaMoMa-v2
 ```
 
 2. Install dependencies:
@@ -130,3 +150,26 @@ These can be managed through the application's settings interface.
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Roadmap / Todo
+
+### Integrations
+- [ ] LangChain integration
+- [x] Ollama integration
+  - [x] List models
+  - [x] Copy models
+  - [x] Delete models
+  - [x] Show model details
+
+### Routes
+- [ ] Chat interface
+- [ ] Database/Files management
+- [ ] Knowledge graph visualization
+
+### Features
+- [ ] Chat UI implementation
+- [ ] Settings improvements
+  - [ ] Reset settings option
+  - [ ] Theme customization
+    - [ ] Color picker
+    - [ ] Modal border radius settings
