@@ -69,17 +69,6 @@ watch(
 
 <template>
 	<div class="pb-2">
-		<!-- <div class="flex items-center justify-between mt-2">
-			<h1 class="text-lg font-semibold">Modelfile</h1>
-			<UButton
-				v-if="modelDetails"
-				color="neutral"
-				variant="ghost"
-				icon="i-heroicons-arrow-path"
-				:loading="isLoading"
-				@click="() => fetchModelDetails(props.modelName)" />
-		</div> -->
-
 		<div
 			v-if="isLoading"
 			class="flex justify-center py-8">
