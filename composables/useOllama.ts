@@ -8,12 +8,14 @@ interface OllamaConfig {
 }
 
 type SortOption = 'name' | 'size' | 'modified';
+type SortDirection = 'asc' | 'desc';
 
 interface OllamaState {
 	models: OllamaModel[];
 	isLoading: boolean;
 	error: string | null;
 	sortBy: SortOption;
+	sortDirection: SortDirection;
 }
 
 export const useOllama = (config: Partial<OllamaConfig> = {}) => {
@@ -34,6 +36,7 @@ export const useOllama = (config: Partial<OllamaConfig> = {}) => {
 		isLoading: false,
 		error: null,
 		sortBy: 'modified',
+		sortDirection: 'asc',
 	}));
 
 	// Getters
@@ -41,6 +44,7 @@ export const useOllama = (config: Partial<OllamaConfig> = {}) => {
 	const isLoading = computed(() => state.value.isLoading);
 	const error = computed(() => state.value.error);
 	const sortBy = computed(() => state.value.sortBy);
+	const sortDirection = computed(() => state.value.sortDirection);
 
 	const getModelByName = computed(() => {
 		return (name: string) => state.value.models.find((model) => model.name === name);
@@ -50,14 +54,16 @@ export const useOllama = (config: Partial<OllamaConfig> = {}) => {
 
 	const sortedModels = computed(() => {
 		return [...state.value.models].sort((a, b) => {
+			const direction = state.value.sortDirection === 'asc' ? 1 : -1;
+
 			switch (state.value.sortBy) {
 				case 'name':
-					return a.name.localeCompare(b.name);
+					return direction * a.name.localeCompare(b.name);
 				case 'size':
-					return b.size - a.size;
+					return direction * (b.size - a.size);
 				case 'modified':
 				default:
-					return new Date(b.modified_at).getTime() - new Date(a.modified_at).getTime();
+					return direction * (new Date(b.modified_at).getTime() - new Date(a.modified_at).getTime());
 			}
 		});
 	});
@@ -159,7 +165,14 @@ export const useOllama = (config: Partial<OllamaConfig> = {}) => {
 	}
 
 	const setSortBy = (option: SortOption) => {
-		state.value.sortBy = option;
+		if (state.value.sortBy === option) {
+			// Toggle direction if same option is selected
+			state.value.sortDirection = state.value.sortDirection === 'desc' ? 'asc' : 'desc';
+		} else {
+			// Reset direction to asc for new option
+			state.value.sortBy = option;
+			state.value.sortDirection = 'asc';
+		}
 	};
 
 	return {
@@ -180,6 +193,7 @@ export const useOllama = (config: Partial<OllamaConfig> = {}) => {
 		deleteModel,
 
 		sortBy,
+		sortDirection,
 		setSortBy,
 	};
 };

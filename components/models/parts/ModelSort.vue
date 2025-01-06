@@ -3,18 +3,18 @@ const ollama = useOllama();
 
 const sortOptions = [
 	{
-		label: 'Sort by Name',
-		icon: 'i-lucide-text',
+		label: 'Name',
+		icon: 'i-lucide-arrow-up-a-z',
 		key: 'name' as const,
 	},
 	{
-		label: 'Sort by Size',
+		label: 'Size',
 		icon: 'i-lucide-database',
 		key: 'size' as const,
 	},
 	{
-		label: 'Sort by Last Modified',
-		icon: 'i-lucide-clock',
+		label: 'Last Modified',
+		icon: 'i-lucide-calendar-check-2',
 		key: 'modified' as const,
 	},
 ];
@@ -25,8 +25,25 @@ const items = computed(() => [
 		icon: option.icon,
 		onSelect: () => ollama.setSortBy(option.key),
 		active: ollama.sortBy.value === option.key,
+		trailing:
+			ollama.sortBy.value === option.key
+				? {
+						icon: ollama.sortDirection.value === 'desc' ? 'i-lucide-arrow-up' : 'i-lucide-arrow-down',
+						class: 'w-4 h-4',
+					}
+				: undefined,
 	})),
 ]);
+
+const buttonIcon = computed(() => {
+	if (ollama.sortBy.value === 'name') {
+		return ollama.sortDirection.value === 'desc' ? 'i-lucide-arrow-down-z-a' : 'i-lucide-arrow-down-a-z';
+	}
+	if (ollama.sortBy.value === 'size') {
+		return ollama.sortDirection.value === 'desc' ? 'i-lucide-arrow-up-narrow-wide' : 'i-lucide-arrow-down-wide-narrow';
+	}
+	return ollama.sortDirection.value === 'desc' ? 'i-lucide-calendar-arrow-down' : 'i-lucide-calendar-arrow-up';
+});
 </script>
 
 <template>
@@ -35,7 +52,7 @@ const items = computed(() => [
 			<UButton
 				color="neutral"
 				variant="ghost"
-				icon="i-lucide-sort-desc"
+				:icon="buttonIcon"
 				label="Sort" />
 		</UDropdownMenu>
 	</div>
