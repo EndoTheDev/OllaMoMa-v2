@@ -1,175 +1,136 @@
-# OllaMoMa v2 - Nuxt 3 + Nuxt UI v3 + Ollama Interface
-> ⚠️ **Work in Progress**: This project is under active development. Features and documentation may change frequently.
-> 🚧 **Note**: The project name "OllaMoMa" is tentative and may change as development progresses.
+# OllaMoMa v2
 
-A modern web interface for interacting with Ollama models, built with Nuxt 3 and Nuxt UI v3.
+> A modern web interface for interacting with Ollama models, built with Nuxt 3 and Nuxt UI v3.
+>
+> ⚠️ **Work in Progress**: This project is under active development.
 
-## Features
+## 🌟 Features
 
-- 🎨 Beautiful UI with Nuxt UI v3 components
-- 🌗 Dark/Light mode support
-- 🎨 Customizable theme colors
-- 🔄 Real-time Ollama model interactions
-- 📱 Responsive design
-- 🔍 Model search and sorting capabilities
+- 🎨 Modern UI with Nuxt UI v3 components
+- 🌗 Dark/Light mode with theme customization
+- 🔄 Real-time Ollama model management
+- 📱 Fully responsive design
+- 🔍 Advanced model search and sorting
 - ⚡ Type-safe development with TypeScript
 
-## Tech Stack
+## 🛠️ Tech Stack
 
-- [Nuxt 3](https://nuxt.com/) - The Intuitive Vue Framework
-- [Nuxt UI v3](https://ui.nuxt.com/) - Fully styled and customizable components
-- [Vue 3](https://vuejs.org/) - The Progressive JavaScript Framework
-- [TypeScript](https://www.typescriptlang.org/) - JavaScript with syntax for types
-- [Tailwind CSS](https://tailwindcss.com/) - A utility-first CSS framework
-- [Pinia](https://pinia.vuejs.org/) - The Vue Store that you will enjoy using
-- [VueUse](https://vueuse.org/) - Collection of Vue Composition Utilities
-- [Ollama](https://ollama.ai/) - Run large language models locally
+- **Frontend Framework**: [Nuxt 3](https://nuxt.com/)
+- **UI Components**: [Nuxt UI v3](https://ui.nuxt.com/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **State Management**: [Pinia](https://pinia.vuejs.org/)
+- **Utilities**: [VueUse](https://vueuse.org/)
+- **LLM Backend**: [Ollama](https://ollama.ai/)
 
-## Project Structure
-
-```bash
-.
-├── assets/             # Static assets
-├── components/         # Vue components
-│   ├── models/         # models view related components
-│   │   ├── actions/
-│   │   └── parts/
-│   └── settings/       # settings view related components
-├── composables/        # Vue composables
-├── pages/             # File-based routing
-├── public/            # Static assets
-├── server/            # Server API routes
-├── stores/            # Pinia stores
-└── types/             # TypeScript types
-```
-
-## Prerequisites
+## 📋 Prerequisites
 
 - Node.js (v18+)
 - Ollama installed and running locally
 - Git
+- Docker (optional, for containerized deployment)
 
-## Setup
+## 🚀 Quick Start
 
-1. Clone the repository:
-```bash
-git clone https://github.com/EndoTheDev/OllaMoMa-v2.git
-cd OllaMoMa-v2
+### Local Development
+
+1. **Clone and Install**
+   ```bash
+   git clone https://github.com/EndoTheDev/OllaMoMa-v2.git
+   cd OllaMoMa-v2
+   npm install  # or pnpm install / yarn install / bun install
+   ```
+
+2. **Start Development Server**
+   ```bash
+   npm run dev  # or pnpm dev / yarn dev / bun run dev
+   ```
+
+3. **Configure Ollama**
+   - Default settings: host: 127.0.0.1, port: 11434
+   - Adjust in application settings if needed
+
+### Docker Deployment
+
+1. **Using Docker**
+   ```bash
+   # Build the image
+   docker build -t ollamoma-v2 .
+   
+   # Run the container
+   docker run -d -p 3000:3000 --name ollamoma ollamoma-v2
+   ```
+
+2. **Using Docker Compose**
+   ```bash
+   # Start the application
+   docker compose up -d
+   
+   # Stop the application
+   docker compose down
+   ```
+
+3. **Important Docker Notes**
+   - Ensure Ollama is running on your host machine
+   - For Windows/macOS: Use `host.docker.internal` instead of `localhost` in Ollama URL settings
+   - For Linux: Use your host machine's IP address
+
+## 🏗️ Project Structure
+
+```
+.
+├── assets/          # Static assets
+├── components/      # Vue components
+├── composables/     # Vue composables
+├── pages/          # File-based routing
+├── server/         # Server API routes
+├── stores/         # Pinia stores
+└── types/          # TypeScript types
 ```
 
-2. Install dependencies:
-```bash
-# npm
-npm install
+## ⚙️ Configuration
 
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-3. Configure Ollama settings in the application (default: host: 127.0.0.1, port: 11434)
-
-## Development
-
-Start the development server:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-The application will be available at `http://localhost:3000`
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Preview the production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-## Configuration
-
-The application supports various configuration options:
-
-- Theme customization (colors, radius)
+Manage through the application's settings interface:
+- Theme colors and radius
 - Dark/Light mode
-- Ollama connection settings
-- Sidebar visibility
+- Ollama connection
+- UI preferences
 
-These can be managed through the application's settings interface.
+## 🔄 Development Workflow
 
-## Contributing
+### Production Build
+```bash
+npm run build   # Build for production
+npm run preview # Preview production build
+```
 
+### Contributing
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## License
+## 📝 Roadmap
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+### Current Progress
+- ✅ Ollama Integration
+  - ✅ Model listing
+  - ✅ Model copying
+  - ✅ Model deletion
+  - ✅ Model details
 
-## Roadmap / Todo
+### Upcoming Features
+- 🔄 LangChain integration
+- 💬 Chat interface
+- 📊 Knowledge graph visualization
+- 🎨 Enhanced theme customization
+  - Color picker
+  - Border radius settings
+- 🗃️ Database/Files management
 
-### Integrations
-- [ ] LangChain integration
-- [x] Ollama integration
-  - [x] List models
-  - [x] Copy models
-  - [x] Delete models
-  - [x] Show model details
+## 📄 License
 
-### Routes
-- [ ] Chat interface
-- [ ] Database/Files management
-- [ ] Knowledge graph visualization
+This project is licensed under the MIT License.
 
-### Features
-- [ ] Chat UI implementation
-- [ ] Settings improvements
-  - [ ] Reset settings option
-  - [ ] Theme customization
-    - [ ] Color picker
-    - [ ] Modal border radius settings
+---
+Built with ❤️ using [Nuxt 3](https://nuxt.com/) and [Nuxt UI v3](https://ui.nuxt.com/)
