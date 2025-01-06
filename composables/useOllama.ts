@@ -1,10 +1,19 @@
 import { Ollama } from 'ollama/browser';
 import { useSettingsStore } from '~/stores/settings';
-import type { OllamaModel, OllamaState, OllamaModelDetails } from '~/types/ollama';
+import type { OllamaModel, OllamaModelDetails } from '~/types/ollama';
 import { OllamaError } from '~/types/ollama';
 
 interface OllamaConfig {
 	host: string;
+}
+
+type SortOption = 'name' | 'size' | 'modified';
+
+interface OllamaState {
+	models: OllamaModel[];
+	isLoading: boolean;
+	error: string | null;
+	sortBy: SortOption;
 }
 
 export const useOllama = (config: Partial<OllamaConfig> = {}) => {
@@ -24,12 +33,14 @@ export const useOllama = (config: Partial<OllamaConfig> = {}) => {
 		models: [],
 		isLoading: false,
 		error: null,
+		sortBy: 'modified',
 	}));
 
 	// Getters
 	const models = computed(() => state.value.models);
 	const isLoading = computed(() => state.value.isLoading);
 	const error = computed(() => state.value.error);
+	const sortBy = computed(() => state.value.sortBy);
 
 	const getModelByName = computed(() => {
 		return (name: string) => state.value.models.find((model) => model.name === name);
@@ -39,7 +50,15 @@ export const useOllama = (config: Partial<OllamaConfig> = {}) => {
 
 	const sortedModels = computed(() => {
 		return [...state.value.models].sort((a, b) => {
-			return new Date(b.modified_at).getTime() - new Date(a.modified_at).getTime();
+			switch (state.value.sortBy) {
+				case 'name':
+					return a.name.localeCompare(b.name);
+				case 'size':
+					return b.size - a.size;
+				case 'modified':
+				default:
+					return new Date(b.modified_at).getTime() - new Date(a.modified_at).getTime();
+			}
 		});
 	});
 
@@ -139,6 +158,10 @@ export const useOllama = (config: Partial<OllamaConfig> = {}) => {
 		}
 	}
 
+	const setSortBy = (option: SortOption) => {
+		state.value.sortBy = option;
+	};
+
 	return {
 		// State exports
 		models,
@@ -155,5 +178,8 @@ export const useOllama = (config: Partial<OllamaConfig> = {}) => {
 		showModel,
 		copyModel,
 		deleteModel,
+
+		sortBy,
+		setSortBy,
 	};
 };
