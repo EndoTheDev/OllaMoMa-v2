@@ -1,6 +1,6 @@
-# Brain - Nuxt 3 + Nuxt UI v3 + Ollama Interface
-
+# OllaMoMa v2 - Nuxt 3 + Nuxt UI v3 + Ollama Interface
 > ⚠️ **Work in Progress**: This project is under active development. Features and documentation may change frequently.
+> 🚧 **Note**: The project name "OllaMoMa" is tentative and may change as development progresses.
 
 A modern web interface for interacting with Ollama models, built with Nuxt 3 and Nuxt UI v3.
 
