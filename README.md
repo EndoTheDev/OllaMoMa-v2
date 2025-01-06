@@ -1,11 +1,43 @@
-# Nuxt Minimal Starter
+# Brain - Nuxt 3 + Nuxt UI v3 + Ollama Interface
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+A modern web interface for interacting with Ollama models, built with Nuxt 3 and Nuxt UI v3.
+
+## Features
+
+- 🎨 Beautiful UI with Nuxt UI v3 components
+- 🌗 Dark/Light mode support
+- 🎨 Customizable theme colors
+- 🔄 Real-time Ollama model interactions
+- 📱 Responsive design
+- 🔍 Model search and sorting capabilities
+- ⚡ Type-safe development with TypeScript
+
+## Tech Stack
+
+- [Nuxt 3](https://nuxt.com/) - The Intuitive Vue Framework
+- [Nuxt UI v3](https://ui.nuxt.com/) - Fully styled and customizable components
+- [Vue 3](https://vuejs.org/) - The Progressive JavaScript Framework
+- [TypeScript](https://www.typescriptlang.org/) - JavaScript with syntax for types
+- [Tailwind CSS](https://tailwindcss.com/) - A utility-first CSS framework
+- [Pinia](https://pinia.vuejs.org/) - The Vue Store that you will enjoy using
+- [VueUse](https://vueuse.org/) - Collection of Vue Composition Utilities
+- [Ollama](https://ollama.ai/) - Run large language models locally
+
+## Prerequisites
+
+- Node.js (v18+)
+- Ollama installed and running locally
+- Git
 
 ## Setup
 
-Make sure to install dependencies:
+1. Clone the repository:
+```bash
+git clone <your-repo-url>
+cd <your-repo-name>
+```
 
+2. Install dependencies:
 ```bash
 # npm
 npm install
@@ -20,9 +52,11 @@ yarn install
 bun install
 ```
 
-## Development Server
+3. Configure Ollama settings in the application (default: host: 127.0.0.1, port: 11434)
 
-Start the development server on `http://localhost:3000`:
+## Development
+
+Start the development server:
 
 ```bash
 # npm
@@ -37,6 +71,8 @@ yarn dev
 # bun
 bun run dev
 ```
+
+The application will be available at `http://localhost:3000`
 
 ## Production
 
@@ -56,7 +92,7 @@ yarn build
 bun run build
 ```
 
-Locally preview production build:
+Preview the production build:
 
 ```bash
 # npm
@@ -72,4 +108,25 @@ yarn preview
 bun run preview
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+## Configuration
+
+The application supports various configuration options:
+
+- Theme customization (colors, radius)
+- Dark/Light mode
+- Ollama connection settings
+- Sidebar visibility
+
+These can be managed through the application's settings interface.
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
