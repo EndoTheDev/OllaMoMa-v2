@@ -9,16 +9,22 @@ const { isOpen, handleCancel, handleConfirm } = useConfirmationModal({
 	onCancel: () => emit('cancel'),
 });
 
+// Only add the event listener when the modal is open
+watch(isOpen, (newValue) => {
+	if (newValue) {
+		document.addEventListener('keyup', onKeyUp);
+	} else {
+		document.removeEventListener('keyup', onKeyUp);
+	}
+});
+
 const onKeyUp = (e: KeyboardEvent) => {
-	if (e.key === 'Enter' && isOpen.value) {
+	if (e.key === 'Enter') {
 		handleConfirm();
 	}
 };
 
-onMounted(() => {
-	document.addEventListener('keyup', onKeyUp);
-});
-
+// Cleanup on component unmount
 onUnmounted(() => {
 	document.removeEventListener('keyup', onKeyUp);
 });
