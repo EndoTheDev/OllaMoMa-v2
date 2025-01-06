@@ -4,13 +4,13 @@ const emit = defineEmits<{
 	(e: 'confirm' | 'cancel'): void;
 }>();
 
-const { handleCancel, handleConfirm } = useConfirmationModal({
+const { isOpen, handleCancel, handleConfirm } = useConfirmationModal({
 	onConfirm: () => emit('confirm'),
 	onCancel: () => emit('cancel'),
 });
 
 const onKeyUp = (e: KeyboardEvent) => {
-	if (e.key === 'Enter') {
+	if (e.key === 'Enter' && isOpen.value) {
 		handleConfirm();
 	}
 };
