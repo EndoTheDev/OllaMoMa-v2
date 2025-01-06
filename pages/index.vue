@@ -69,7 +69,7 @@ onMounted(async () => {
 			</div>
 		</template>
 		<template #footer>
-			<h1>FOOTER</h1>
+			<!--  -->
 		</template>
 	</BaseLayout>
 </template>
