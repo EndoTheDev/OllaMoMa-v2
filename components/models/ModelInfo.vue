@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { OllamaModel } from '~/types/ollama';
-const { fadeTransition, radiusClasses } = useUIUtils();
+const { radiusClasses } = useUIUtils();
 
 defineProps<{
 	model: OllamaModel;

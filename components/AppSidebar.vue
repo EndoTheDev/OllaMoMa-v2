@@ -12,8 +12,8 @@ const { fadeTransition, radiusClasses } = useUIUtils();
 			settingsStore.sidebarOpen ? 'w-56' : 'w-14',
 		]">
 		<UButton
-			@click="settingsStore.toggleSidebar"
-			:class="['h-10 flex w-full justify-center', radiusClasses]">
+			:class="['h-10 flex w-full justify-center', radiusClasses]"
+			@click="settingsStore.toggleSidebar">
 			<UIcon
 				name="i-heroicons-bars-3"
 				class="fixed left-4 w-6 h-6" />
@@ -31,8 +31,8 @@ const { fadeTransition, radiusClasses } = useUIUtils();
 	<!-- OVERLAY -->
 	<Transition v-bind="fadeTransition">
 		<div
-			@click="settingsStore.toggleSidebar"
 			v-show="settingsStore.sidebarOpen && !isSmallViewport"
-			class="fixed w-full h-full bg-[var(--ui-bg)]/50 backdrop-blur-sm z-40" />
+			class="fixed w-full h-full bg-[var(--ui-bg)]/50 backdrop-blur-sm z-40"
+			@click="settingsStore.toggleSidebar" />
 	</Transition>
 </template>

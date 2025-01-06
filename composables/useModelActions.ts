@@ -37,34 +37,18 @@ export function useModelActions() {
 	const copyModel = async (modelName: string, newName: string, options?: ModelActionOptions) => {
 		try {
 			await ollama.copyModel(modelName, newName);
-			handleSuccess(
-				'Model copied',
-				`Successfully copied ${modelName} to ${newName}`,
-				options
-			);
+			handleSuccess('Model copied', `Successfully copied ${modelName} to ${newName}`, options);
 		} catch (err) {
-			handleError(
-				err as OllamaError,
-				`Failed to copy ${modelName}`,
-				options
-			);
+			handleError(err as OllamaError, `Failed to copy ${modelName}`, options);
 		}
 	};
 
 	const deleteModel = async (modelName: string, options?: ModelActionOptions) => {
 		try {
 			await ollama.deleteModel(modelName);
-			handleSuccess(
-				'Model deleted',
-				`Successfully deleted ${modelName}`,
-				options
-			);
+			handleSuccess('Model deleted', `Successfully deleted ${modelName}`, options);
 		} catch (err) {
-			handleError(
-				err as OllamaError,
-				`Failed to delete ${modelName}`,
-				options
-			);
+			handleError(err as OllamaError, `Failed to delete ${modelName}`, options);
 		}
 	};
 
@@ -73,21 +57,13 @@ export function useModelActions() {
 			await copyModel(oldName, newName, { silent: true });
 			try {
 				await deleteModel(oldName, { silent: true });
-				handleSuccess(
-					'Model renamed',
-					`Successfully renamed ${oldName} to ${newName}`,
-					options
-				);
+				handleSuccess('Model renamed', `Successfully renamed ${oldName} to ${newName}`, options);
 			} catch (deleteError) {
 				await deleteModel(newName, { silent: true });
 				throw deleteError;
 			}
 		} catch (err) {
-			handleError(
-				err as OllamaError,
-				`Failed to rename ${oldName}`,
-				options
-			);
+			handleError(err as OllamaError, `Failed to rename ${oldName}`, options);
 		}
 	};
 
@@ -95,6 +71,6 @@ export function useModelActions() {
 		modal,
 		copyModel,
 		deleteModel,
-		renameModel
+		renameModel,
 	};
-} 
+}

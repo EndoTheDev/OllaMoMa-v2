@@ -17,11 +17,11 @@ export const neutralColorMap = {
 } as const;
 
 export const radiusMap = {
-	'none': '0',
-	'xs': '0.125',
-	'sm': '0.25',
-	'md': '0.375',
-	'lg': '0.5'
+	none: '0',
+	xs: '0.125',
+	sm: '0.25',
+	md: '0.375',
+	lg: '0.5',
 } as const;
 
 export interface ThemeColors {

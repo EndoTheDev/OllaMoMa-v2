@@ -3,7 +3,7 @@ import { computed, watch } from 'vue';
 import { useColorMode, useAppConfig } from '#imports';
 import { defineStore } from 'pinia';
 import type { SettingsState, ThemeColors, ThemeOption, NeutralOption, RadiusOption } from '~/types/settings';
-import { themeColorMap, neutralColorMap, radiusMap } from '~/types/settings';
+import { themeColorMap, neutralColorMap } from '~/types/settings';
 
 export const useSettingsStore = defineStore('settings', () => {
 	const colorMode = useColorMode();
@@ -17,7 +17,7 @@ export const useSettingsStore = defineStore('settings', () => {
 		neutral: 'neutral',
 		radius: 'md',
 		ollamaHost: '127.0.0.1',
-		ollamaPort: 11434
+		ollamaPort: 11434,
 	});
 
 	// Computed
@@ -41,7 +41,7 @@ export const useSettingsStore = defineStore('settings', () => {
 			warning: 'yellow',
 			success: 'green',
 			info: 'blue',
-			secondary: 'gray'
+			secondary: 'gray',
 		};
 		appConfig.ui.colors = colors;
 	}
@@ -111,7 +111,6 @@ export const useSettingsStore = defineStore('settings', () => {
 		setNeutral,
 		setRadius,
 		setOllamaHost,
-		setOllamaPort
+		setOllamaPort,
 	};
 });
-

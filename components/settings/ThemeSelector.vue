@@ -14,8 +14,8 @@ const { radiusClasses } = useUIUtils();
 			<p class="text-sm text-[var(--ui-text-muted)]">Choose your preferred primary color</p>
 		</div>
 		<URadioGroup
-			:model-value="settingsStore.currentTheme"
 			orientation="horizontal"
+			:model-value="settingsStore.currentTheme"
 			:items="[
 				{ value: 'blue', class: 'bg-blue-500' },
 				{ value: 'green', class: 'bg-green-500' },
@@ -25,15 +25,15 @@ const { radiusClasses } = useUIUtils();
 				{ value: 'pink', class: 'bg-pink-500' },
 				{ value: 'indigo', class: 'bg-indigo-500' },
 			]"
-			@update:model-value="
-				(value: string) =>
-					settingsStore.setTheme(value as 'blue' | 'green' | 'red' | 'yellow' | 'purple' | 'pink' | 'indigo')
-			"
 			:ui="{
 				wrapper: 'inline-flex flex-wrap gap-4',
 				container: 'hidden',
 				base: 'flex',
-			}">
+			}"
+			@update:model-value="
+				(value: string) =>
+					settingsStore.setTheme(value as 'blue' | 'green' | 'red' | 'yellow' | 'purple' | 'pink' | 'indigo')
+			">
 			<template #label="{ item, modelValue }">
 				<div
 					class="w-6 h-6 rounded-full transition-all duration-200 ring-2 ring-offset-2 dark:ring-offset-gray-900 hover:scale-110"

@@ -47,12 +47,12 @@ const revertChanges = () => {
 		<div class="flex items-center gap-2">
 			<UInput
 				type="number"
-				:model-value="currentPort"
-				placeholder="11434"
-				@update:model-value="updatePort"
 				:ui="{
 					base: 'w-full sm:w-64',
-				}" />
+				}"
+				:model-value="currentPort"
+				placeholder="11434"
+				@update:model-value="updatePort" />
 			<UButton
 				color="neutral"
 				variant="ghost"

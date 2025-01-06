@@ -15,7 +15,6 @@ const { radiusClasses } = useUIUtils();
 		</div>
 		<URadioGroup
 			:model-value="settingsStore.currentRadius"
-			orientation="horizontal"
 			:items="[
 				{ value: 'none', label: '0' },
 				{ value: 'xs', label: '0.125' },
@@ -23,12 +22,13 @@ const { radiusClasses } = useUIUtils();
 				{ value: 'md', label: '0.375' },
 				{ value: 'lg', label: '0.5' },
 			]"
-			@update:model-value="(value: string) => settingsStore.setRadius(value as 'none' | 'xs' | 'sm' | 'md' | 'lg')"
 			:ui="{
 				wrapper: 'inline-flex flex-wrap gap-4',
 				container: 'hidden',
 				base: 'flex',
-			}">
+			}"
+			orientation="horizontal"
+			@update:model-value="(value: string) => settingsStore.setRadius(value as 'none' | 'xs' | 'sm' | 'md' | 'lg')">
 			<template #label="{ item, modelValue }">
 				<div
 					class="w-6 h-6 bg-[var(--ui-primary)] transition-all duration-200 ring-2 ring-offset-2 dark:ring-offset-gray-900 hover:scale-110"

@@ -172,7 +172,6 @@ const onMouseUp = () => {
 			class="absolute right-0.5 top-0 h-full w-1.5 select-none bg-[var(--ui-text-dimmed)]/10">
 			<div
 				ref="thumb"
-				@mousedown="onMouseDown"
 				:class="[
 					'rounded-full cursor-pointer',
 					isDragging
@@ -181,7 +180,8 @@ const onMouseUp = () => {
 					isScrolling || isDragging
 						? 'opacity-100 transition-none'
 						: 'opacity-0 group-hover:opacity-100 transition-opacity duration-[100ms] group-hover:duration-[300ms]',
-				]" />
+				]"
+				@mousedown="onMouseDown" />
 		</div>
 	</div>
 </template>

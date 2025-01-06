@@ -15,7 +15,6 @@ const { radiusClasses } = useUIUtils();
 		</div>
 		<URadioGroup
 			:model-value="settingsStore.currentNeutral"
-			orientation="horizontal"
 			:items="[
 				{ value: 'slate', class: 'bg-slate-500' },
 				{ value: 'gray', class: 'bg-gray-500' },
@@ -23,14 +22,15 @@ const { radiusClasses } = useUIUtils();
 				{ value: 'neutral', class: 'bg-neutral-500' },
 				{ value: 'stone', class: 'bg-stone-500' },
 			]"
-			@update:model-value="
-				(value: string) => settingsStore.setNeutral(value as 'slate' | 'gray' | 'zinc' | 'neutral' | 'stone')
-			"
 			:ui="{
 				wrapper: 'inline-flex flex-wrap gap-4',
 				container: 'hidden',
 				base: 'flex',
-			}">
+			}"
+			orientation="horizontal"
+			@update:model-value="
+				(value: string) => settingsStore.setNeutral(value as 'slate' | 'gray' | 'zinc' | 'neutral' | 'stone')
+			">
 			<template #label="{ item, modelValue }">
 				<div
 					class="w-6 h-6 rounded-full transition-all duration-200 ring-2 ring-offset-2 dark:ring-offset-gray-900 hover:scale-110"

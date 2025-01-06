@@ -1,11 +1,10 @@
 <script setup lang="ts">
-const props = defineProps<{ modelName?: string }>();
+defineProps<{ modelName?: string }>();
 const emit = defineEmits<{
-	(e: 'confirm'): void;
-	(e: 'cancel'): void;
+	(e: 'confirm' | 'cancel'): void;
 }>();
 
-const { isOpen, handleCancel, handleConfirm } = useConfirmationModal({
+const { handleCancel, handleConfirm } = useConfirmationModal({
 	onConfirm: () => emit('confirm'),
 	onCancel: () => emit('cancel'),
 });

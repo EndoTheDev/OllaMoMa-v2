@@ -6,7 +6,7 @@ const props = defineProps<{
 	activePanel: 'info' | 'modelfile';
 }>();
 
-const emit = defineEmits<{
+defineEmits<{
 	'update:activePanel': ['info' | 'modelfile'];
 }>();
 

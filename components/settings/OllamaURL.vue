@@ -45,12 +45,12 @@ const revertChanges = () => {
 		</div>
 		<div class="flex items-center gap-2">
 			<UInput
-				:model-value="currentHost"
-				placeholder="127.0.0.1"
-				@update:model-value="updateHost"
 				:ui="{
 					base: 'w-full sm:w-64',
-				}" />
+				}"
+				:model-value="currentHost"
+				placeholder="127.0.0.1"
+				@update:model-value="updateHost" />
 			<UButton
 				color="neutral"
 				variant="ghost"
