@@ -2,6 +2,7 @@
 const ollama = useOllama();
 const { radiusClasses } = useUIUtils();
 const activePanels = ref<Record<string, 'info' | 'modelfile'>>({});
+const searchQuery = ref('');
 
 const getActivePanel = (modelName: string) => {
 	return activePanels.value[modelName] || 'info';
@@ -10,6 +11,13 @@ const getActivePanel = (modelName: string) => {
 const setActivePanel = (modelName: string, panel: 'info' | 'modelfile') => {
 	activePanels.value[modelName] = panel;
 };
+
+const filteredModels = computed(() => {
+	if (!searchQuery.value.trim()) return ollama.models.value;
+
+	const query = searchQuery.value.toLowerCase();
+	return ollama.models.value.filter((model) => model.name.toLowerCase().includes(query));
+});
 
 onMounted(async () => {
 	try {
@@ -23,7 +31,7 @@ onMounted(async () => {
 <template>
 	<BaseLayout>
 		<template #header>
-			<h1>Models</h1>
+			<ModelsModelSearchSort v-model:search="searchQuery" />
 		</template>
 		<template #default>
 			<div
@@ -41,7 +49,7 @@ onMounted(async () => {
 					v-if="ollama.hasModels.value"
 					class="space-y-1">
 					<li
-						v-for="model in ollama.models.value"
+						v-for="model in filteredModels"
 						:key="model.name"
 						:class="[
 							'p-3 py-2 border border-[var(--ui-border)] hover:bg-[var(--ui-bg-muted)]/50 hover:drop-shadow-sm transition-colors duration-500 ease-out',
