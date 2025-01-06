@@ -9,16 +9,19 @@ export const useSettingsStore = defineStore('settings', () => {
 	const colorMode = useColorMode();
 	const appConfig = useAppConfig();
 
-	// State
-	const settings = useLocalStorage<SettingsState>('app:settings', {
+	// Default settings
+	const defaultSettings: SettingsState = {
 		sidebarOpen: true,
-		colorMode: colorMode.preference as SettingsState['colorMode'],
+		colorMode: 'dark',
 		theme: 'green',
 		neutral: 'neutral',
 		radius: 'md',
 		ollamaHost: '127.0.0.1',
 		ollamaPort: 11434,
-	});
+	};
+
+	// State
+	const settings = useLocalStorage<SettingsState>('app:settings', defaultSettings);
 
 	// Computed
 	const sidebarOpen = computed(() => settings.value.sidebarOpen);
@@ -77,6 +80,12 @@ export const useSettingsStore = defineStore('settings', () => {
 		settings.value.ollamaPort = port;
 	}
 
+	function resetSettings(): void {
+		settings.value = { ...defaultSettings };
+		colorMode.preference = defaultSettings.colorMode;
+		updateThemeColors(defaultSettings.theme, defaultSettings.neutral);
+	}
+
 	// Initialize settings
 	function initializeSettings(): void {
 		colorMode.preference = settings.value.colorMode;
@@ -112,5 +121,6 @@ export const useSettingsStore = defineStore('settings', () => {
 		setRadius,
 		setOllamaHost,
 		setOllamaPort,
+		resetSettings,
 	};
 });
