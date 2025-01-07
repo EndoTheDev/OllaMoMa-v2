@@ -41,7 +41,7 @@ const getTransitionClasses = computed(() => {
 			trigger: 'text-base font-bold py-2 cursor-pointer',
 		}">
 		<template #model-details>
-			<ModelsActionsActionMenu
+			<ModelsActionsMenu
 				class="py-2"
 				:active-panel="activePanel"
 				:model-name="model.name"
