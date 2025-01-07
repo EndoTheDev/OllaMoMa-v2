@@ -10,9 +10,9 @@ const emit = defineEmits<{
 
 <template>
 	<div class="flex items-center h-full gap-2 p-2">
-		<ModelsPartsModelSearch
+		<ModelsSearchModelSearch
 			:model-value="search"
 			@update:model-value="(value: string) => emit('update:search', value)" />
-		<ModelsPartsModelSort />
+		<ModelsSearchModelSort />
 	</div>
 </template>

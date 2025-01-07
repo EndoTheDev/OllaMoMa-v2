@@ -122,12 +122,12 @@ watch(
 		<div
 			v-else-if="modelDetails"
 			class="relative">
-			<ScrollArea
+			<UiScrollArea
 				max-height="400px"
 				class="bg-[var(--ui-bg-muted)] border border-[var(--ui-border)]"
 				:class="radiusClasses">
 				<pre class="text-sm p-2 whitespace-pre-wrap break-words font-mono">{{ modelDetails.modelfile }}</pre>
-			</ScrollArea>
+			</UiScrollArea>
 			<UButton
 				size="xl"
 				color="primary"
