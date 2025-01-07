@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useSettingsStore } from '~/stores/settings';
 const settingsStore = useSettingsStore();
 const isSmallViewport = useMediaQuery('(min-width: 768px)');
 const { fadeTransition, radiusClasses } = useUIUtils();

@@ -1,4 +1,6 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import ScrollArea from '~/components/ui/ScrollArea.vue';
+</script>
 
 <template>
 	<div class="flex flex-col min-h-screen max-w-3xl w-full md:border-x md:border-[var(--ui-border)]">
