@@ -31,7 +31,7 @@ onMounted(async () => {
 <template>
 	<BaseLayout>
 		<template #header>
-			<ModelsModelSearchSort v-model:search="searchQuery" />
+			<ModelsSearchModelSearchSort v-model:search="searchQuery" />
 		</template>
 		<template #default>
 			<div

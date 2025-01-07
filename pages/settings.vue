@@ -1,3 +1,13 @@
+<script setup lang="ts">
+import DarkMode from '~/components/settings/appearance/DarkMode.vue';
+import ThemeSelector from '~/components/settings/appearance/ThemeSelector.vue';
+import NeutralSelector from '~/components/settings/appearance/NeutralSelector.vue';
+import BorderSelector from '~/components/settings/appearance/BorderSelector.vue';
+import OllamaURL from '~/components/settings/connection/OllamaURL.vue';
+import OllamaPort from '~/components/settings/connection/OllamaPort.vue';
+import ResetSettings from '~/components/settings/ResetSettings.vue';
+</script>
+
 <template>
 	<BaseLayout>
 		<template #header>
@@ -8,15 +18,15 @@
 		<template #default>
 			<div class="space-y-1">
 				<!-- todo: wrap in one accordion -->
-				<SettingsDarkMode />
-				<SettingsThemeSelector />
-				<SettingsNeutralSelector />
-				<SettingsBorderSelector />
+				<DarkMode />
+				<ThemeSelector />
+				<NeutralSelector />
+				<BorderSelector />
 				<!-- todo: wrap in one accordion -->
-				<SettingsOllamaURL />
-				<SettingsOllamaPort />
+				<OllamaURL />
+				<OllamaPort />
 				<!-- todo: wrap in one accordion -->
-				<SettingsResetSettings />
+				<ResetSettings />
 			</div>
 		</template>
 		<template #footer>

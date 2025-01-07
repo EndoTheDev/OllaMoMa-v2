@@ -41,11 +41,11 @@ const getTransitionClasses = computed(() => {
 			trigger: 'text-base font-bold py-2 cursor-pointer',
 		}">
 		<template #model-details>
-			<ModelsPartsActionMenu
+			<ModelsActionsActionMenu
 				class="py-2"
 				:active-panel="activePanel"
 				:model-name="model.name"
-				@update:active-panel="(panel) => $emit('update:activePanel', panel)" />
+				@update:active-panel="(panel: 'info' | 'modelfile') => $emit('update:activePanel', panel)" />
 			<div class="relative">
 				<Transition
 					mode="out-in"
@@ -55,11 +55,11 @@ const getTransitionClasses = computed(() => {
 					:leave-active-class="getTransitionClasses.leaveActive"
 					:leave-from-class="getTransitionClasses.leaveFrom"
 					:leave-to-class="getTransitionClasses.leaveTo">
-					<ModelsPartsModelInfo
+					<ModelsDetailsModelInfo
 						v-if="activePanel === 'info'"
 						:key="'info-' + model.name"
 						:model="model" />
-					<ModelsPartsModelFile
+					<ModelsDetailsModelFile
 						v-else
 						:key="'modelfile-' + model.name"
 						:model-name="model.name" />
