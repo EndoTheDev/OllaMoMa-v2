@@ -33,13 +33,22 @@ const messages = ref<{ role: 'user' | 'assistant'; content: string }[]>([
 			'Common challenges include requiring large amounts of high-quality training data, computational intensity, potential overfitting where the model performs well on training data but poorly on new data, and the "black box" nature making it difficult to understand how the network reaches its decisions.',
 	},
 ]);
+
+const selectedModel = ref<string>('');
+
+const handleModelSelect = (model: string) => {
+	console.log('Selected model:', model);
+	selectedModel.value = model;
+};
 </script>
 
 <template>
 	<BaseLayout>
 		<template #header>
-			<div class="text-xl flex items-center p-5 h-full">
-				<h1>Chat WIP</h1>
+			<div class="text-xl flex items-center p-2 h-full">
+				<ChatModelDropdown
+					v-model="selectedModel"
+					@update:model-value="handleModelSelect" />
 			</div>
 		</template>
 		<template #default>
