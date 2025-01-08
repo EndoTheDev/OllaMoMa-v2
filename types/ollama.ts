@@ -23,12 +23,6 @@ export interface OllamaModel {
 	details?: ModelDetails;
 }
 
-export interface OllamaState {
-	models: OllamaModel[];
-	isLoading: boolean;
-	error: string | null;
-}
-
 export class OllamaError extends Error {
 	constructor(
 		message: string,

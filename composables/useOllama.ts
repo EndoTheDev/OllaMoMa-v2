@@ -1,5 +1,5 @@
 import { Ollama } from 'ollama/browser';
-import type { GenerateRequest, GenerateResponse } from 'ollama/browser';
+import type { GenerateRequest, GenerateResponse, CopyRequest, DeleteRequest } from 'ollama/browser';
 import { useSettingsStore } from '~/stores/settings';
 import type { OllamaModel, OllamaModelDetails } from '~/types/ollama';
 import { OllamaError } from '~/types/ollama';
@@ -113,7 +113,8 @@ export const useOllama = (config: Partial<OllamaConfig> = {}) => {
 		state.value.error = null;
 
 		try {
-			await client.copy({ source, destination });
+			const request: CopyRequest = { source, destination };
+			await client.copy(request);
 			await fetchModels();
 		} catch (err) {
 			const error = new OllamaError(`Failed to copy model from ${source} to ${destination}`, err);
@@ -130,7 +131,8 @@ export const useOllama = (config: Partial<OllamaConfig> = {}) => {
 		state.value.error = null;
 
 		try {
-			await client.delete({ model: name });
+			const request: DeleteRequest = { model: name };
+			await client.delete(request);
 			await fetchModels();
 		} catch (err) {
 			const error = new OllamaError(`Failed to delete model ${name}`, err);
