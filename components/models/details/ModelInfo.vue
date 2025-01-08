@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { OllamaModel } from '~/types/ollama';
 const { radiusClasses } = useUIUtils();
+const { formatSize } = useUtils();
 
 defineProps<{
 	model: OllamaModel;
@@ -25,13 +26,7 @@ defineProps<{
 			<div class="flex flex-wrap items-center gap-3">
 				<span class="text-base w-36">Size:</span>
 				<span class="text-[var(--ui-text-muted)] text-base">
-					{{
-						model.size >= 1024 * 1024 * 1024
-							? `${(model.size / 1024 / 1024 / 1024).toFixed(2)} GB`
-							: model.size >= 1024 * 1024
-								? `${(model.size / 1024 / 1024).toFixed(2)} MB`
-								: `${(model.size / 1024).toFixed(2)} KB`
-					}}
+					{{ formatSize(model.size) }}
 				</span>
 			</div>
 
