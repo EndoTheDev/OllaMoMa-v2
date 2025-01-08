@@ -12,7 +12,7 @@
 				</div>
 			</UiScrollArea>
 		</div>
-		<div class="min-h-12">
+		<div class="h-12">
 			<slot name="footer" />
 		</div>
 	</div>
