@@ -46,7 +46,7 @@ const getRoleIcon = (role: 'user' | 'assistant') => {
 						? 'bg-[var(--ui-bg-accented)] text-[var(--ui-text-highlighted)]'
 						: 'bg-[var(--ui-bg-muted)] text-[var(--ui-text)]',
 				]">
-				<p class="text-sm">{{ message.content }}</p>
+				<p>{{ message.content }}</p>
 			</div>
 		</div>
 	</div>

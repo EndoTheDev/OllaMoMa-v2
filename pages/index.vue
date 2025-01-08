@@ -92,6 +92,7 @@ const handleSubmit = async () => {
 					variant="ghost"
 					color="primary"
 					size="lg"
+					:disabled="!messages.length"
 					@click="handleClear">
 					Clear
 				</UButton>
