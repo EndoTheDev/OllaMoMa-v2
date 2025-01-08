@@ -2,7 +2,6 @@
 import { useOllama } from '~/composables/useOllama';
 import { useChatStore } from '~/stores/chat';
 
-const selectedModel = ref<string>('');
 const message = ref<string>('');
 const isLoading = ref(false);
 const currentResponse = ref<string>('');
@@ -11,14 +10,14 @@ const chatStore = useChatStore();
 const { streamChat } = useOllama();
 
 // Computed properties for validation
-const isModelSelected = computed(() => Boolean(selectedModel.value));
 const isMessageValid = computed(() => Boolean(message.value.trim()));
-const canSubmit = computed(() => isModelSelected.value && isMessageValid.value && !isLoading.value);
+const canSubmit = computed(() => chatStore.isModelSelected && isMessageValid.value && !isLoading.value);
 
-const handleModelSelect = (model: string) => {
-	console.log('Selected model:', model);
-	selectedModel.value = model;
-};
+// Add this computed property for two-way binding
+const selectedModel = computed({
+	get: () => chatStore.selectedModel,
+	set: (value: string) => chatStore.setSelectedModel(value),
+});
 
 const handleClear = () => {
 	chatStore.clearMessages();
@@ -45,7 +44,7 @@ const handleSubmit = async () => {
 	try {
 		// Prepare chat request
 		const request = {
-			model: selectedModel.value,
+			model: chatStore.selectedModel,
 			messages: chatStore.messages,
 			stream: true as const,
 		};
@@ -86,9 +85,7 @@ const handleSubmit = async () => {
 	<BaseLayout>
 		<template #header>
 			<div class="text-xl flex items-center p-2 h-full">
-				<ChatModelDropdown
-					v-model="selectedModel"
-					@update:model-value="handleModelSelect" />
+				<ChatModelDropdown v-model="selectedModel" />
 				<UButton
 					variant="ghost"
 					color="primary"
@@ -108,13 +105,19 @@ const handleSubmit = async () => {
 					<UInput
 						v-model="message"
 						variant="ghost"
-						:placeholder="isModelSelected ? 'Ask a question...' : 'Please select a model first'"
+						:placeholder="chatStore.isModelSelected ? 'Ask a question...' : 'Please select a model first'"
 						class="w-full"
 						autofocus
-						:disabled="isLoading || !isModelSelected"
+						:disabled="isLoading || !chatStore.isModelSelected"
 						@keyup.enter="handleSubmit" />
 					<UTooltip
-						:text="!isModelSelected ? 'Please select a model first' : !isMessageValid ? 'Please enter a message' : ''"
+						:text="
+							!chatStore.isModelSelected
+								? 'Please select a model first'
+								: !isMessageValid
+									? 'Please enter a message'
+									: ''
+						"
 						:disabled="canSubmit">
 						<UButton
 							variant="ghost"
