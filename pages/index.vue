@@ -54,7 +54,7 @@ const handleSubmit = () => {
 			<div class="text-xl flex items-center p-2 h-full">
 				<UForm
 					:state="formState"
-					class="flex w-full gap-2"
+					class="flex w-full gap-1"
 					@submit="handleSubmit">
 					<UInput
 						v-model="message"

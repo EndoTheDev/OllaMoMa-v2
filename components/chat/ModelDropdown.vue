@@ -66,7 +66,7 @@ const handleOpen = async () => {
 			<template #leading>
 				<UIcon
 					name="i-lucide-box"
-					class="h-5 w-5 text-primary-500 dark:text-primary-400" />
+					class="h-5 w-5 text-[var(--ui-text)]" />
 			</template>
 
 			<!-- Custom item template -->
