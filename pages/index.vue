@@ -5,6 +5,7 @@ import { useChatStore } from '~/stores/chat';
 const message = ref<string>('');
 const isLoading = ref(false);
 const currentResponse = ref<string>('');
+const messageInput = ref();
 
 const chatStore = useChatStore();
 const { streamChat } = useOllama();
@@ -19,8 +20,45 @@ const selectedModel = computed({
 	set: (value: string) => chatStore.setSelectedModel(value),
 });
 
+// Focus helper function
+const focusInput = () => {
+	// Try multiple focus strategies
+	if (messageInput.value) {
+		// Try the exposed focus method
+		if (typeof messageInput.value.focus === 'function') {
+			messageInput.value.focus();
+		}
+		// Try accessing the input element
+		else if (messageInput.value.input) {
+			messageInput.value.input.focus();
+		}
+		// Try finding the input element
+		else {
+			const inputEl = messageInput.value.$el?.querySelector('input');
+			if (inputEl) inputEl.focus();
+		}
+	}
+};
+
+// Focus input on mount with multiple attempts
+onMounted(() => {
+	// Immediate attempt
+	focusInput();
+
+	// Attempt after a short delay
+	setTimeout(focusInput, 100);
+
+	// Attempt after nextTick
+	nextTick(focusInput);
+
+	// Final attempt after a longer delay
+	setTimeout(focusInput, 500);
+});
+
 const handleClear = () => {
 	chatStore.clearMessages();
+	// Re-focus input after clearing
+	nextTick(focusInput);
 };
 
 const handleSubmit = async () => {
@@ -77,6 +115,8 @@ const handleSubmit = async () => {
 	} finally {
 		isLoading.value = false;
 		currentResponse.value = '';
+		// Refocus input after response is complete
+		nextTick(focusInput);
 	}
 };
 </script>
@@ -103,12 +143,13 @@ const handleSubmit = async () => {
 			<div class="text-xl flex items-center p-2 h-full">
 				<div class="flex w-full gap-1">
 					<UInput
+						ref="messageInput"
 						v-model="message"
 						variant="ghost"
 						:placeholder="chatStore.isModelSelected ? 'Ask a question...' : 'Please select a model first'"
 						class="w-full"
-						autofocus
 						:disabled="isLoading || !chatStore.isModelSelected"
+						autofocus
 						@keyup.enter="handleSubmit" />
 					<UTooltip
 						:text="
