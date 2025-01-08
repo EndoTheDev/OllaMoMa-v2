@@ -2,78 +2,32 @@
 import { useOllama } from '~/composables/useOllama';
 import { useChatStore } from '~/stores/chat';
 
-const message = ref<string>('');
 const isLoading = ref(false);
 const currentResponse = ref<string>('');
-const messageInput = ref();
+const chatInput = ref();
 
 const chatStore = useChatStore();
 const { streamChat } = useOllama();
 
-// Computed properties for validation
-const isMessageValid = computed(() => Boolean(message.value.trim()));
-const canSubmit = computed(() => chatStore.isModelSelected && isMessageValid.value && !isLoading.value);
-
-// Add this computed property for two-way binding
+// Computed property for two-way binding
 const selectedModel = computed({
 	get: () => chatStore.selectedModel,
 	set: (value: string) => chatStore.setSelectedModel(value),
 });
 
-// Focus helper function
-const focusInput = () => {
-	// Try multiple focus strategies
-	if (messageInput.value) {
-		// Try the exposed focus method
-		if (typeof messageInput.value.focus === 'function') {
-			messageInput.value.focus();
-		}
-		// Try accessing the input element
-		else if (messageInput.value.input) {
-			messageInput.value.input.focus();
-		}
-		// Try finding the input element
-		else {
-			const inputEl = messageInput.value.$el?.querySelector('input');
-			if (inputEl) inputEl.focus();
-		}
-	}
-};
-
-// Focus input on mount with multiple attempts
-onMounted(() => {
-	// Immediate attempt
-	focusInput();
-
-	// Attempt after a short delay
-	setTimeout(focusInput, 100);
-
-	// Attempt after nextTick
-	nextTick(focusInput);
-
-	// Final attempt after a longer delay
-	setTimeout(focusInput, 500);
-});
-
 const handleClear = () => {
 	chatStore.clearMessages();
-	// Re-focus input after clearing
-	nextTick(focusInput);
+	nextTick(() => chatInput.value?.focus());
 };
 
-const handleSubmit = async () => {
-	if (!canSubmit.value) return;
-
+const handleSubmit = async (userInput: string) => {
 	const userMessage = {
 		role: 'user' as const,
-		content: message.value.trim(),
+		content: userInput,
 	};
 
 	// Add user message to chat
 	chatStore.addMessage(userMessage);
-
-	// Clear input
-	message.value = '';
 
 	// Set loading state
 	isLoading.value = true;
@@ -115,6 +69,7 @@ const handleSubmit = async () => {
 	} finally {
 		isLoading.value = false;
 		currentResponse.value = '';
+		nextTick(() => chatInput.value?.focus());
 	}
 };
 </script>
@@ -139,37 +94,10 @@ const handleSubmit = async () => {
 		</template>
 		<template #footer>
 			<div class="text-xl flex items-center p-2 h-full">
-				<div class="flex w-full gap-1">
-					<UInput
-						ref="messageInput"
-						v-model="message"
-						size="lg"
-						variant="ghost"
-						:placeholder="chatStore.isModelSelected ? 'Ask a question...' : 'Please select a model first'"
-						class="w-full"
-						:disabled="isLoading || !chatStore.isModelSelected"
-						autofocus
-						@keyup.enter="handleSubmit" />
-					<UTooltip
-						:text="
-							!chatStore.isModelSelected
-								? 'Please select a model first'
-								: !isMessageValid
-									? 'Please enter a message'
-									: ''
-						"
-						:disabled="canSubmit">
-						<UButton
-							variant="ghost"
-							color="primary"
-							size="lg"
-							:loading="isLoading"
-							:disabled="!canSubmit"
-							@click="handleSubmit">
-							{{ isLoading ? 'Thinking...' : 'Send' }}
-						</UButton>
-					</UTooltip>
-				</div>
+				<ChatInput
+					ref="chatInput"
+					:is-loading="isLoading"
+					@submit="handleSubmit" />
 			</div>
 		</template>
 	</BaseLayout>
