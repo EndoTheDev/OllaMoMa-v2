@@ -1,7 +1,18 @@
 <script setup lang="ts">
+import { useOllama } from '~/composables/useOllama';
+
 const selectedModel = ref<string>('');
 const messages = ref<{ role: 'user' | 'assistant'; content: string }[]>([]);
 const message = ref<string>('');
+const isLoading = ref(false);
+const currentResponse = ref<string>('');
+
+const { streamChat } = useOllama();
+
+// Computed properties for validation
+const isModelSelected = computed(() => Boolean(selectedModel.value));
+const isMessageValid = computed(() => Boolean(message.value.trim()));
+const canSubmit = computed(() => isModelSelected.value && isMessageValid.value && !isLoading.value);
 
 const handleModelSelect = (model: string) => {
 	console.log('Selected model:', model);
@@ -12,21 +23,61 @@ const handleClear = () => {
 	messages.value = [];
 };
 
-const handleSubmit = () => {
-	if (!message.value.trim()) return;
+const handleSubmit = async () => {
+	if (!canSubmit.value) return;
 
-	messages.value.push({
-		role: 'user',
+	const userMessage = {
+		role: 'user' as const,
 		content: message.value.trim(),
-	});
+	};
 
-	// mock response
-	messages.value.push({
-		role: 'assistant',
-		content: 'Hello! I am a helpful assistant.',
-	});
+	// Add user message to chat
+	messages.value.push(userMessage);
 
+	// Clear input
 	message.value = '';
+
+	// Set loading state
+	isLoading.value = true;
+	currentResponse.value = '';
+
+	try {
+		// Prepare chat request
+		const request = {
+			model: selectedModel.value,
+			messages: messages.value,
+			stream: true as const,
+		};
+
+		// Get streaming response from API
+		const stream = await streamChat(request);
+
+		// Create placeholder for assistant's response
+		messages.value.push({
+			role: 'assistant',
+			content: '',
+		});
+
+		// Process the stream
+		for await (const part of stream) {
+			if (part.message?.content) {
+				// Update the current response
+				currentResponse.value += part.message.content;
+				// Update the last message in the chat
+				messages.value[messages.value.length - 1].content = currentResponse.value;
+			}
+		}
+	} catch (err) {
+		console.error('Chat error:', err);
+		// Show error message
+		messages.value.push({
+			role: 'assistant',
+			content: 'Sorry, I encountered an error while processing your request.',
+		});
+	} finally {
+		isLoading.value = false;
+		currentResponse.value = '';
+	}
 };
 </script>
 
@@ -55,18 +106,24 @@ const handleSubmit = () => {
 					<UInput
 						v-model="message"
 						variant="ghost"
-						placeholder="Ask a question..."
+						:placeholder="isModelSelected ? 'Ask a question...' : 'Please select a model first'"
 						class="w-full"
 						autofocus
+						:disabled="isLoading || !isModelSelected"
 						@keyup.enter="handleSubmit" />
-					<UButton
-						variant="ghost"
-						color="primary"
-						size="lg"
-						:disabled="!message.trim()"
-						@click="handleSubmit">
-						Send
-					</UButton>
+					<UTooltip
+						:text="!isModelSelected ? 'Please select a model first' : !isMessageValid ? 'Please enter a message' : ''"
+						:disabled="canSubmit">
+						<UButton
+							variant="ghost"
+							color="primary"
+							size="lg"
+							:loading="isLoading"
+							:disabled="!canSubmit"
+							@click="handleSubmit">
+							{{ isLoading ? 'Thinking...' : 'Send' }}
+						</UButton>
+					</UTooltip>
 				</div>
 			</div>
 		</template>

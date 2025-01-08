@@ -124,4 +124,71 @@ describe('useOllama Integration', () => {
 			await expect(ollama.chat(request)).rejects.toThrow();
 		});
 	});
+
+	describe('streamGenerate', () => {
+		it('should stream generate from Ollama API', async () => {
+			const ollama = useOllama({
+				host: 'http://localhost:11434',
+			});
+
+			const request = {
+				model: 'llama3.2:3b',
+				prompt: 'Count from 1 to 3',
+				stream: true as const,
+			};
+
+			const stream = await ollama.streamGenerate(request);
+			const responses = [];
+
+			for await (const response of stream) {
+				responses.push(response);
+				// Verify response structure for each chunk
+				expect(response).toBeDefined();
+				expect(response.model).toBe('llama3.2:3b');
+				expect(typeof response.created_at).toBe('string');
+				expect(new Date(response.created_at)).toBeInstanceOf(Date);
+				expect(response.response).toBeDefined();
+				expect(typeof response.response).toBe('string');
+			}
+
+			// Verify we got multiple chunks
+			expect(responses.length).toBeGreaterThan(0);
+			// Verify the last response is marked as done
+			expect(responses[responses.length - 1].done).toBe(true);
+		}, 30000);
+	});
+
+	describe('streamChat', () => {
+		it('should stream chat from Ollama API', async () => {
+			const ollama = useOllama({
+				host: 'http://localhost:11434',
+			});
+
+			const request = {
+				model: 'llama3.2:3b',
+				messages: [{ role: 'user', content: 'Count from 1 to 3' }],
+				stream: true as const,
+			};
+
+			const stream = await ollama.streamChat(request);
+			const responses = [];
+
+			for await (const response of stream) {
+				responses.push(response);
+				// Verify response structure for each chunk
+				expect(response).toBeDefined();
+				expect(response.model).toBe('llama3.2:3b');
+				expect(typeof response.created_at).toBe('string');
+				expect(new Date(response.created_at)).toBeInstanceOf(Date);
+				expect(response.message).toBeDefined();
+				expect(response.message.role).toBe('assistant');
+				expect(typeof response.message.content).toBe('string');
+			}
+
+			// Verify we got multiple chunks
+			expect(responses.length).toBeGreaterThan(0);
+			// Verify the last response is marked as done
+			expect(responses[responses.length - 1].done).toBe(true);
+		}, 30000);
+	});
 });
