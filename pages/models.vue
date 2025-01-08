@@ -79,8 +79,9 @@ onMounted(async () => {
 				<USelectMenu
 					v-model="selectedSort"
 					:items="sortOptions"
+					size="lg"
 					variant="ghost"
-					class="min-w-[140px]"
+					class="min-w-36"
 					:leading-icon="selectedSort.icon"
 					:search-input="false" />
 			</div>
