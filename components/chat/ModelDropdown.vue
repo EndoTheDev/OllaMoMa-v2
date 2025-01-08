@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { sortedModels, fetchModels, isLoading } = useOllama();
+const { models, fetchModels, isLoading } = useOllama();
 const { formatSize } = useUtils();
 
 interface ModelOption {
@@ -10,7 +10,7 @@ interface ModelOption {
 
 // Transform models into options with formatted labels
 const modelOptions = computed<ModelOption[]>(() =>
-	sortedModels.value.map((model) => ({
+	models.value.map((model) => ({
 		name: model.name,
 		size: model.size,
 		label: `${model.name} (${formatSize(model.size)})`,
@@ -37,7 +37,7 @@ onMounted(async () => {
 
 // Handle menu open to refresh models
 const handleOpen = async () => {
-	if (!sortedModels.value.length) {
+	if (!models.value.length) {
 		await fetchModels();
 	}
 };
