@@ -4,6 +4,20 @@ const { radiusClasses } = useUIUtils();
 const activePanels = ref<Record<string, 'info' | 'modelfile'>>({});
 const searchQuery = ref('');
 
+interface SortOption {
+	label: string;
+	value: 'name' | 'size' | 'modified';
+	icon?: string;
+}
+
+const sortOptions: SortOption[] = [
+	{ label: 'Name', value: 'name', icon: 'i-lucide-sort-asc' },
+	{ label: 'Size', value: 'size', icon: 'i-lucide-database' },
+	{ label: 'Last Modified', value: 'modified', icon: 'i-lucide-clock' },
+];
+
+const selectedSort = ref<SortOption>(sortOptions[2]); // Default to 'Last Modified'
+
 const getActivePanel = (modelName: string) => {
 	return activePanels.value[modelName] || 'info';
 };
@@ -13,10 +27,27 @@ const setActivePanel = (modelName: string, panel: 'info' | 'modelfile') => {
 };
 
 const filteredModels = computed(() => {
-	if (!searchQuery.value.trim()) return ollama.models.value;
+	let models = [...ollama.models.value];
 
-	const query = searchQuery.value.toLowerCase();
-	return ollama.models.value.filter((model) => model.name.toLowerCase().includes(query));
+	// Apply search filter
+	if (searchQuery.value.trim()) {
+		const query = searchQuery.value.toLowerCase();
+		models = models.filter((model) => model.name.toLowerCase().includes(query));
+	}
+
+	// Apply sorting
+	return models.sort((a, b) => {
+		switch (selectedSort.value.value) {
+			case 'name':
+				return a.name.localeCompare(b.name);
+			case 'size':
+				return (b.size || 0) - (a.size || 0);
+			case 'modified':
+				return new Date(b.modified_at).getTime() - new Date(a.modified_at).getTime();
+			default:
+				return 0;
+		}
+	});
 });
 
 onMounted(async () => {
@@ -31,7 +62,22 @@ onMounted(async () => {
 <template>
 	<BaseLayout>
 		<template #header>
-			<ModelsSearchModelSearchSort v-model:search="searchQuery" />
+			<div class="flex gap-1 items-center h-full p-2">
+				<UInput
+					v-model="searchQuery"
+					variant="ghost"
+					placeholder="Search models..."
+					class="w-full"
+					icon="i-lucide-search"
+					autofocus />
+				<USelectMenu
+					v-model="selectedSort"
+					:items="sortOptions"
+					variant="ghost"
+					class="min-w-[140px]"
+					:leading-icon="selectedSort.icon"
+					:search-input="false" />
+			</div>
 		</template>
 		<template #default>
 			<div
