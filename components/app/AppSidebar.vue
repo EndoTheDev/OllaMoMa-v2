@@ -9,7 +9,7 @@ const { fadeTransition, radiusClasses } = useUIUtils();
 	<div
 		:class="[
 			'h-screen flex flex-col gap-1 p-1 bg-[var(--ui-bg)] z-50 border-r border-[var(--ui-border)]',
-			'transition-[width] duration-300',
+			'transition-[width] duration-300 drop-shadow-sm',
 			settingsStore.sidebarOpen ? 'w-56' : 'w-14',
 		]">
 		<UButton
