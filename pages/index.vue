@@ -2,7 +2,6 @@
 const selectedModel = ref<string>('');
 const messages = ref<{ role: 'user' | 'assistant'; content: string }[]>([]);
 const message = ref<string>('');
-const formState = ref({});
 
 const handleModelSelect = (model: string) => {
 	console.log('Selected model:', model);
@@ -52,25 +51,23 @@ const handleSubmit = () => {
 		</template>
 		<template #footer>
 			<div class="text-xl flex items-center p-2 h-full">
-				<UForm
-					:state="formState"
-					class="flex w-full gap-1"
-					@submit="handleSubmit">
+				<div class="flex w-full gap-1">
 					<UInput
 						v-model="message"
 						variant="ghost"
 						placeholder="Ask a question..."
 						class="w-full"
-						autofocus />
+						autofocus
+						@keyup.enter="handleSubmit" />
 					<UButton
-						type="submit"
 						variant="ghost"
 						color="primary"
 						size="lg"
-						:disabled="!message.trim()">
+						:disabled="!message.trim()"
+						@click="handleSubmit">
 						Send
 					</UButton>
-				</UForm>
+				</div>
 			</div>
 		</template>
 	</BaseLayout>
