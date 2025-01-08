@@ -72,10 +72,10 @@ const handleOpen = async () => {
 			<!-- Custom item template -->
 			<template #item="{ item }">
 				<div class="flex justify-between items-center w-full">
-					<span class="text-base font-medium text-gray-900 dark:text-white">
+					<span class="text-[var(--ui-text)] font-medium">
 						{{ item.name }}
 					</span>
-					<span class="text-sm text-gray-500 dark:text-gray-400">
+					<span class="text-sm text-[var(--ui-text-muted)]">
 						{{ formatSize(item.size) }}
 					</span>
 				</div>
