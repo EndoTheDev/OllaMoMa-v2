@@ -50,6 +50,11 @@ const filteredModels = computed(() => {
 	});
 });
 
+const searchPlaceholder = computed(() => {
+	const count = filteredModels.value.length;
+	return `Search ${count} model${count !== 1 ? 's' : ''}...`;
+});
+
 onMounted(async () => {
 	try {
 		await ollama.fetchModels();
@@ -66,7 +71,7 @@ onMounted(async () => {
 				<UInput
 					v-model="searchQuery"
 					variant="ghost"
-					placeholder="Search models..."
+					:placeholder="searchPlaceholder"
 					class="w-full"
 					icon="i-lucide-search"
 					size="lg"
