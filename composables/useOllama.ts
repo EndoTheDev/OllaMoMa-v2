@@ -7,15 +7,10 @@ interface OllamaConfig {
 	host: string;
 }
 
-type SortOption = 'name' | 'size' | 'modified';
-type SortDirection = 'asc' | 'desc';
-
 interface OllamaState {
 	models: OllamaModel[];
 	isLoading: boolean;
 	error: string | null;
-	sortBy: SortOption;
-	sortDirection: SortDirection;
 }
 
 export const useOllama = (config: Partial<OllamaConfig> = {}) => {
@@ -35,38 +30,18 @@ export const useOllama = (config: Partial<OllamaConfig> = {}) => {
 		models: [],
 		isLoading: false,
 		error: null,
-		sortBy: 'modified',
-		sortDirection: 'asc',
 	}));
 
 	// Getters
 	const models = computed(() => state.value.models);
 	const isLoading = computed(() => state.value.isLoading);
 	const error = computed(() => state.value.error);
-	const sortBy = computed(() => state.value.sortBy);
-	const sortDirection = computed(() => state.value.sortDirection);
 
 	const getModelByName = computed(() => {
 		return (name: string) => state.value.models.find((model) => model.name === name);
 	});
 
 	const hasModels = computed(() => state.value.models.length > 0);
-
-	const sortedModels = computed(() => {
-		return [...state.value.models].sort((a, b) => {
-			const direction = state.value.sortDirection === 'asc' ? 1 : -1;
-
-			switch (state.value.sortBy) {
-				case 'name':
-					return direction * a.name.localeCompare(b.name);
-				case 'size':
-					return direction * (b.size - a.size);
-				case 'modified':
-				default:
-					return direction * (new Date(b.modified_at).getTime() - new Date(a.modified_at).getTime());
-			}
-		});
-	});
 
 	// Actions
 	async function fetchModels(): Promise<void> {
@@ -164,17 +139,6 @@ export const useOllama = (config: Partial<OllamaConfig> = {}) => {
 		}
 	}
 
-	const setSortBy = (option: SortOption) => {
-		if (state.value.sortBy === option) {
-			// Toggle direction if same option is selected
-			state.value.sortDirection = state.value.sortDirection === 'desc' ? 'asc' : 'desc';
-		} else {
-			// Reset direction to asc for new option
-			state.value.sortBy = option;
-			state.value.sortDirection = 'asc';
-		}
-	};
-
 	return {
 		// State exports
 		models,
@@ -184,16 +148,11 @@ export const useOllama = (config: Partial<OllamaConfig> = {}) => {
 		// Getter exports
 		getModelByName,
 		hasModels,
-		sortedModels,
 
 		// Action exports
 		fetchModels,
 		showModel,
 		copyModel,
 		deleteModel,
-
-		sortBy,
-		sortDirection,
-		setSortBy,
 	};
 };

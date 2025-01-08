@@ -13,10 +13,10 @@ const setActivePanel = (modelName: string, panel: 'info' | 'modelfile') => {
 };
 
 const filteredModels = computed(() => {
-	if (!searchQuery.value.trim()) return ollama.sortedModels.value;
+	if (!searchQuery.value.trim()) return ollama.models.value;
 
 	const query = searchQuery.value.toLowerCase();
-	return ollama.sortedModels.value.filter((model) => model.name.toLowerCase().includes(query));
+	return ollama.models.value.filter((model) => model.name.toLowerCase().includes(query));
 });
 
 onMounted(async () => {
