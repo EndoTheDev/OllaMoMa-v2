@@ -1,7 +1,10 @@
 import { Ollama } from 'ollama/browser';
+import type { GenerateRequest, GenerateResponse } from 'ollama/browser';
 import { useSettingsStore } from '~/stores/settings';
 import type { OllamaModel, OllamaModelDetails } from '~/types/ollama';
 import { OllamaError } from '~/types/ollama';
+import { useState } from '#imports';
+import { computed } from 'vue';
 
 interface OllamaConfig {
 	host: string;
@@ -139,6 +142,28 @@ export const useOllama = (config: Partial<OllamaConfig> = {}) => {
 		}
 	}
 
+	async function generate(request: GenerateRequest & { stream?: false }): Promise<GenerateResponse> {
+		state.value.isLoading = true;
+		state.value.error = null;
+
+		try {
+			const response = await client.generate(request);
+
+			if (!response) {
+				throw new Error('No response returned from API');
+			}
+
+			return response;
+		} catch (err) {
+			const error = new OllamaError(`Failed to generate response with model ${request.model}`, err);
+			state.value.error = error.message;
+			console.error(error);
+			throw error;
+		} finally {
+			state.value.isLoading = false;
+		}
+	}
+
 	return {
 		// State exports
 		models,
@@ -154,5 +179,6 @@ export const useOllama = (config: Partial<OllamaConfig> = {}) => {
 		showModel,
 		copyModel,
 		deleteModel,
+		generate,
 	};
 };
