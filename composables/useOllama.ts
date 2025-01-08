@@ -173,6 +173,28 @@ export const useOllama = (config: Partial<OllamaConfig> = {}) => {
 		}
 	}
 
+	async function streamGenerate(request: GenerateRequest & { stream: true }): Promise<AsyncIterable<GenerateResponse>> {
+		state.value.isLoading = true;
+		state.value.error = null;
+
+		try {
+			const stream = await client.generate(request);
+
+			if (!stream) {
+				throw new Error('No stream returned from API');
+			}
+
+			return stream;
+		} catch (err) {
+			const error = new OllamaError(`Failed to generate streaming response with model ${request.model}`, err);
+			state.value.error = error.message;
+			console.error(error);
+			throw error;
+		} finally {
+			state.value.isLoading = false;
+		}
+	}
+
 	async function chat(request: ChatRequest & { stream?: false }): Promise<ChatResponse> {
 		state.value.isLoading = true;
 		state.value.error = null;
@@ -187,6 +209,28 @@ export const useOllama = (config: Partial<OllamaConfig> = {}) => {
 			return response;
 		} catch (err) {
 			const error = new OllamaError(`Failed to chat with model ${request.model}`, err);
+			state.value.error = error.message;
+			console.error(error);
+			throw error;
+		} finally {
+			state.value.isLoading = false;
+		}
+	}
+
+	async function streamChat(request: ChatRequest & { stream: true }): Promise<AsyncIterable<ChatResponse>> {
+		state.value.isLoading = true;
+		state.value.error = null;
+
+		try {
+			const stream = await client.chat(request);
+
+			if (!stream) {
+				throw new Error('No stream returned from API');
+			}
+
+			return stream;
+		} catch (err) {
+			const error = new OllamaError(`Failed to chat stream with model ${request.model}`, err);
 			state.value.error = error.message;
 			console.error(error);
 			throw error;
@@ -211,6 +255,8 @@ export const useOllama = (config: Partial<OllamaConfig> = {}) => {
 		copyModel,
 		deleteModel,
 		generate,
+		streamGenerate,
 		chat,
+		streamChat,
 	};
 };

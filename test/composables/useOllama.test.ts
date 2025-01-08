@@ -284,4 +284,116 @@ describe('useOllama', () => {
 			}
 		});
 	});
+
+	describe('streamGenerate', () => {
+		it('should stream generate responses successfully', async () => {
+			const ollama = useOllama();
+			const mockResponses = [
+				{ response: 'First', done: false },
+				{ response: 'Second', done: false },
+				{ response: 'Third', done: true },
+			];
+
+			// Mock the async iterator
+			const mockStream = {
+				async *[Symbol.asyncIterator]() {
+					for (const response of mockResponses) {
+						yield response;
+					}
+				},
+			};
+
+			mockGenerate.mockResolvedValueOnce(mockStream);
+
+			const request = {
+				model: 'llama2',
+				prompt: 'Test prompt',
+				stream: true as const,
+			};
+
+			const stream = await ollama.streamGenerate(request);
+			const responses = [];
+
+			for await (const response of stream) {
+				responses.push(response);
+			}
+
+			expect(responses).toEqual(mockResponses);
+			expect(mockGenerate).toHaveBeenCalledWith(request);
+			expect(mockGenerate).toHaveBeenCalledTimes(1);
+		});
+
+		it('should handle errors when streaming generate', async () => {
+			const ollama = useOllama();
+			const errorMessage = 'Failed to stream';
+
+			mockGenerate.mockRejectedValueOnce(new Error(errorMessage));
+
+			const request = {
+				model: 'llama2',
+				prompt: 'Test prompt',
+				stream: true as const,
+			};
+
+			await expect(ollama.streamGenerate(request)).rejects.toThrow();
+			expect(mockGenerate).toHaveBeenCalledWith(request);
+			expect(mockGenerate).toHaveBeenCalledTimes(1);
+		});
+	});
+
+	describe('streamChat', () => {
+		it('should stream chat responses successfully', async () => {
+			const ollama = useOllama();
+			const mockResponses = [
+				{ message: { role: 'assistant', content: 'First' }, done: false },
+				{ message: { role: 'assistant', content: 'Second' }, done: false },
+				{ message: { role: 'assistant', content: 'Third' }, done: true },
+			];
+
+			// Mock the async iterator
+			const mockStream = {
+				async *[Symbol.asyncIterator]() {
+					for (const response of mockResponses) {
+						yield response;
+					}
+				},
+			};
+
+			mockChat.mockResolvedValueOnce(mockStream);
+
+			const request = {
+				model: 'llama2',
+				messages: [{ role: 'user', content: 'Test message' }],
+				stream: true as const,
+			};
+
+			const stream = await ollama.streamChat(request);
+			const responses = [];
+
+			for await (const response of stream) {
+				responses.push(response);
+			}
+
+			expect(responses).toEqual(mockResponses);
+			expect(mockChat).toHaveBeenCalledWith(request);
+			expect(mockChat).toHaveBeenCalledTimes(1);
+		});
+
+		it('should handle errors when streaming chat', async () => {
+			const ollama = useOllama();
+			const errorMessage = 'Failed to stream';
+
+			mockChat.mockRejectedValueOnce(new Error(errorMessage));
+
+			const request = {
+				model: 'llama2',
+				messages: [{ role: 'user', content: 'Test message' }],
+				stream: true as const,
+			};
+
+			await expect(ollama.streamChat(request)).rejects.toThrow();
+			expect(mockChat).toHaveBeenCalledWith(request);
+			expect(mockChat).toHaveBeenCalledTimes(1);
+		});
+	});
 });
