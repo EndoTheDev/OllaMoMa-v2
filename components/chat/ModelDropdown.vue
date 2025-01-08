@@ -1,4 +1,11 @@
 <script setup lang="ts">
+import { useOllama } from '~/composables/useOllama';
+import { useUtils } from '~/composables/useUtils';
+
+const props = defineProps<{
+	modelValue: string;
+}>();
+
 const { models, fetchModels, isLoading } = useOllama();
 const { formatSize } = useUtils();
 
@@ -21,11 +28,10 @@ const emit = defineEmits<{
 	'update:modelValue': [value: string];
 }>();
 
-const selectedModel = ref<string>('');
-
-// Watch for changes in selectedModel
-watch(selectedModel, (newValue) => {
-	emit('update:modelValue', newValue);
+// Use computed for two-way binding
+const selectedModel = computed({
+	get: () => props.modelValue,
+	set: (value) => emit('update:modelValue', value),
 });
 
 const searchTerm = ref('');
