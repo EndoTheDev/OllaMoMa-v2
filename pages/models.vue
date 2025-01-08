@@ -69,6 +69,7 @@ onMounted(async () => {
 					placeholder="Search models..."
 					class="w-full"
 					icon="i-lucide-search"
+					size="lg"
 					autofocus />
 				<USelectMenu
 					v-model="selectedSort"

@@ -115,8 +115,6 @@ const handleSubmit = async () => {
 	} finally {
 		isLoading.value = false;
 		currentResponse.value = '';
-		// Refocus input after response is complete
-		nextTick(focusInput);
 	}
 };
 </script>
@@ -145,6 +143,7 @@ const handleSubmit = async () => {
 					<UInput
 						ref="messageInput"
 						v-model="message"
+						size="lg"
 						variant="ghost"
 						:placeholder="chatStore.isModelSelected ? 'Ask a question...' : 'Please select a model first'"
 						class="w-full"
