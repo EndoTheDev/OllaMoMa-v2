@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { useOllama } from '~/composables/useOllama';
+import { useChatStore } from '~/stores/chat';
 
 const selectedModel = ref<string>('');
-const messages = ref<{ role: 'user' | 'assistant'; content: string }[]>([]);
 const message = ref<string>('');
 const isLoading = ref(false);
 const currentResponse = ref<string>('');
 
+const chatStore = useChatStore();
 const { streamChat } = useOllama();
 
 // Computed properties for validation
@@ -20,7 +21,7 @@ const handleModelSelect = (model: string) => {
 };
 
 const handleClear = () => {
-	messages.value = [];
+	chatStore.clearMessages();
 };
 
 const handleSubmit = async () => {
@@ -32,7 +33,7 @@ const handleSubmit = async () => {
 	};
 
 	// Add user message to chat
-	messages.value.push(userMessage);
+	chatStore.addMessage(userMessage);
 
 	// Clear input
 	message.value = '';
@@ -45,7 +46,7 @@ const handleSubmit = async () => {
 		// Prepare chat request
 		const request = {
 			model: selectedModel.value,
-			messages: messages.value,
+			messages: chatStore.messages,
 			stream: true as const,
 		};
 
@@ -53,7 +54,7 @@ const handleSubmit = async () => {
 		const stream = await streamChat(request);
 
 		// Create placeholder for assistant's response
-		messages.value.push({
+		chatStore.addMessage({
 			role: 'assistant',
 			content: '',
 		});
@@ -64,13 +65,13 @@ const handleSubmit = async () => {
 				// Update the current response
 				currentResponse.value += part.message.content;
 				// Update the last message in the chat
-				messages.value[messages.value.length - 1].content = currentResponse.value;
+				chatStore.updateLastMessage(currentResponse.value);
 			}
 		}
 	} catch (err) {
 		console.error('Chat error:', err);
 		// Show error message
-		messages.value.push({
+		chatStore.addMessage({
 			role: 'assistant',
 			content: 'Sorry, I encountered an error while processing your request.',
 		});
@@ -92,14 +93,14 @@ const handleSubmit = async () => {
 					variant="ghost"
 					color="primary"
 					size="lg"
-					:disabled="!messages.length"
+					:disabled="!chatStore.hasMessages"
 					@click="handleClear">
 					Clear
 				</UButton>
 			</div>
 		</template>
 		<template #default>
-			<ChatDisplay :messages="messages" />
+			<ChatDisplay :messages="chatStore.messages" />
 		</template>
 		<template #footer>
 			<div class="text-xl flex items-center p-2 h-full">
