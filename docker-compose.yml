@@ -8,11 +8,6 @@ services:
       - NODE_ENV=production
       - HOST=0.0.0.0
       - PORT=3000
-    # For better development experience
-    volumes:
-      - ./.nuxt:/app/.nuxt
-      - ./.output:/app/.output
-    # Healthcheck to ensure the application is running
     healthcheck:
       test: ["CMD", "wget", "--spider", "http://localhost:3000"]
       interval: 30s
