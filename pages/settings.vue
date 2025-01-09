@@ -16,18 +16,20 @@ import ResetSettings from '~/components/settings/ResetSettings.vue';
 			</div>
 		</template>
 		<template #default>
-			<div class="space-y-1">
-				<!-- todo: wrap in one accordion -->
-				<DarkMode />
-				<ThemeSelector />
-				<NeutralSelector />
-				<BorderSelector />
-				<!-- todo: wrap in one accordion -->
-				<OllamaURL />
-				<OllamaPort />
-				<!-- todo: wrap in one accordion -->
-				<ResetSettings />
-			</div>
+			<UiScrollArea class="h-[calc(100vh-98px)] pl-1 pr-3">
+				<div class="space-y-1 py-1">
+					<!-- todo: wrap in one accordion -->
+					<DarkMode />
+					<ThemeSelector />
+					<NeutralSelector />
+					<BorderSelector />
+					<!-- todo: wrap in one accordion -->
+					<OllamaURL />
+					<OllamaPort />
+					<!-- todo: wrap in one accordion -->
+					<ResetSettings />
+				</div>
+			</UiScrollArea>
 		</template>
 		<template #footer>
 			<div class="text-xs flex items-center justify-center h-full">
