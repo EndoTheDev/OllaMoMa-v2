@@ -1,6 +1,19 @@
 <script setup lang="ts">
 const settingsStore = useSettingsStore();
 const { radiusClasses } = useUIUtils();
+
+// Tooltip configuration
+const tooltipContent = {
+	side: 'bottom',
+	align: 'center',
+	sideOffset: 4,
+} as const;
+
+const tooltipUI = {
+	content:
+		'flex items-center gap-1 bg-[var(--ui-bg)] text-[var(--ui-text-highlighted)] shadow-sm rounded-[var(--ui-radius)] ring ring-[var(--ui-border)] h-7 px-2 py-1 text-xs select-none capitalize',
+	text: 'truncate font-medium',
+} as const;
 </script>
 
 <template>
@@ -32,9 +45,17 @@ const { radiusClasses } = useUIUtils();
 				(value: string) => settingsStore.setNeutral(value as 'slate' | 'gray' | 'zinc' | 'neutral' | 'stone')
 			">
 			<template #label="{ item, modelValue }">
-				<div
-					class="w-6 h-6 rounded-full transition-all duration-200 ring-2 ring-offset-2 dark:ring-offset-gray-900 hover:scale-110"
-					:class="[item.class, modelValue === item.value ? 'ring-gray-400 dark:ring-gray-500' : 'ring-transparent']" />
+				<UTooltip
+					:text="item.value"
+					:content="tooltipContent"
+					:ui="tooltipUI">
+					<div
+						class="w-6 h-6 rounded-full transition-all duration-200 ring-2 ring-offset-2 dark:ring-offset-gray-900 hover:scale-110"
+						:class="[
+							item.class,
+							modelValue === item.value ? 'ring-gray-400 dark:ring-gray-500' : 'ring-transparent',
+						]" />
+				</UTooltip>
 			</template>
 		</URadioGroup>
 	</div>
