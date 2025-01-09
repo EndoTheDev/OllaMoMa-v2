@@ -16,20 +16,14 @@ const canSubmit = computed(() => chatStore.isModelSelected && isMessageValid.val
 // Focus helper function
 const focusInput = () => {
 	if (messageInput.value) {
-		if (typeof messageInput.value.focus === 'function') {
-			messageInput.value.focus();
-		} else if (messageInput.value.input) {
-			messageInput.value.input.focus();
-		} else {
-			const inputEl = messageInput.value.$el?.querySelector('input');
-			if (inputEl) inputEl.focus();
-		}
+		messageInput.value?.textarea?.focus();
 	}
 };
 
-// Focus input on mount with multiple attempts
+// Focus input on mount and after loading
 onMounted(() => {
 	focusInput();
+	// Multiple focus attempts to ensure it works across different scenarios
 	setTimeout(focusInput, 100);
 	nextTick(focusInput);
 	setTimeout(focusInput, 500);
@@ -45,6 +39,9 @@ const handleSubmit = () => {
 	const userMessage = message.value.trim();
 	emit('submit', userMessage);
 	message.value = '';
+
+	// Refocus after submission
+	nextTick(focusInput);
 };
 
 // Expose focusInput method to parent components
@@ -54,31 +51,38 @@ defineExpose({
 </script>
 
 <template>
-	<div class="flex w-full gap-1 px-2 bg-[var(--ui-bg)] my-1.5">
-		<UInput
-			ref="messageInput"
-			v-model="message"
-			size="lg"
-			variant="ghost"
-			:placeholder="chatStore.isModelSelected ? 'Ask a question...' : 'Please select a model first'"
-			class="w-full"
-			:disabled="isLoading || !chatStore.isModelSelected"
-			autofocus
-			@keyup.enter="handleSubmit" />
-		<UTooltip
-			:text="
-				!chatStore.isModelSelected ? 'Please select a model first' : !isMessageValid ? 'Please enter a message' : ''
-			"
-			:disabled="canSubmit">
-			<UButton
-				variant="ghost"
-				color="primary"
+	<div class="flex w-full gap-1 px-2 bg-[var(--ui-bg)]">
+		<div class="flex-1">
+			<UTextarea
+				ref="messageInput"
+				v-model="message"
 				size="lg"
-				:loading="isLoading"
-				:disabled="!canSubmit"
-				@click="handleSubmit">
-				{{ isLoading ? 'Thinking...' : 'Send' }}
-			</UButton>
-		</UTooltip>
+				variant="ghost"
+				:placeholder="chatStore.isModelSelected ? 'Ask a question...' : 'Please select a model first'"
+				class="w-full min-h-12 py-1.5"
+				:disabled="isLoading || !chatStore.isModelSelected"
+				:rows="1"
+				:maxrows="12"
+				autofocus
+				autoresize
+				@keydown.enter.exact.prevent="handleSubmit" />
+		</div>
+		<div class="flex items-end py-1.5">
+			<UTooltip
+				:text="
+					!chatStore.isModelSelected ? 'Please select a model first' : !isMessageValid ? 'Please enter a message' : ''
+				"
+				:disabled="canSubmit">
+				<UButton
+					variant="ghost"
+					color="primary"
+					size="lg"
+					:loading="isLoading"
+					:disabled="!canSubmit"
+					@click="handleSubmit">
+					{{ isLoading ? 'Thinking...' : 'Send' }}
+				</UButton>
+			</UTooltip>
+		</div>
 	</div>
 </template>

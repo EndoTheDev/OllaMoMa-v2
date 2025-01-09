@@ -1,15 +1,15 @@
 <script setup lang="ts"></script>
 
 <template>
-	<div class="flex flex-col min-h-screen max-w-3xl w-full md:border-x md:border-[var(--ui-border)] shadow-sm">
-		<div class="h-12">
+	<div class="flex flex-col h-screen max-w-3xl w-full md:border-x md:border-[var(--ui-border)] shadow-sm">
+		<header class="flex-none">
 			<slot name="header" />
-		</div>
-		<div class="flex-1 border-y border-[var(--ui-border)] overflow-hidden">
+		</header>
+		<main class="flex-1 min-h-0 border-y border-[var(--ui-border)] overflow-hidden">
 			<slot />
-		</div>
-		<div>
+		</main>
+		<footer class="flex-none">
 			<slot name="footer" />
-		</div>
+		</footer>
 	</div>
 </template>
