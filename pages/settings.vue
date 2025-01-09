@@ -17,7 +17,7 @@ import ResetSettings from '~/components/settings/ResetSettings.vue';
 		</template>
 		<template #default>
 			<UiScrollArea class="h-[calc(100vh-98px)] pl-1 pr-3">
-				<div class="space-y-1 py-1">
+				<div class="flex flex-col gap-1 py-1">
 					<!-- todo: wrap in one accordion -->
 					<DarkMode />
 					<ThemeSelector />
@@ -26,7 +26,7 @@ import ResetSettings from '~/components/settings/ResetSettings.vue';
 					<!-- todo: wrap in one accordion -->
 					<OllamaURL />
 					<OllamaPort />
-					<!-- todo: wrap in one accordion -->
+					<!--  -->
 					<ResetSettings />
 				</div>
 			</UiScrollArea>
