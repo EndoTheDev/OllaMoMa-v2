@@ -8,7 +8,7 @@
 		<div class="flex-1 border-y border-[var(--ui-border)] overflow-hidden">
 			<slot />
 		</div>
-		<div class="h-12">
+		<div>
 			<slot name="footer" />
 		</div>
 	</div>

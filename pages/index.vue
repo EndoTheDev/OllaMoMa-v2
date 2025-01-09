@@ -90,17 +90,15 @@ const handleSubmit = async (userInput: string) => {
 			</div>
 		</template>
 		<template #default>
-			<UiScrollArea class="h-[calc(100vh-98px)] pt-1 pl-1 pr-3">
+			<UiScrollArea class="h-[calc(100vh-100px)] pt-1 pl-1 pr-3">
 				<ChatDisplay :messages="chatStore.messages" />
 			</UiScrollArea>
 		</template>
 		<template #footer>
-			<div class="text-xl flex items-center p-2 h-full">
-				<ChatInput
-					ref="chatInput"
-					:is-loading="isLoading"
-					@submit="handleSubmit" />
-			</div>
+			<ChatInput
+				ref="chatInput"
+				:is-loading="isLoading"
+				@submit="handleSubmit" />
 		</template>
 	</BaseLayout>
 </template>
