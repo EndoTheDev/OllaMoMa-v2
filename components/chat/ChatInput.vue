@@ -54,7 +54,7 @@ defineExpose({
 </script>
 
 <template>
-	<div class="flex w-full gap-1">
+	<div class="flex w-full gap-1 px-2 bg-[var(--ui-bg)] my-1.5">
 		<UInput
 			ref="messageInput"
 			v-model="message"
