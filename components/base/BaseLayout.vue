@@ -6,11 +6,7 @@
 			<slot name="header" />
 		</div>
 		<div class="flex-1 border-y border-[var(--ui-border)] overflow-hidden">
-			<UiScrollArea class="h-[calc(100vh-98px)]">
-				<div class="pl-1 pr-3 py-1 space-y-1">
-					<slot />
-				</div>
-			</UiScrollArea>
+			<slot />
 		</div>
 		<div class="h-12">
 			<slot name="footer" />
