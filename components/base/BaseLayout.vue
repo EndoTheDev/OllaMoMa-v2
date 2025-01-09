@@ -6,7 +6,13 @@
 			<slot name="header" />
 		</header>
 		<main class="flex-1 min-h-0 border-y border-[var(--ui-border)] overflow-hidden">
-			<slot />
+			<div class="flex flex-col h-full">
+				<UiScrollArea class="flex-1">
+					<div class="pl-1 pr-3">
+						<slot />
+					</div>
+				</UiScrollArea>
+			</div>
 		</main>
 		<footer class="flex-none">
 			<slot name="footer" />

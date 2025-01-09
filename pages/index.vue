@@ -90,11 +90,7 @@ const handleSubmit = async (userInput: string) => {
 			</div>
 		</template>
 		<template #default>
-			<div class="flex flex-col flex-1 min-h-0">
-				<UiScrollArea class="flex-1 pl-1 pr-3">
-					<ChatDisplay :messages="chatStore.messages" />
-				</UiScrollArea>
-			</div>
+			<ChatDisplay :messages="chatStore.messages" />
 		</template>
 		<template #footer>
 			<ChatInput

@@ -87,44 +87,42 @@ onMounted(async () => {
 			</div>
 		</template>
 		<template #default>
-			<UiScrollArea class="h-[calc(100vh-98px)] pl-1 pr-3">
-				<div
-					v-if="ollama.isLoading.value"
-					class="text-[var(--ui-text-dimmed)]">
-					Loading models...
-				</div>
-				<div
-					v-else-if="ollama.error.value"
-					class="text-[var(--ui-error)]">
-					{{ ollama.error.value }}
-				</div>
-				<div v-else>
-					<ul
-						v-if="ollama.hasModels.value"
-						class="flex flex-col gap-1 py-1">
-						<li
-							v-for="model in filteredModels"
-							:key="model.name"
-							:class="[
-								'p-3 py-2 border border-[var(--ui-border)] hover:bg-[var(--ui-bg-muted)]/50 hover:drop-shadow-sm transition-colors duration-500 ease-out',
-								radiusClasses,
-							]">
-							<ModelsModelCard
-								:model="model"
-								:active-panel="getActivePanel(model.name)"
-								@update:active-panel="(panel) => setActivePanel(model.name, panel)" />
-						</li>
-					</ul>
-					<p
-						v-else
-						class="text-[var(--ui-text-muted)]">
-						No models available
-					</p>
-				</div>
-			</UiScrollArea>
+			<div
+				v-if="ollama.isLoading.value"
+				class="text-[var(--ui-text-dimmed)]">
+				Loading models...
+			</div>
+			<div
+				v-else-if="ollama.error.value"
+				class="text-[var(--ui-error)]">
+				{{ ollama.error.value }}
+			</div>
+			<div v-else>
+				<ul
+					v-if="ollama.hasModels.value"
+					class="flex flex-col gap-1 py-1">
+					<li
+						v-for="model in filteredModels"
+						:key="model.name"
+						:class="[
+							'p-3 py-2 border border-[var(--ui-border)] hover:bg-[var(--ui-bg-muted)]/50 hover:drop-shadow-sm transition-colors duration-500 ease-out',
+							radiusClasses,
+						]">
+						<ModelsModelCard
+							:model="model"
+							:active-panel="getActivePanel(model.name)"
+							@update:active-panel="(panel) => setActivePanel(model.name, panel)" />
+					</li>
+				</ul>
+				<p
+					v-else
+					class="text-[var(--ui-text-muted)]">
+					No models available
+				</p>
+			</div>
 		</template>
 		<template #footer>
-			<!--  -->
+			<div class="h-12" />
 		</template>
 	</BaseLayout>
 </template>
