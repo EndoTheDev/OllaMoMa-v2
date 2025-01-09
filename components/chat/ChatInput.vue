@@ -59,7 +59,7 @@ defineExpose({
 				size="lg"
 				variant="ghost"
 				:placeholder="chatStore.isModelSelected ? 'Ask a question...' : 'Please select a model first'"
-				class="w-full min-h-12 py-1.5"
+				class="w-full min-h-12 py-1.5 [&_textarea]:resize-none"
 				:disabled="isLoading || !chatStore.isModelSelected"
 				:rows="1"
 				:maxrows="12"
