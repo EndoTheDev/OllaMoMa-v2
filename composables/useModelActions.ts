@@ -1,5 +1,6 @@
 import { useModal, useToast } from '#imports';
 import type { OllamaError } from '~/types/ollama';
+import { useOllama } from './useOllama';
 
 interface ModelActionOptions {
 	silent?: boolean;
@@ -39,7 +40,9 @@ export function useModelActions() {
 			await ollama.copyModel(modelName, newName);
 			handleSuccess('Model copied', `Successfully copied ${modelName} to ${newName}`, options);
 		} catch (err) {
-			handleError(err as OllamaError, `Failed to copy ${modelName}`, options);
+			const error = err as OllamaError;
+			handleError(error, `Failed to copy ${modelName}`, options);
+			throw error;
 		}
 	};
 
@@ -48,7 +51,9 @@ export function useModelActions() {
 			await ollama.deleteModel(modelName);
 			handleSuccess('Model deleted', `Successfully deleted ${modelName}`, options);
 		} catch (err) {
-			handleError(err as OllamaError, `Failed to delete ${modelName}`, options);
+			const error = err as OllamaError;
+			handleError(error, `Failed to delete ${modelName}`, options);
+			throw error;
 		}
 	};
 
@@ -59,11 +64,20 @@ export function useModelActions() {
 				await deleteModel(oldName, { silent: true });
 				handleSuccess('Model renamed', `Successfully renamed ${oldName} to ${newName}`, options);
 			} catch (deleteError) {
-				await deleteModel(newName, { silent: true });
-				throw deleteError;
+				// If deleting the old model fails, try to clean up the new model
+				try {
+					await deleteModel(newName, { silent: true });
+				} catch {
+					// Ignore cleanup errors
+				}
+				const error = deleteError as OllamaError;
+				handleError(error, `Failed to rename ${oldName}`, options);
+				throw error;
 			}
 		} catch (err) {
-			handleError(err as OllamaError, `Failed to rename ${oldName}`, options);
+			const error = err as OllamaError;
+			handleError(error, `Failed to rename ${oldName}`, options);
+			throw error;
 		}
 	};
 
