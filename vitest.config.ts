@@ -8,6 +8,36 @@ export default defineConfig({
 		environment: 'happy-dom',
 		setupFiles: ['./test/setup/vitest.setup.ts'],
 		include: ['test/**/*.{test,spec}.{js,ts,jsx,tsx}'],
+		coverage: {
+			provider: 'v8',
+			reporter: ['text', 'json', 'html'],
+			include: [
+				'composables/**/*.ts',
+				'components/**/*.{ts,vue}',
+				'pages/**/*.{ts,vue}',
+				'stores/**/*.ts',
+				'types/**/*.ts',
+				'server/**/*.ts',
+				'utils/**/*.ts',
+			],
+			exclude: [
+				'node_modules/**',
+				'test/**',
+				'**/*.d.ts',
+				'**/*.test.ts',
+				'**/*.spec.ts',
+				'.nuxt/**',
+				'.output/**',
+				'dist/**',
+			],
+			all: true,
+			thresholds: {
+				branches: 80,
+				functions: 80,
+				lines: 80,
+				statements: 80,
+			},
+		},
 	},
 	resolve: {
 		alias: {
