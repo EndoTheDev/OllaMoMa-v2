@@ -67,7 +67,7 @@ onMounted(async () => {
 <template>
 	<BaseLayout>
 		<template #header>
-			<div class="flex gap-1 items-center h-full p-2">
+			<div class="flex gap-1 items-center h-full py-1.5 px-2">
 				<UInput
 					v-model="searchQuery"
 					variant="ghost"

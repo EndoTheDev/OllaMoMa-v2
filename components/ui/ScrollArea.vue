@@ -10,6 +10,10 @@ interface Props {
 	 * The maximum height of the scroll area
 	 */
 	maxHeight?: string;
+	/**
+	 * Whether to auto scroll to bottom when content changes
+	 */
+	autoScroll?: boolean;
 }
 
 const props = defineProps<Props>();
@@ -34,6 +38,25 @@ const checkOverflow = () => {
 		return showScrollbar.value;
 	}
 	return false;
+};
+
+// Add function to check if scrolled near bottom
+const isNearBottom = () => {
+	if (!container.value || !content.value) return false;
+	const { scrollTop, clientHeight } = container.value;
+	const { scrollHeight } = content.value;
+	const threshold = 100; // pixels from bottom
+	return scrollHeight - (scrollTop + clientHeight) <= threshold;
+};
+
+// Add function to scroll to bottom
+const scrollToBottom = (smooth = true) => {
+	if (!container.value || !content.value) return;
+
+	container.value.scrollTo({
+		top: content.value.scrollHeight,
+		behavior: smooth ? 'smooth' : 'auto',
+	});
 };
 
 // Add function to update thumb size and position
@@ -72,6 +95,9 @@ onMounted(() => {
 	nextTick(() => {
 		checkOverflow();
 		updateThumb();
+		if (props.autoScroll) {
+			scrollToBottom(false);
+		}
 	});
 
 	// Watch for content changes
@@ -79,6 +105,10 @@ onMounted(() => {
 		nextTick(() => {
 			checkOverflow();
 			updateThumb();
+			// Auto-scroll only if we were already near the bottom or autoScroll is enabled
+			if (props.autoScroll || isNearBottom()) {
+				scrollToBottom();
+			}
 		});
 	});
 
@@ -92,6 +122,10 @@ onMounted(() => {
 				observeContent();
 				checkOverflow();
 				updateThumb();
+				// Auto-scroll only if we were already near the bottom or autoScroll is enabled
+				if (props.autoScroll || isNearBottom()) {
+					scrollToBottom();
+				}
 			});
 		});
 
@@ -152,6 +186,12 @@ const onMouseUp = () => {
 	document.removeEventListener('mousemove', onMouseMove);
 	document.removeEventListener('mouseup', onMouseUp);
 };
+
+// Expose methods
+defineExpose({
+	scrollToBottom,
+	isNearBottom,
+});
 </script>
 
 <template>

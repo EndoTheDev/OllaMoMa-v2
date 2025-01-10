@@ -11,8 +11,8 @@ import ResetSettings from '~/components/settings/ResetSettings.vue';
 <template>
 	<BaseLayout>
 		<template #header>
-			<div class="text-xl flex items-center p-5 h-full">
-				<h1>Settings</h1>
+			<div class="text-xl flex items-center py-2.5 px-2 h-full">
+				<h1 class="text-[var(--ui-text)]">Settings</h1>
 			</div>
 		</template>
 		<template #default>
