@@ -3,7 +3,7 @@ import { useOllama } from '~/composables/useOllama';
 import { useChatStore } from '~/stores/chat';
 
 const isLoading = ref(false);
-const currentResponse = ref<string>('');
+const currentResponse = ref('');
 const chatInput = ref();
 
 const chatStore = useChatStore();
@@ -15,69 +15,56 @@ const selectedModel = computed({
 	set: (value: string) => chatStore.setSelectedModel(value),
 });
 
+// Focus management
+const focusInput = () => nextTick(() => chatInput.value?.focus());
+
 const handleClear = () => {
 	chatStore.clearMessages();
-	nextTick(() => chatInput.value?.focus());
+	focusInput();
 };
 
 const handleSubmit = async (userInput: string) => {
-	const userMessage = {
-		role: 'user' as const,
-		content: userInput,
-	};
-
-	// Add user message to chat
-	chatStore.addMessage(userMessage);
-
-	// Set loading state
-	isLoading.value = true;
-	currentResponse.value = '';
+	if (!userInput.trim() || isLoading.value) return;
 
 	try {
-		// Prepare chat request
-		const request = {
-			model: chatStore.selectedModel,
-			messages: chatStore.messages,
-			stream: true as const,
-		};
+		isLoading.value = true;
+		currentResponse.value = '';
 
-		// Get streaming response from API
-		const stream = await streamChat(request);
+		// Add user message
+		chatStore.addMessage({ role: 'user', content: userInput });
 
 		// Create placeholder for assistant's response
-		chatStore.addMessage({
-			role: 'assistant',
-			content: '',
+		chatStore.addMessage({ role: 'assistant', content: '' });
+
+		// Get streaming response
+		const stream = await streamChat({
+			model: chatStore.selectedModel,
+			messages: chatStore.messages,
+			stream: true,
 		});
 
 		// Process the stream
 		for await (const part of stream) {
 			if (part.message?.content) {
-				// Update the current response
 				currentResponse.value += part.message.content;
-				// Update the last message in the chat
 				chatStore.updateLastMessage(currentResponse.value);
 			}
 		}
-	} catch (err) {
-		console.error('Chat error:', err);
-		// Show error message
-		chatStore.addMessage({
-			role: 'assistant',
-			content: 'Sorry, I encountered an error while processing your request.',
-		});
+	} catch (error) {
+		console.error('Chat error:', error);
+		chatStore.updateLastMessage('Sorry, I encountered an error while processing your request.');
 	} finally {
 		isLoading.value = false;
 		currentResponse.value = '';
-		nextTick(() => chatInput.value?.focus());
+		focusInput();
 	}
 };
 </script>
 
 <template>
-	<BaseLayout>
+	<BaseLayout auto-scroll>
 		<template #header>
-			<div class="text-xl flex items-center p-2 h-full">
+			<div class="flex items-center gap-1 justify-between py-1.5 p-2 h-full">
 				<ChatModelDropdown v-model="selectedModel" />
 				<UButton
 					variant="ghost"
@@ -85,13 +72,17 @@ const handleSubmit = async (userInput: string) => {
 					size="lg"
 					:disabled="!chatStore.hasMessages"
 					@click="handleClear">
-					Clear
+					<UIcon
+						name="i-heroicons-trash"
+						class="h-5 w-5 text-[var(--ui-pimary)]" />
 				</UButton>
 			</div>
 		</template>
+
 		<template #default>
 			<ChatDisplay :messages="chatStore.messages" />
 		</template>
+
 		<template #footer>
 			<ChatInput
 				ref="chatInput"
