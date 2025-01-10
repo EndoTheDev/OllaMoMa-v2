@@ -156,6 +156,34 @@ describe('useOllama Integration', () => {
 			// Verify the last response is marked as done
 			expect(responses[responses.length - 1].done).toBe(true);
 		}, 30000);
+
+		it('should handle errors when model does not exist for stream generate', async () => {
+			const ollama = useOllama({
+				host: 'http://localhost:11434',
+			});
+
+			const request = {
+				model: 'non-existent-model',
+				prompt: 'This should fail',
+				stream: true as const,
+			};
+
+			await expect(ollama.streamGenerate(request)).rejects.toThrow();
+		});
+
+		it('should handle connection errors with invalid host for stream generate', async () => {
+			const ollama = useOllama({
+				host: 'http://invalid-host:11434',
+			});
+
+			const request = {
+				model: 'llama3.2:3b',
+				prompt: 'This should fail',
+				stream: true as const,
+			};
+
+			await expect(ollama.streamGenerate(request)).rejects.toThrow();
+		});
 	});
 
 	describe('streamChat', () => {
@@ -190,5 +218,33 @@ describe('useOllama Integration', () => {
 			// Verify the last response is marked as done
 			expect(responses[responses.length - 1].done).toBe(true);
 		}, 30000);
+
+		it('should handle errors when model does not exist for stream chat', async () => {
+			const ollama = useOllama({
+				host: 'http://localhost:11434',
+			});
+
+			const request = {
+				model: 'non-existent-model',
+				messages: [{ role: 'user', content: 'This should fail' }],
+				stream: true as const,
+			};
+
+			await expect(ollama.streamChat(request)).rejects.toThrow();
+		});
+
+		it('should handle connection errors with invalid host for stream chat', async () => {
+			const ollama = useOllama({
+				host: 'http://invalid-host:11434',
+			});
+
+			const request = {
+				model: 'llama3.2:3b',
+				messages: [{ role: 'user', content: 'This should fail' }],
+				stream: true as const,
+			};
+
+			await expect(ollama.streamChat(request)).rejects.toThrow();
+		});
 	});
 });
