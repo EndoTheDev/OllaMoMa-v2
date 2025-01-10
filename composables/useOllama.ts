@@ -1,18 +1,12 @@
 import { Ollama } from 'ollama/browser';
-import type {
-	GenerateRequest,
-	GenerateResponse,
-	ChatRequest,
-	ChatResponse,
-	CopyRequest,
-	DeleteRequest,
-} from 'ollama/browser';
+import type { GenerateRequest, GenerateResponse, ChatRequest, ChatResponse } from 'ollama/browser';
 import { useSettingsStore } from '~/stores/settings';
 import type { OllamaModel, OllamaModelDetails } from '~/types/ollama';
 import { OllamaError } from '~/types/ollama';
 import { useState } from '#imports';
 import { computed } from 'vue';
 
+// Types
 interface OllamaConfig {
 	host: string;
 }
@@ -23,44 +17,45 @@ interface OllamaState {
 	error: string | null;
 }
 
+// Composable
 export const useOllama = (config: Partial<OllamaConfig> = {}) => {
 	const settingsStore = useSettingsStore();
 
-	const defaultConfig: OllamaConfig = {
-		host: `http://${settingsStore.ollamaHost}:${settingsStore.ollamaPort}`,
-	};
-
+	// Initialize Ollama client
 	const client = new Ollama({
-		...defaultConfig,
+		host: `http://${settingsStore.ollamaHost}:${settingsStore.ollamaPort}`,
 		...config,
 	});
 
-	// State
+	// State management
 	const state = useState<OllamaState>('ollama-state', () => ({
 		models: [],
 		isLoading: false,
 		error: null,
 	}));
 
-	// Getters
+	// Computed properties
 	const models = computed(() => state.value.models);
 	const isLoading = computed(() => state.value.isLoading);
 	const error = computed(() => state.value.error);
-
-	const getModelByName = computed(() => {
-		return (name: string) => state.value.models.find((model) => model.name === name);
-	});
-
 	const hasModels = computed(() => state.value.models.length > 0);
+	const getModelByName = computed(() => (name: string) => state.value.models.find((model) => model.name === name));
 
-	// Actions
+	// Error handling utility
+	const handleError = (message: string, err: unknown): never => {
+		const error = new OllamaError(message, err);
+		state.value.error = error.message;
+		console.error(message, error);
+		throw error;
+	};
+
+	// API actions
 	async function fetchModels(): Promise<void> {
 		state.value.isLoading = true;
 		state.value.error = null;
 
 		try {
 			const response = await client.list();
-
 			if (!response?.models) {
 				throw new Error('No models returned from API');
 			}
@@ -72,10 +67,7 @@ export const useOllama = (config: Partial<OllamaConfig> = {}) => {
 				})
 			);
 		} catch (err) {
-			const error = new OllamaError('Failed to fetch models', err);
-			state.value.error = error.message;
-			console.error('Failed to fetch models:', error);
-			throw error;
+			handleError('Failed to fetch models', err);
 		} finally {
 			state.value.isLoading = false;
 		}
@@ -87,12 +79,11 @@ export const useOllama = (config: Partial<OllamaConfig> = {}) => {
 
 		try {
 			const response = await client.show({ model: name });
-
 			if (!response) {
 				throw new Error('No model details returned from API');
 			}
 
-			return {
+			const details: OllamaModelDetails = {
 				license: response.license,
 				modelfile: response.modelfile,
 				parameters: response.parameters,
@@ -105,11 +96,10 @@ export const useOllama = (config: Partial<OllamaConfig> = {}) => {
 				parameter_size: response.details?.parameter_size || '',
 				quantization_level: response.details?.quantization_level || '',
 			};
+
+			return details;
 		} catch (err) {
-			const error = new OllamaError(`Failed to fetch details for model ${name}`, err);
-			state.value.error = error.message;
-			console.error(`Failed to fetch details for model ${name}:`, error);
-			throw error;
+			return handleError(`Failed to fetch details for model ${name}`, err);
 		} finally {
 			state.value.isLoading = false;
 		}
@@ -120,14 +110,10 @@ export const useOllama = (config: Partial<OllamaConfig> = {}) => {
 		state.value.error = null;
 
 		try {
-			const request: CopyRequest = { source, destination };
-			await client.copy(request);
+			await client.copy({ source, destination });
 			await fetchModels();
 		} catch (err) {
-			const error = new OllamaError(`Failed to copy model from ${source} to ${destination}`, err);
-			state.value.error = error.message;
-			console.error(error);
-			throw error;
+			handleError(`Failed to copy model from ${source} to ${destination}`, err);
 		} finally {
 			state.value.isLoading = false;
 		}
@@ -138,14 +124,10 @@ export const useOllama = (config: Partial<OllamaConfig> = {}) => {
 		state.value.error = null;
 
 		try {
-			const request: DeleteRequest = { model: name };
-			await client.delete(request);
+			await client.delete({ model: name });
 			await fetchModels();
 		} catch (err) {
-			const error = new OllamaError(`Failed to delete model ${name}`, err);
-			state.value.error = error.message;
-			console.error(error);
-			throw error;
+			handleError(`Failed to delete model ${name}`, err);
 		} finally {
 			state.value.isLoading = false;
 		}
@@ -157,17 +139,13 @@ export const useOllama = (config: Partial<OllamaConfig> = {}) => {
 
 		try {
 			const response = await client.generate(request);
-
 			if (!response) {
 				throw new Error('No response returned from API');
 			}
 
 			return response;
 		} catch (err) {
-			const error = new OllamaError(`Failed to generate response with model ${request.model}`, err);
-			state.value.error = error.message;
-			console.error(error);
-			throw error;
+			return handleError(`Failed to generate response with model ${request.model}`, err);
 		} finally {
 			state.value.isLoading = false;
 		}
@@ -179,17 +157,13 @@ export const useOllama = (config: Partial<OllamaConfig> = {}) => {
 
 		try {
 			const stream = await client.generate(request);
-
 			if (!stream) {
 				throw new Error('No stream returned from API');
 			}
 
 			return stream;
 		} catch (err) {
-			const error = new OllamaError(`Failed to generate streaming response with model ${request.model}`, err);
-			state.value.error = error.message;
-			console.error(error);
-			throw error;
+			return handleError(`Failed to generate streaming response with model ${request.model}`, err);
 		} finally {
 			state.value.isLoading = false;
 		}
@@ -201,17 +175,13 @@ export const useOllama = (config: Partial<OllamaConfig> = {}) => {
 
 		try {
 			const response = await client.chat(request);
-
 			if (!response) {
 				throw new Error('No response returned from API');
 			}
 
 			return response;
 		} catch (err) {
-			const error = new OllamaError(`Failed to chat with model ${request.model}`, err);
-			state.value.error = error.message;
-			console.error(error);
-			throw error;
+			return handleError(`Failed to chat with model ${request.model}`, err);
 		} finally {
 			state.value.isLoading = false;
 		}
@@ -223,33 +193,29 @@ export const useOllama = (config: Partial<OllamaConfig> = {}) => {
 
 		try {
 			const stream = await client.chat(request);
-
 			if (!stream) {
 				throw new Error('No stream returned from API');
 			}
 
 			return stream;
 		} catch (err) {
-			const error = new OllamaError(`Failed to chat stream with model ${request.model}`, err);
-			state.value.error = error.message;
-			console.error(error);
-			throw error;
+			return handleError(`Failed to chat stream with model ${request.model}`, err);
 		} finally {
 			state.value.isLoading = false;
 		}
 	}
 
 	return {
-		// State exports
+		// State
 		models,
 		isLoading,
 		error,
 
-		// Getter exports
+		// Computed
 		getModelByName,
 		hasModels,
 
-		// Action exports
+		// Actions
 		fetchModels,
 		showModel,
 		copyModel,
