@@ -65,7 +65,7 @@ const handleSubmit = async (userInput: string) => {
 	<BaseLayout auto-scroll>
 		<template #header>
 			<div class="flex items-center gap-1 justify-between py-1.5 p-2 h-full">
-				<ChatModelDropdown v-model="selectedModel" />
+				<AppChatModelDropdown v-model="selectedModel" />
 				<UButton
 					variant="ghost"
 					color="primary"
@@ -80,11 +80,11 @@ const handleSubmit = async (userInput: string) => {
 		</template>
 
 		<template #default>
-			<ChatDisplay :messages="chatStore.messages" />
+			<AppChatDisplay :messages="chatStore.messages" />
 		</template>
 
 		<template #footer>
-			<ChatInput
+			<AppChatInput
 				ref="chatInput"
 				:is-loading="isLoading"
 				@submit="handleSubmit" />

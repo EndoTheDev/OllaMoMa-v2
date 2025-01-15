@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import DarkMode from '~/components/settings/appearance/DarkMode.vue';
-import ThemeSelector from '~/components/settings/appearance/ThemeSelector.vue';
-import NeutralSelector from '~/components/settings/appearance/NeutralSelector.vue';
-import BorderSelector from '~/components/settings/appearance/BorderSelector.vue';
-import OllamaURL from '~/components/settings/connection/OllamaURL.vue';
-import OllamaPort from '~/components/settings/connection/OllamaPort.vue';
-import ResetSettings from '~/components/settings/ResetSettings.vue';
+import DarkMode from '~/components/app/settings/appearance/DarkMode.vue';
+import ThemeSelector from '~/components/app/settings/appearance/ThemeSelector.vue';
+import NeutralSelector from '~/components/app/settings/appearance/NeutralSelector.vue';
+import BorderSelector from '~/components/app/settings/appearance/BorderSelector.vue';
+import OllamaURL from '~/components/app/settings/connection/OllamaURL.vue';
+import OllamaPort from '~/components/app/settings/connection/OllamaPort.vue';
+import ResetSettings from '~/components/app/settings/ResetSettings.vue';
 </script>
 
 <template>
