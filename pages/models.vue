@@ -108,7 +108,7 @@ onMounted(async () => {
 							'p-3 py-2 border border-[var(--ui-border)] hover:bg-[var(--ui-bg-muted)]/50 hover:drop-shadow-sm transition-colors duration-500 ease-out',
 							radiusClasses,
 						]">
-						<ModelsModelCard
+						<AppModelsModelCard
 							:model="model"
 							:active-panel="getActivePanel(model.name)"
 							@update:active-panel="(panel) => setActivePanel(model.name, panel)" />

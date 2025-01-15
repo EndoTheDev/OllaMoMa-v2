@@ -11,6 +11,11 @@ export function useModelActions() {
 	const toast = useToast();
 	const ollama = useOllama();
 
+	const normalizeModelName = (name: string) => {
+		// If the name doesn't include a tag (no colon), append :latest
+		return name.includes(':') ? name : `${name}:latest`;
+	};
+
 	const handleSuccess = (title: string, description: string, options?: ModelActionOptions) => {
 		if (options?.silent) return;
 
@@ -58,6 +63,15 @@ export function useModelActions() {
 	};
 
 	const renameModel = async (oldName: string, newName: string, options?: ModelActionOptions) => {
+		// Prevent renaming if the normalized names would be the same
+		if (normalizeModelName(oldName) === normalizeModelName(newName)) {
+			const error = new Error(
+				'Cannot rename: source and destination would resolve to the same model name'
+			) as OllamaError;
+			handleError(error, `Failed to rename ${oldName}`, options);
+			throw error;
+		}
+
 		try {
 			await copyModel(oldName, newName, { silent: true });
 			try {

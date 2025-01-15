@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import {
-	LazyModelsActionsConfirmDelete,
-	LazyModelsActionsConfirmCopy,
-	LazyModelsActionsConfirmRename,
+	LazyAppModelsActionsConfirmDelete,
+	LazyAppModelsActionsConfirmCopy,
+	LazyAppModelsActionsConfirmRename,
 } from '#components';
 
 const emit = defineEmits<{
@@ -21,7 +21,7 @@ const togglePanel = (panel: 'info' | 'modelfile') => {
 };
 
 const openCopyModal = () => {
-	modal.open(LazyModelsActionsConfirmCopy, {
+	modal.open(LazyAppModelsActionsConfirmCopy, {
 		modelName: props.modelName,
 		onConfirm: (newName: string) => copyModel(props.modelName, newName),
 		onCancel: () => modal.close(),
@@ -29,7 +29,7 @@ const openCopyModal = () => {
 };
 
 const openRenameModal = () => {
-	modal.open(LazyModelsActionsConfirmRename, {
+	modal.open(LazyAppModelsActionsConfirmRename, {
 		modelName: props.modelName,
 		onConfirm: (newName: string) => renameModel(props.modelName, newName),
 		onCancel: () => modal.close(),
@@ -37,7 +37,7 @@ const openRenameModal = () => {
 };
 
 const openDeleteModal = () => {
-	modal.open(LazyModelsActionsConfirmDelete, {
+	modal.open(LazyAppModelsActionsConfirmDelete, {
 		modelName: props.modelName,
 		onConfirm: () => deleteModel(props.modelName),
 		onCancel: () => modal.close(),

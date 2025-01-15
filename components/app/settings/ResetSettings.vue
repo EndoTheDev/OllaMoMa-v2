@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ConfirmReset from '~/components/settings/actions/ConfirmReset.vue';
+import ConfirmReset from '~/components/app/settings/actions/ConfirmReset.vue';
 
 const settings = useSettingsStore();
 const modal = useModal();
