@@ -11,26 +11,7 @@ const { fadeTransition, radiusClasses } = useUIUtils();
 			<div class="flex">
 				<AppSidebar>
 					<template #default>
-						<UButton
-							:to="'/'"
-							:class="['h-10 flex w-full justify-center', radiusClasses]">
-							<UIcon
-								name="i-heroicons-chat-bubble-left-right"
-								class="fixed left-4 w-6 h-6" />
-							<Transition v-bind="fadeTransition">
-								<span v-if="settingsStore.sidebarOpen">Chat</span>
-							</Transition>
-						</UButton>
-						<UButton
-							:to="'/models'"
-							:class="['h-10 flex w-full justify-center', radiusClasses]">
-							<UIcon
-								name="i-heroicons-circle-stack"
-								class="fixed left-4 w-6 h-6" />
-							<Transition v-bind="fadeTransition">
-								<span v-if="settingsStore.sidebarOpen">Models</span>
-							</Transition>
-						</UButton>
+						<AppSidebarNav :show-labels="settingsStore.sidebarOpen" />
 					</template>
 
 					<template #footer>
