@@ -219,7 +219,7 @@ watch(selectedParameter, (newVal) => {
 </script>
 
 <template>
-	<div class="flex gap-1">
+	<div class="flex gap-1 items-end">
 		<USelectMenu
 			v-model="selectedInstruction"
 			:items="modelfileInstructions"
@@ -233,6 +233,7 @@ watch(selectedParameter, (newVal) => {
 			<template #item="{ item }">
 				<div class="flex flex-col gap-0.5">
 					<span class="font-medium">{{ item.name }}</span>
+					<!-- <span class="text-xs text-[var(--ui-text-muted)]">{{ item.description }}</span> -->
 				</div>
 			</template>
 		</USelectMenu>
@@ -320,15 +321,15 @@ watch(selectedParameter, (newVal) => {
 			"
 			:disabled="!selectedInstruction || (isParameter && !selectedParameter)" />
 
-		<div class="flex items-end gap-1">
+		<div class="flex gap-1">
 			<UButton
 				color="primary"
-				size="md"
+				size="lg"
 				icon="i-lucide-plus"
 				@click="$emit('add')" />
 			<UButton
 				color="primary"
-				size="md"
+				size="lg"
 				icon="i-lucide-minus"
 				:disabled="isFirstLine"
 				@click="$emit('remove')" />
