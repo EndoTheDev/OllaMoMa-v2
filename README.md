@@ -46,14 +46,16 @@ Before you begin, ensure you have:
 
 1. **Clone and Install**
    ```bash
-   git clone https://github.com/EndoTheDev/OllaMoMa-v2.git
-   cd OllaMoMa-v2
-   npm install  # or pnpm install / yarn install / bun install
+    # Clone the repository
+    git clone https://github.com/EndoTheDev/OllaMoMa-v2.git
+    cd OllaMoMa-v2
+    # Install dependencies
+    npm install  # or pnpm install / yarn install / bun install
    ```
 
 2. **Start Development Server**
    ```bash
-   npm run dev  # or pnpm dev / yarn dev / bun run dev
+    npm run dev  # or pnpm dev / yarn dev / bun run dev
    ```
 
 3. **Configure Ollama**
@@ -64,20 +66,24 @@ Before you begin, ensure you have:
 
 1. **Using Docker**
    ```bash
-   # Build the image
-   docker build -t ollamoma-v2 .
-   
-   # Run the container
-   docker run -d -p 3000:3000 --name ollamoma ollamoma-v2
+    # Clone the repository
+    git clone https://github.com/EndoTheDev/OllaMoMa-v2.git
+    cd OllaMoMa-v2
+    # Build the image
+    docker build -t ollamoma-v2 .
+    # Run the container
+    docker run -d -p 3000:3000 --name ollamoma ollamoma-v2
    ```
 
 2. **Using Docker Compose**
    ```bash
-   # Start the application
-   docker compose up -d
-   
-   # Stop the application
-   docker compose down
+    # Clone the repository
+    git clone https://github.com/EndoTheDev/OllaMoMa-v2.git
+    cd OllaMoMa-v2
+    # Start the application
+    docker compose up -d
+    # Stop the application
+    docker compose down
    ```
 
 3. **Important Docker Notes**
@@ -96,6 +102,7 @@ Detailed documentation is available in the [docs](./docs) directory:
 - **Features**
   - [Chat Interface](./docs/pages/index.md)
   - [Model Management](./docs/pages/models.md)
+  - [Model File Management](./docs/pages/modelfile.md)
   - [Settings](./docs/pages/settings.md)
 
 ## 🏗️ Project Structure
@@ -104,6 +111,13 @@ Detailed documentation is available in the [docs](./docs) directory:
 .
 ├── assets/          # Static assets
 ├── components/      # Vue components
+│    ├── app/        # App components
+│    │    ├── chat/       # Chat components 
+│    │    ├── modelfile/  # Modelfile components
+│    │    ├── models/     # Models components
+│    │    └── settings/   # Settings components
+│    ├── base/       # Base components
+│    └── ui/         # UI components
 ├── composables/     # Vue composables
 ├── docs/           # Documentation
 ├── pages/          # File-based routing
