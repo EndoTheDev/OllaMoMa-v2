@@ -15,7 +15,26 @@ const isCopied = ref(false);
 
 const modelfileContent = computed(() => {
 	return props.instructions
-		.filter((inst) => inst.instruction && inst.value)
+		.filter((inst) => {
+			// Always require instruction to be non-empty
+			if (!inst.instruction) return false;
+
+			// For triple-quoted instructions, filter out if the value is empty or just quotes
+			if (['SYSTEM', 'TEMPLATE', 'LICENSE'].includes(inst.instruction)) {
+				const valueWithoutQuotes = inst.value.replace(/"""/g, '').trim();
+				return valueWithoutQuotes.length > 0;
+			}
+
+			// For MESSAGE instruction, check if there's actual content
+			if (inst.instruction === 'MESSAGE') {
+				const [role, ...messageParts] = inst.value.split(' ');
+				const messageContent = messageParts.join(' ').replace(/"""/g, '').trim();
+				return role && messageContent.length > 0;
+			}
+
+			// For other instructions, require non-empty value
+			return inst.value.trim().length > 0;
+		})
 		.map((inst) => `${inst.instruction} ${inst.value}`)
 		.join('\n');
 });

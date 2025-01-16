@@ -45,18 +45,16 @@ const updateValue = (index: number, value: string) => {
 		</template>
 		<template #default>
 			<div class="flex flex-col gap-1 pt-1">
-				<div class="flex flex-col gap-2">
-					<div
-						v-for="(instruction, index) in instructions"
-						:key="instruction.id"
-						class="flex flex-col gap-1">
-						<AppModelfileInstructionLine
-							:is-first-line="index === 0"
-							@add="addInstruction"
-							@remove="() => removeInstruction(index)"
-							@update:instruction="(val) => updateInstruction(index, val)"
-							@update:value="(val) => updateValue(index, val)" />
-					</div>
+				<div
+					v-for="(instruction, index) in instructions"
+					:key="instruction.id"
+					class="flex flex-col gap-1">
+					<AppModelfileInput
+						:is-first-line="index === 0"
+						@add="addInstruction"
+						@remove="() => removeInstruction(index)"
+						@update:instruction="(val) => updateInstruction(index, val)"
+						@update:value="(val) => updateValue(index, val)" />
 				</div>
 
 				<AppModelfilePreview :instructions="instructions" />
