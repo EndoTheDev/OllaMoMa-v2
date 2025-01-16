@@ -31,3 +31,8 @@ coverage
 # System files
 .DS_Store
 Thumbs.db 
+
+# Cursor
+.cursorignore
+.cursorrules
+

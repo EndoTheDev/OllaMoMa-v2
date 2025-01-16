@@ -54,30 +54,7 @@ const tooltipUI = {
 				v-if="settingsStore.sidebarOpen"
 				name="default" />
 			<template v-else>
-				<UTooltip
-					text="Chat"
-					:content="tooltipContent"
-					:ui="tooltipUI">
-					<UButton
-						:to="'/'"
-						:class="['h-10 flex w-full justify-center', radiusClasses]">
-						<UIcon
-							name="i-heroicons-chat-bubble-left-right"
-							class="fixed left-4 w-6 h-6" />
-					</UButton>
-				</UTooltip>
-				<UTooltip
-					text="Models"
-					:content="tooltipContent"
-					:ui="tooltipUI">
-					<UButton
-						:to="'/models'"
-						:class="['h-10 flex w-full justify-center', radiusClasses]">
-						<UIcon
-							name="i-heroicons-circle-stack"
-							class="fixed left-4 w-6 h-6" />
-					</UButton>
-				</UTooltip>
+				<AppSidebarNav :show-tooltips="true" />
 			</template>
 		</div>
 		<div>
