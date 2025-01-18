@@ -1,20 +1,17 @@
 <script setup lang="ts">
-interface Message {
-	role: 'user' | 'assistant';
-	content: string;
-}
+import type { ChatMessage } from '~/stores/chat';
 
 interface Props {
-	messages: Message[];
+	messages: ChatMessage[];
 }
 
 defineProps<Props>();
 
 const { radiusClasses } = useUIUtils();
 
-const getRoleIcon = (role: Message['role']) => (role === 'assistant' ? 'i-heroicons-sparkles' : 'i-heroicons-user');
+const getRoleIcon = (role: ChatMessage['role']) => (role === 'assistant' ? 'i-heroicons-sparkles' : 'i-heroicons-user');
 
-const getMessageClasses = (role: Message['role']) => ({
+const getMessageClasses = (role: ChatMessage['role']) => ({
 	container: ['gap-2', 'items-end', role === 'user' ? 'flex-row-reverse' : 'flex-row'],
 	avatar: [
 		'mb-0.5',
@@ -35,7 +32,7 @@ const getMessageClasses = (role: Message['role']) => ({
 	<div class="flex flex-col gap-2 px-1 py-2">
 		<article
 			v-for="message in messages"
-			:key="message.content"
+			:key="message.id"
 			class="flex"
 			:class="getMessageClasses(message.role).container">
 			<UAvatar

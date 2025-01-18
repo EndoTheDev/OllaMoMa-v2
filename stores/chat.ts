@@ -1,8 +1,10 @@
 import { useLocalStorage } from '@vueuse/core';
 import { defineStore } from 'pinia';
 import { computed } from 'vue';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface ChatMessage {
+	id: string;
 	role: 'user' | 'assistant';
 	content: string;
 }
@@ -26,8 +28,11 @@ export const useChatStore = defineStore('chat', () => {
 	const isModelSelected = computed(() => Boolean(state.value.selectedModel));
 
 	// Actions
-	function addMessage(message: ChatMessage) {
-		state.value.messages.push(message);
+	function addMessage(message: Omit<ChatMessage, 'id'>) {
+		state.value.messages.push({
+			...message,
+			id: uuidv4(),
+		});
 	}
 
 	function updateLastMessage(content: string) {

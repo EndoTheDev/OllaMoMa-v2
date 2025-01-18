@@ -32,27 +32,35 @@ describe('useChatStore', () => {
 
 	describe('actions', () => {
 		describe('addMessage', () => {
-			it('should add a user message', () => {
+			it('should add a user message with generated id', () => {
 				const store = useChatStore();
 				const message = { role: 'user' as const, content: 'Hello' };
 
 				store.addMessage(message);
 
-				expect(store.messages).toEqual([message]);
+				expect(store.messages).toHaveLength(1);
+				expect(store.messages[0]).toEqual({
+					...message,
+					id: expect.any(String),
+				});
 				expect(store.hasMessages).toBe(true);
 			});
 
-			it('should add an assistant message', () => {
+			it('should add an assistant message with generated id', () => {
 				const store = useChatStore();
 				const message = { role: 'assistant' as const, content: 'Hi there!' };
 
 				store.addMessage(message);
 
-				expect(store.messages).toEqual([message]);
+				expect(store.messages).toHaveLength(1);
+				expect(store.messages[0]).toEqual({
+					...message,
+					id: expect.any(String),
+				});
 				expect(store.hasMessages).toBe(true);
 			});
 
-			it('should add multiple messages in sequence', () => {
+			it('should add multiple messages with unique ids', () => {
 				const store = useChatStore();
 				const message1 = { role: 'user' as const, content: 'Hello' };
 				const message2 = { role: 'assistant' as const, content: 'Hi!' };
@@ -60,7 +68,12 @@ describe('useChatStore', () => {
 				store.addMessage(message1);
 				store.addMessage(message2);
 
-				expect(store.messages).toEqual([message1, message2]);
+				expect(store.messages).toHaveLength(2);
+				expect(store.messages[0].id).not.toBe(store.messages[1].id);
+				expect(store.messages).toEqual([
+					{ ...message1, id: expect.any(String) },
+					{ ...message2, id: expect.any(String) },
+				]);
 			});
 		});
 
@@ -130,12 +143,17 @@ describe('useChatStore', () => {
 	describe('persistence', () => {
 		it('should persist state to localStorage', () => {
 			const store = useChatStore();
-			store.addMessage({ role: 'user', content: 'Hello' });
+			const message = { role: 'user' as const, content: 'Hello' };
+			store.addMessage(message);
 			store.setSelectedModel('llama2');
 
 			// Create a new store instance to test persistence
 			const newStore = useChatStore();
-			expect(newStore.messages).toEqual([{ role: 'user', content: 'Hello' }]);
+			expect(newStore.messages).toHaveLength(1);
+			expect(newStore.messages[0]).toEqual({
+				...message,
+				id: expect.any(String),
+			});
 			expect(newStore.selectedModel).toBe('llama2');
 		});
 	});

@@ -31,10 +31,10 @@ const handleSubmit = async (userInput: string) => {
 		currentResponse.value = '';
 
 		// Add user message
-		chatStore.addMessage({ role: 'user', content: userInput });
+		chatStore.addMessage({ role: 'user' as const, content: userInput });
 
 		// Create placeholder for assistant's response
-		chatStore.addMessage({ role: 'assistant', content: '' });
+		chatStore.addMessage({ role: 'assistant' as const, content: '' });
 
 		// Get streaming response
 		const stream = await streamChat({
