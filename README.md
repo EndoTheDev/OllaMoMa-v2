@@ -1,10 +1,10 @@
 # OllaMoMa v2
 
-> A modern web interface for interacting with Ollama models, built with Nuxt 3 and Nuxt UI v3.
+> A modern web interface for interacting with Ollama models, built with Nuxt 4 and Nuxt UI v4.
 >
 > ⚠️ **Work in Progress**: This project is under active development.
 
-<img src="./assets/preview.gif" width="720" alt="OllaMoMa v2 Preview">
+<img src="./app/assets/preview.gif" width="720" alt="OllaMoMa v2 Preview">
 
 ## 🌟 Features
 
@@ -16,7 +16,7 @@
   - View and manage Ollama models
   - Search and sort functionality
   - Detailed model information
-- 🎨 Modern UI with Nuxt UI v3
+- 🎨 Modern UI with Nuxt UI v4
   - Dark/Light mode with theme customization
   - Responsive design for all devices
   - Customizable UI elements
@@ -27,8 +27,8 @@
 
 ## 🛠️ Tech Stack
 
-- **Frontend Framework**: [Nuxt 3](https://nuxt.com/)
-- **UI Components**: [Nuxt UI v3](https://ui.nuxt.com/)
+- **Frontend Framework**: [Nuxt 4](https://nuxt.com/)
+- **UI Components**: [Nuxt UI v4](https://ui.nuxt.com/)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 - **State Management**: [Pinia](https://pinia.vuejs.org/)
 - **Utilities**: [VueUse](https://vueuse.org/)
@@ -117,22 +117,27 @@ Detailed documentation is available in the [docs](./docs) directory:
 
 ```
 .
-├── assets/          # Static assets
-├── components/      # Vue components
-│    ├── app/        # App components
-│    │    ├── chat/       # Chat components
-│    │    ├── modelfile/  # Modelfile components
-│    │    ├── models/     # Models components
-│    │    └── settings/   # Settings components
-│    ├── base/       # Base components
-│    └── ui/         # UI components
-├── composables/     # Vue composables
-├── docs/           # Documentation
-├── pages/          # File-based routing
-├── server/         # Server API routes
-├── stores/         # Pinia stores
-├── tests/          # Test files
-└── types/          # TypeScript types
+├── app/                    # Application source (Nuxt 4 structure)
+│   ├── assets/            # Static assets
+│   ├── components/        # Vue components
+│   │   ├── app/           # App components
+│   │   │   ├── chat/      # Chat components
+│   │   │   ├── modelfile/ # Modelfile components
+│   │   │   ├── models/    # Models components
+│   │   │   └── settings/  # Settings components
+│   │   ├── base/          # Base components
+│   │   └── ui/            # UI components
+│   ├── composables/       # Vue composables
+│   ├── pages/             # File-based routing
+│   ├── stores/            # Pinia stores
+│   ├── types/             # TypeScript type definitions
+│   ├── app.vue            # Root component
+│   └── app.config.ts      # App configuration
+├── docs/                  # Documentation
+├── public/                # Public static files
+├── server/                # Server API routes
+├── test/                  # Test files
+└── nuxt.config.ts         # Nuxt configuration
 ```
 
 ## 📝 Roadmap
@@ -169,4 +174,4 @@ This project is licensed under the MIT License.
 
 ---
 
-Built with ❤️ by EndoTheDev using [Nuxt 3](https://nuxt.com/) and [Nuxt UI v3](https://ui.nuxt.com/)
+Built with ❤️ by EndoTheDev using [Nuxt 4](https://nuxt.com/) and [Nuxt UI v4](https://ui.nuxt.com/)

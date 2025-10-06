@@ -15,10 +15,13 @@ This guide covers the development workflow and best practices for contributing t
 ### Running in Development Mode
 
 1. Start the development server:
+
    ```bash
    npm run dev
    ```
+
    This will:
+
    - Start the Nuxt development server
    - Enable hot module replacement
    - Provide detailed error messages
@@ -28,6 +31,7 @@ This guide covers the development workflow and best practices for contributing t
 ### Building for Production
 
 1. Create a production build:
+
    ```bash
    npm run build
    ```
@@ -41,25 +45,38 @@ This guide covers the development workflow and best practices for contributing t
 
 ```
 .
-├── assets/          # Static assets (images, global styles)
-├── components/      # Reusable Vue components
-├── composables/     # Vue composables (shared logic)
-├── docs/           # Documentation
-├── pages/          # Application pages (auto-routed)
-├── server/         # Server API routes
-├── stores/         # Pinia stores (state management)
-└── types/          # TypeScript type definitions
+├── app/                    # Application source (Nuxt 4 structure)
+│   ├── assets/            # Static assets (images, global styles)
+│   ├── components/        # Reusable Vue components
+│   │   ├── app/           # App-specific components
+│   │   ├── base/          # Base/shared components
+│   │   └── ui/            # UI components
+│   ├── composables/       # Vue composables (shared logic)
+│   ├── pages/             # Application pages (auto-routed)
+│   ├── stores/            # Pinia stores (state management)
+│   ├── types/             # TypeScript type definitions
+│   ├── app.vue            # Root component
+│   └── app.config.ts      # App configuration
+├── docs/                  # Documentation
+├── public/                # Public static files
+├── server/                # Server API routes
+├── test/                  # Test files
+└── nuxt.config.ts         # Nuxt configuration
 ```
+
+**Note:** With Nuxt 4, all application source code is now organized under the `app/` directory, while configuration files and server/public directories remain at the project root.
 
 ## Contributing Guidelines
 
 1. Fork the repository
 2. Create a feature branch:
+
    ```bash
    git checkout -b feature/your-feature-name
    ```
 
 3. Make your changes following our code style:
+
    - Use TypeScript
    - Follow Vue 3 Composition API conventions
    - Use Nuxt UI components when possible
@@ -67,6 +84,7 @@ This guide covers the development workflow and best practices for contributing t
    - Write self-documenting code
 
 4. Test your changes:
+
    - Run unit tests: `npm run test`
    - Test in development mode
    - Verify mobile responsiveness
@@ -85,4 +103,3 @@ This guide covers the development workflow and best practices for contributing t
 - Implement responsive design
 - Write clear commit messages
 - Update documentation for new features
-``` 
