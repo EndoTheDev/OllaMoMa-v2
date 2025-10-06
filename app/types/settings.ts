@@ -37,6 +37,7 @@ export interface ThemeColors {
 export interface SettingsState {
   sidebarOpen: boolean;
   colorMode: "light" | "dark";
+  followSystem: boolean;
   theme: keyof typeof themeColorMap;
   neutral: keyof typeof neutralColorMap;
   radius: keyof typeof radiusMap;

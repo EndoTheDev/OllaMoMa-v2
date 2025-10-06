@@ -19,6 +19,7 @@ export const useSettingsStore = defineStore("settings", () => {
   const defaultSettings: SettingsState = {
     sidebarOpen: true,
     colorMode: "dark",
+    followSystem: true,
     theme: "green",
     neutral: "neutral",
     radius: "md",
@@ -36,6 +37,8 @@ export const useSettingsStore = defineStore("settings", () => {
   // Computed
   const sidebarOpen = computed(() => settings.value.sidebarOpen);
   const isDarkMode = computed(() => settings.value.colorMode === "dark");
+  const followSystem = computed(() => settings.value.followSystem);
+  const currentColorMode = computed(() => colorMode.value);
   const currentTheme = computed(() => settings.value.theme);
   const currentNeutral = computed(() => settings.value.neutral);
   const currentRadius = computed(() => settings.value.radius);
@@ -95,15 +98,22 @@ export const useSettingsStore = defineStore("settings", () => {
     settings.value.airplaneMode = mode;
   }
 
+  function setFollowSystem(mode: boolean): void {
+    settings.value.followSystem = mode;
+    colorMode.preference = mode ? "system" : settings.value.colorMode;
+  }
+
   function resetSettings(): void {
     settings.value = { ...defaultSettings };
-    colorMode.preference = defaultSettings.colorMode;
+    colorMode.preference =
+      defaultSettings.followSystem ? "system" : defaultSettings.colorMode;
     updateThemeColors(defaultSettings.theme, defaultSettings.neutral);
   }
 
   // Initialize settings
   function initializeSettings(): void {
-    colorMode.preference = settings.value.colorMode;
+    colorMode.preference =
+      settings.value.followSystem ? "system" : settings.value.colorMode;
     updateThemeColors(settings.value.theme);
   }
   initializeSettings();
@@ -112,7 +122,10 @@ export const useSettingsStore = defineStore("settings", () => {
   watch(
     () => colorMode.value,
     (newMode) => {
-      if (newMode === "light" || newMode === "dark") {
+      if (
+        (newMode === "light" || newMode === "dark") &&
+        !settings.value.followSystem
+      ) {
         settings.value.colorMode = newMode;
       }
     }
@@ -122,6 +135,8 @@ export const useSettingsStore = defineStore("settings", () => {
     // State exports
     sidebarOpen,
     isDarkMode,
+    followSystem,
+    currentColorMode,
     currentTheme,
     currentNeutral,
     currentRadius,
@@ -132,6 +147,7 @@ export const useSettingsStore = defineStore("settings", () => {
     // Action exports
     toggleSidebar,
     setColorMode,
+    setFollowSystem,
     setTheme,
     setNeutral,
     setRadius,
