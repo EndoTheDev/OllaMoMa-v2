@@ -1,6 +1,10 @@
 <script setup lang="ts">
+  import { ref } from "vue";
+
   const settingsStore = useSettingsStore();
   const { radiusClasses } = useUIUtils();
+
+  const switchRef = ref<HTMLElement | null>(null);
 
   const tooltipContent = {
     side: "bottom",
@@ -13,6 +17,16 @@
       "flex items-center gap-1 bg-[var(--ui-bg)] text-[var(--ui-text-highlighted)] shadow-sm rounded-[var(--ui-radius)] ring ring-[var(--ui-border)] h-7 px-2 py-1 text-xs select-none",
     text: "truncate font-medium",
   } as const;
+
+  const handleSwitchClick = (event: MouseEvent) => {
+    // Capture the click coordinates before the color mode changes
+    if (switchRef.value) {
+      const rect = switchRef.value.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+      settingsStore.setTransitionCoordinates(x, y);
+    }
+  };
 </script>
 
 <template>
@@ -39,16 +53,20 @@
             @update:model-value="settingsStore.setFollowSystem(!!$event)" />
         </UTooltip>
       </div>
-      <USwitch
-        :model-value="
-          settingsStore.followSystem ?
-            settingsStore.currentColorMode === 'dark'
-          : settingsStore.isDarkMode
-        "
-        :disabled="settingsStore.followSystem"
-        @update:model-value="
-          settingsStore.setColorMode($event ? 'dark' : 'light')
-        " />
+      <div
+        ref="switchRef"
+        @click="handleSwitchClick">
+        <USwitch
+          :model-value="
+            settingsStore.followSystem ?
+              settingsStore.currentColorMode === 'dark'
+            : settingsStore.isDarkMode
+          "
+          :disabled="settingsStore.followSystem"
+          @update:model-value="
+            settingsStore.setColorMode($event ? 'dark' : 'light')
+          " />
+      </div>
     </div>
   </div>
 </template>

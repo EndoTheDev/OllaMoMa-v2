@@ -1,5 +1,5 @@
 import { useLocalStorage } from "@vueuse/core";
-import { computed, watch } from "vue";
+import { computed, watch, nextTick } from "vue";
 import { useColorMode, useAppConfig } from "#imports";
 import { defineStore } from "pinia";
 import type {
@@ -46,6 +46,11 @@ export const useSettingsStore = defineStore("settings", () => {
   const ollamaPort = computed(() => settings.value.ollamaPort);
   const airplaneMode = computed(() => settings.value.airplaneMode);
 
+  // Store click coordinates for view transition
+  let transitionCoordinates: { x: number; y: number } | null = null;
+  // Flag to prevent double transitions
+  let isManualTransition = false;
+
   // Actions
   function updateThemeColors(
     theme: ThemeOption = settings.value.theme,
@@ -67,9 +72,75 @@ export const useSettingsStore = defineStore("settings", () => {
     settings.value.sidebarOpen = !settings.value.sidebarOpen;
   }
 
+  /**
+   * Helper function to start a view transition with circular reveal animation
+   */
+  async function startViewTransition(callback: () => void): Promise<void> {
+    // Check if View Transitions API is supported and user doesn't prefer reduced motion
+    const hasAPI =
+      typeof document !== "undefined" && "startViewTransition" in document;
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    if (typeof document === "undefined" || !hasAPI || prefersReducedMotion) {
+      callback();
+      return;
+    }
+
+    // Get coordinates or use center of screen as fallback
+    const x = transitionCoordinates?.x ?? window.innerWidth / 2;
+    const y = transitionCoordinates?.y ?? window.innerHeight / 2;
+
+    // Calculate the maximum radius needed to cover the entire viewport
+    const endRadius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    );
+
+    try {
+      // Start the transition
+      const transition = (document as any).startViewTransition(async () => {
+        callback();
+        await nextTick();
+      });
+
+      // Animate the clip-path once transition is ready
+      await transition.ready;
+
+      document.documentElement.animate(
+        {
+          clipPath: [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${endRadius}px at ${x}px ${y}px)`,
+          ],
+        },
+        {
+          duration: 600,
+          easing: "cubic-bezier(.76,.32,.29,.99)",
+          pseudoElement: "::view-transition-new(root)",
+        }
+      );
+    } catch (error) {
+      // Transition was skipped or aborted - this is fine, just continue
+    } finally {
+      // Clear coordinates after use
+      transitionCoordinates = null;
+    }
+  }
+
   function setColorMode(mode: SettingsState["colorMode"]): void {
-    settings.value.colorMode = mode;
-    colorMode.preference = mode;
+    isManualTransition = true;
+    startViewTransition(() => {
+      settings.value.colorMode = mode;
+      colorMode.preference = mode;
+    }).finally(() => {
+      isManualTransition = false;
+    });
+  }
+
+  function setTransitionCoordinates(x: number, y: number): void {
+    transitionCoordinates = { x, y };
   }
 
   function setTheme(theme: ThemeOption): void {
@@ -118,16 +189,25 @@ export const useSettingsStore = defineStore("settings", () => {
   }
   initializeSettings();
 
-  // Watch system color mode changes
+  // Watch system color mode changes and animate transitions
   watch(
     () => colorMode.value,
-    (newMode) => {
+    async (newMode) => {
+      // Skip if this is a manual transition already in progress
+      if (isManualTransition) {
+        return;
+      }
+
       if (
         (newMode === "light" || newMode === "dark") &&
         !settings.value.followSystem
       ) {
-        settings.value.colorMode = newMode;
+        await startViewTransition(() => {
+          settings.value.colorMode = newMode;
+        });
       }
+      // System changes when following system happen instantly (no animation)
+      // This provides natural UX - user actions are animated, automatic changes aren't
     }
   );
 
@@ -147,6 +227,7 @@ export const useSettingsStore = defineStore("settings", () => {
     // Action exports
     toggleSidebar,
     setColorMode,
+    setTransitionCoordinates,
     setFollowSystem,
     setTheme,
     setNeutral,
