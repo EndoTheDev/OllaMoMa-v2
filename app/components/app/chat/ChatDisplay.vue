@@ -15,11 +15,13 @@
   const getMessageClasses = (role: ChatMessage["role"]) => ({
     container: [
       "gap-2",
-      "items-end",
+      "items-start",
+
       role === "user" ? "flex-row-reverse" : "flex-row",
     ],
     avatar: [
-      "mb-0.5",
+      "mt-0.5",
+
       role === "user" ?
         "bg-[var(--ui-bg-accented)]"
       : "bg-transparent border border-[var(--ui-border)]",
