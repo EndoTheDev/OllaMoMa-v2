@@ -70,3 +70,28 @@
     </div>
   </div>
 </template>
+
+<style>
+  /* View Transitions API styles for dark mode animation */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  ::view-transition-new(root) {
+    z-index: 9999;
+  }
+
+  ::view-transition-old(root) {
+    z-index: 1;
+  }
+
+  /* Disable animations for users who prefer reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation: none !important;
+    }
+  }
+</style>
