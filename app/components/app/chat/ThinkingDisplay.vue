@@ -9,14 +9,15 @@
 </script>
 
 <template>
-  <div class="thinking-container mb-2">
+  <div class="mb-2">
     <UCollapsible
       v-model:open="isOpen"
-      class="flex flex-col gap-2">
+      class="flex flex-col border-t border-x border-[var(--ui-border-muted)] rounded-md"
+      :class="{ 'border-b': !isOpen }">
       <UButton
         class="group"
         color="neutral"
-        variant="subtle"
+        variant="soft"
         size="sm"
         trailing-icon="i-lucide-chevron-down"
         :ui="{
@@ -34,7 +35,7 @@
 
       <template #content>
         <div
-          class="p-2 bg-[var(--ui-bg-muted)] rounded-md border border-[var(--ui-border)]">
+          class="px-2 py-1 bg-[var(--ui-bg-muted)] rounded-b-md border-b border-[var(--ui-border-muted)]">
           <div
             class="text-sm text-[var(--ui-text)] whitespace-pre-wrap font-mono">
             {{ thinking }}

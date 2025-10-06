@@ -28,7 +28,7 @@
       radiusClasses,
     ],
     message: [
-      "max-w-[90%] py-2 px-3",
+      "max-w-[90%] py-3 px-3",
       role === "user" ?
         `${radiusClasses.value} rounded-tr-none`
       : `${radiusClasses.value} rounded-tl-none`,
@@ -60,7 +60,7 @@
         <AppChatThinkingDisplay
           v-if="message.role === 'assistant' && message.thinking"
           :thinking="message.thinking" />
-        <p>{{ message.content }}</p>
+        <p class="px-1">{{ message.content }}</p>
       </div>
     </article>
   </div>
