@@ -22,7 +22,10 @@
       name: model.name,
       size: model.size,
       isCloud: "remote_host" in model,
-      label: `${model.name} (${formatSize(model.size)})`,
+      label:
+        "remote_host" in model ?
+          model.name
+        : `${model.name} (${formatSize(model.size)})`,
     }))
   );
 
