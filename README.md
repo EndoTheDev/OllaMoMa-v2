@@ -4,6 +4,8 @@
 >
 > ⚠️ **Work in Progress**: This project is under active development.
 
+<img src="./assets/preview.gif" width="720" alt="OllaMoMa v2 Preview">
+
 ## 🌟 Features
 
 - 🎨 Interactive Chat Interface
@@ -35,6 +37,7 @@
 ## 📋 Prerequisites
 
 Before you begin, ensure you have:
+
 - Node.js (v18+)
 - Ollama installed and running locally
 - Git for version control
@@ -45,6 +48,7 @@ Before you begin, ensure you have:
 ### Local Development
 
 1. **Clone and Install**
+
    ```bash
     # Clone the repository
     git clone https://github.com/EndoTheDev/OllaMoMa-v2.git
@@ -54,6 +58,7 @@ Before you begin, ensure you have:
    ```
 
 2. **Start Development Server**
+
    ```bash
     npm run dev  # or pnpm dev / yarn dev / bun run dev
    ```
@@ -65,6 +70,7 @@ Before you begin, ensure you have:
 ### Docker Deployment
 
 1. **Using Docker**
+
    ```bash
     # Clone the repository
     git clone https://github.com/EndoTheDev/OllaMoMa-v2.git
@@ -76,6 +82,7 @@ Before you begin, ensure you have:
    ```
 
 2. **Using Docker Compose**
+
    ```bash
     # Clone the repository
     git clone https://github.com/EndoTheDev/OllaMoMa-v2.git
@@ -96,6 +103,7 @@ Before you begin, ensure you have:
 Detailed documentation is available in the [docs](./docs) directory:
 
 - **Getting Started**
+
   - [Installation Guide](./docs/getting-started/installation.md)
   - [Development Guide](./docs/getting-started/development.md)
 
@@ -112,7 +120,7 @@ Detailed documentation is available in the [docs](./docs) directory:
 ├── assets/          # Static assets
 ├── components/      # Vue components
 │    ├── app/        # App components
-│    │    ├── chat/       # Chat components 
+│    │    ├── chat/       # Chat components
 │    │    ├── modelfile/  # Modelfile components
 │    │    ├── models/     # Models components
 │    │    └── settings/   # Settings components
@@ -130,6 +138,7 @@ Detailed documentation is available in the [docs](./docs) directory:
 ## 📝 Roadmap
 
 ### Current Progress
+
 - ✅ Core Features
   - ✅ Chat interface with streaming
   - ✅ Model management
@@ -137,6 +146,7 @@ Detailed documentation is available in the [docs](./docs) directory:
   - ✅ Settings management
 
 ### Upcoming Features
+
 - 🔄 LangChain integration
 - 📊 Knowledge graph visualization
 - 🎨 Enhanced theme customization
@@ -147,6 +157,7 @@ Detailed documentation is available in the [docs](./docs) directory:
 ## 🤝 Contributing
 
 We welcome contributions! Please see our [Development Guide](./docs/getting-started/development.md) for details on:
+
 - Setting up your development environment
 - Our coding standards
 - The contribution workflow
@@ -157,4 +168,5 @@ We welcome contributions! Please see our [Development Guide](./docs/getting-star
 This project is licensed under the MIT License.
 
 ---
+
 Built with ❤️ by EndoTheDev using [Nuxt 3](https://nuxt.com/) and [Nuxt UI v3](https://ui.nuxt.com/)
