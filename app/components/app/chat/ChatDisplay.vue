@@ -16,11 +16,12 @@
     container: [
       "gap-2",
       "items-start",
-
+      role === "user" ? "sticky top-0 z-10 bg-[var(--ui-bg)] py-1.5" : "",
       role === "user" ? "flex-row-reverse" : "flex-row",
     ],
     avatar: [
       "mt-0.5",
+      role === "assistant" ? "sticky top-16 z-10" : "",
 
       role === "user" ?
         "bg-[var(--ui-bg-accented)]"
@@ -40,7 +41,7 @@
 </script>
 
 <template>
-  <div class="flex flex-col gap-2 px-1 py-2">
+  <div class="flex flex-col px-1 pb-2">
     <article
       v-for="message in messages"
       :key="message.id"
