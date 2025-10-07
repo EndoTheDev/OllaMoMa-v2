@@ -19,13 +19,9 @@
   } as const;
 
   const handleSwitchClick = (event: MouseEvent) => {
-    // Capture the click coordinates before the color mode changes
-    if (switchRef.value) {
-      const rect = switchRef.value.getBoundingClientRect();
-      const x = rect.left + rect.width / 2;
-      const y = rect.top + rect.height / 2;
-      settingsStore.setTransitionCoordinates(x, y);
-    }
+    const x = event.clientX;
+    const y = event.clientY;
+    settingsStore.setTransitionCoordinates(x, y);
   };
 </script>
 
@@ -53,9 +49,7 @@
             @update:model-value="settingsStore.setFollowSystem(!!$event)" />
         </UTooltip>
       </div>
-      <div
-        ref="switchRef"
-        @click="handleSwitchClick">
+      <div ref="switchRef">
         <USwitch
           :model-value="
             settingsStore.followSystem ?
@@ -63,6 +57,7 @@
             : settingsStore.isDarkMode
           "
           :disabled="settingsStore.followSystem"
+          @click="handleSwitchClick"
           @update:model-value="
             settingsStore.setColorMode($event ? 'dark' : 'light')
           " />
