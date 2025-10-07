@@ -8,6 +8,7 @@ import type {
   ThemeOption,
   NeutralOption,
   RadiusOption,
+  MaxWidthOption,
 } from "~/types/settings";
 import { themeColorMap, neutralColorMap } from "~/types/settings";
 
@@ -23,6 +24,7 @@ export const useSettingsStore = defineStore("settings", () => {
     theme: "green",
     neutral: "neutral",
     radius: "md",
+    maxWidth: "4xl",
     ollamaHost: "127.0.0.1",
     ollamaPort: 11434,
     airplaneMode: false,
@@ -43,6 +45,7 @@ export const useSettingsStore = defineStore("settings", () => {
   const currentTheme = computed(() => settings.value.theme);
   const currentNeutral = computed(() => settings.value.neutral);
   const currentRadius = computed(() => settings.value.radius);
+  const currentMaxWidth = computed(() => settings.value.maxWidth);
   const ollamaHost = computed(() => settings.value.ollamaHost);
   const ollamaPort = computed(() => settings.value.ollamaPort);
   const airplaneMode = computed(() => settings.value.airplaneMode);
@@ -213,6 +216,12 @@ export const useSettingsStore = defineStore("settings", () => {
     settings.value.radius = radius;
   }
 
+  function setMaxWidth(maxWidth: MaxWidthOption): void {
+    startViewTransition(() => {
+      settings.value.maxWidth = maxWidth;
+    });
+  }
+
   function setOllamaHost(host: string): void {
     settings.value.ollamaHost = host;
   }
@@ -282,6 +291,7 @@ export const useSettingsStore = defineStore("settings", () => {
     currentTheme,
     currentNeutral,
     currentRadius,
+    currentMaxWidth,
     ollamaHost,
     ollamaPort,
     airplaneMode,
@@ -295,6 +305,7 @@ export const useSettingsStore = defineStore("settings", () => {
     setTheme,
     setNeutral,
     setRadius,
+    setMaxWidth,
     setOllamaHost,
     setOllamaPort,
     setAirplaneMode,

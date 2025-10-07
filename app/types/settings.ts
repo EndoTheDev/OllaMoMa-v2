@@ -24,6 +24,16 @@ export const radiusMap = {
   lg: "0.5",
 } as const;
 
+export const maxWidthMap = {
+  "2xl": "max-w-2xl",
+  "3xl": "max-w-3xl",
+  "4xl": "max-w-4xl",
+  "5xl": "max-w-5xl",
+  "6xl": "max-w-6xl",
+  "7xl": "max-w-7xl",
+  max: "",
+} as const;
+
 export interface ThemeColors {
   primary: string;
   neutral: string;
@@ -41,6 +51,7 @@ export interface SettingsState {
   theme: keyof typeof themeColorMap | "custom";
   neutral: keyof typeof neutralColorMap;
   radius: keyof typeof radiusMap;
+  maxWidth: keyof typeof maxWidthMap;
   ollamaHost: string;
   ollamaPort: number;
   airplaneMode: boolean;
@@ -50,3 +61,4 @@ export interface SettingsState {
 export type ThemeOption = keyof typeof themeColorMap | "custom";
 export type NeutralOption = keyof typeof neutralColorMap;
 export type RadiusOption = keyof typeof radiusMap;
+export type MaxWidthOption = keyof typeof maxWidthMap;
