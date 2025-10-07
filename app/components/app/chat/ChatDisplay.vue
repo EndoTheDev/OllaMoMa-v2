@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import type { ChatMessage } from "~/stores/chat";
+  import { parseThinking } from "~/composables/useThinkingParser";
 
   interface Props {
     messages: ChatMessage[];
@@ -38,6 +39,23 @@
       : "bg-[var(--ui-bg-muted)] text-[var(--ui-text)]",
     ],
   });
+
+  // Parse thinking content from message
+  const getParsedMessage = (
+    message: ChatMessage
+  ): { thinking: string | null; content: string } => {
+    if (message.role !== "assistant") {
+      return { thinking: null, content: message.content };
+    }
+
+    // Priority: use structured thinking if available, otherwise parse from content
+    if (message.thinking) {
+      return { thinking: message.thinking, content: message.content };
+    }
+
+    const parsed = parseThinking(message.content);
+    return { thinking: parsed.thinking, content: parsed.cleanContent };
+  };
 </script>
 
 <template>
@@ -59,9 +77,11 @@
         :class="getMessageClasses(message.role).avatar" />
       <div :class="getMessageClasses(message.role).message">
         <AppChatThinkingDisplay
-          v-if="message.role === 'assistant' && message.thinking"
-          :thinking="message.thinking" />
-        <p class="px-1">{{ message.content }}</p>
+          v-if="
+            message.role === 'assistant' && getParsedMessage(message).thinking
+          "
+          :thinking="getParsedMessage(message).thinking!" />
+        <p class="px-1">{{ getParsedMessage(message).content }}</p>
       </div>
     </article>
   </div>
