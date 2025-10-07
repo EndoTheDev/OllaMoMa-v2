@@ -26,6 +26,7 @@ export const useSettingsStore = defineStore("settings", () => {
     ollamaHost: "127.0.0.1",
     ollamaPort: 11434,
     airplaneMode: false,
+    customPrimaryColor: null,
   };
 
   // State
@@ -45,6 +46,7 @@ export const useSettingsStore = defineStore("settings", () => {
   const ollamaHost = computed(() => settings.value.ollamaHost);
   const ollamaPort = computed(() => settings.value.ollamaPort);
   const airplaneMode = computed(() => settings.value.airplaneMode);
+  const customPrimaryColor = computed(() => settings.value.customPrimaryColor);
 
   // Store click coordinates for view transition
   let transitionCoordinates: { x: number; y: number } | null = null;
@@ -56,8 +58,13 @@ export const useSettingsStore = defineStore("settings", () => {
     theme: ThemeOption = settings.value.theme,
     neutral: NeutralOption = settings.value.neutral
   ): void {
+    // For predefined themes, use Tailwind color names
+    // For custom theme, use 'green' as base but override with CSS variable
     const colors: ThemeColors = {
-      primary: themeColorMap[theme],
+      primary:
+        theme === "custom" ? "green" : (
+          themeColorMap[theme as keyof typeof themeColorMap]
+        ),
       neutral: neutralColorMap[neutral],
       error: "red",
       warning: "yellow",
@@ -66,6 +73,49 @@ export const useSettingsStore = defineStore("settings", () => {
       secondary: "gray",
     };
     appConfig.ui.colors = colors;
+
+    // For custom colors, override all primary color shades with the custom color
+    if (theme === "custom" && settings.value.customPrimaryColor) {
+      const shades = [
+        "50",
+        "100",
+        "200",
+        "300",
+        "400",
+        "500",
+        "600",
+        "700",
+        "800",
+        "900",
+        "950",
+      ];
+      shades.forEach((shade) => {
+        document.documentElement.style.setProperty(
+          `--ui-color-primary-${shade}`,
+          settings.value.customPrimaryColor!
+        );
+      });
+    } else {
+      // Remove custom overrides to let Nuxt UI handle the color conversion
+      const shades = [
+        "50",
+        "100",
+        "200",
+        "300",
+        "400",
+        "500",
+        "600",
+        "700",
+        "800",
+        "900",
+        "950",
+      ];
+      shades.forEach((shade) => {
+        document.documentElement.style.removeProperty(
+          `--ui-color-primary-${shade}`
+        );
+      });
+    }
   }
 
   function toggleSidebar(): void {
@@ -145,6 +195,9 @@ export const useSettingsStore = defineStore("settings", () => {
 
   function setTheme(theme: ThemeOption): void {
     settings.value.theme = theme;
+    if (theme !== "custom") {
+      settings.value.customPrimaryColor = null;
+    }
     updateThemeColors(theme);
   }
 
@@ -167,6 +220,12 @@ export const useSettingsStore = defineStore("settings", () => {
 
   function setAirplaneMode(mode: boolean): void {
     settings.value.airplaneMode = mode;
+  }
+
+  function setCustomPrimaryColor(color: string): void {
+    settings.value.customPrimaryColor = color;
+    settings.value.theme = "custom";
+    updateThemeColors("custom");
   }
 
   function setFollowSystem(mode: boolean): void {
@@ -223,6 +282,7 @@ export const useSettingsStore = defineStore("settings", () => {
     ollamaHost,
     ollamaPort,
     airplaneMode,
+    customPrimaryColor,
 
     // Action exports
     toggleSidebar,
@@ -235,6 +295,7 @@ export const useSettingsStore = defineStore("settings", () => {
     setOllamaHost,
     setOllamaPort,
     setAirplaneMode,
+    setCustomPrimaryColor,
     resetSettings,
   };
 });

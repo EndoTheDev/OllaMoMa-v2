@@ -38,14 +38,15 @@ export interface SettingsState {
   sidebarOpen: boolean;
   colorMode: "light" | "dark";
   followSystem: boolean;
-  theme: keyof typeof themeColorMap;
+  theme: keyof typeof themeColorMap | "custom";
   neutral: keyof typeof neutralColorMap;
   radius: keyof typeof radiusMap;
   ollamaHost: string;
   ollamaPort: number;
   airplaneMode: boolean;
+  customPrimaryColor: string | null;
 }
 
-export type ThemeOption = keyof typeof themeColorMap;
+export type ThemeOption = keyof typeof themeColorMap | "custom";
 export type NeutralOption = keyof typeof neutralColorMap;
 export type RadiusOption = keyof typeof radiusMap;
