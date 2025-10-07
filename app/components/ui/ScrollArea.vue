@@ -103,6 +103,11 @@
       updateThumb();
       if (props.autoScroll) {
         scrollToBottom(false);
+      } else {
+        // Ensure we start at the top when autoScroll is disabled
+        if (container.value) {
+          container.value.scrollTop = 0;
+        }
       }
     });
 
@@ -111,8 +116,8 @@
       nextTick(() => {
         checkOverflow();
         updateThumb();
-        // Auto-scroll only if we were already near the bottom or autoScroll is enabled and user hasn't scrolled up
-        if ((props.autoScroll && !userScrolledUp.value) || isNearBottom()) {
+        // Auto-scroll only if autoScroll is enabled and user hasn't scrolled up
+        if (props.autoScroll && !userScrolledUp.value) {
           requestAnimationFrame(() => {
             scrollToBottom(false);
           });
@@ -130,8 +135,8 @@
           observeContent();
           checkOverflow();
           updateThumb();
-          // Auto-scroll only if we were already near the bottom or autoScroll is enabled and user hasn't scrolled up
-          if ((props.autoScroll && !userScrolledUp.value) || isNearBottom()) {
+          // Auto-scroll only if autoScroll is enabled and user hasn't scrolled up
+          if (props.autoScroll && !userScrolledUp.value) {
             requestAnimationFrame(() => {
               scrollToBottom(false);
             });

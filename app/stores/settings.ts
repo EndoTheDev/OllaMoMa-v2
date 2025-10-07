@@ -74,47 +74,50 @@ export const useSettingsStore = defineStore("settings", () => {
     };
     appConfig.ui.colors = colors;
 
-    // For custom colors, override all primary color shades with the custom color
-    if (theme === "custom" && settings.value.customPrimaryColor) {
-      const shades = [
-        "50",
-        "100",
-        "200",
-        "300",
-        "400",
-        "500",
-        "600",
-        "700",
-        "800",
-        "900",
-        "950",
-      ];
-      shades.forEach((shade) => {
-        document.documentElement.style.setProperty(
-          `--ui-color-primary-${shade}`,
-          settings.value.customPrimaryColor!
-        );
-      });
-    } else {
-      // Remove custom overrides to let Nuxt UI handle the color conversion
-      const shades = [
-        "50",
-        "100",
-        "200",
-        "300",
-        "400",
-        "500",
-        "600",
-        "700",
-        "800",
-        "900",
-        "950",
-      ];
-      shades.forEach((shade) => {
-        document.documentElement.style.removeProperty(
-          `--ui-color-primary-${shade}`
-        );
-      });
+    // DOM manipulation only on client-side
+    if (typeof document !== "undefined") {
+      // For custom colors, override all primary color shades with the custom color
+      if (theme === "custom" && settings.value.customPrimaryColor) {
+        const shades = [
+          "50",
+          "100",
+          "200",
+          "300",
+          "400",
+          "500",
+          "600",
+          "700",
+          "800",
+          "900",
+          "950",
+        ];
+        shades.forEach((shade) => {
+          document.documentElement.style.setProperty(
+            `--ui-color-primary-${shade}`,
+            settings.value.customPrimaryColor!
+          );
+        });
+      } else {
+        // Remove custom overrides to let Nuxt UI handle the color conversion
+        const shades = [
+          "50",
+          "100",
+          "200",
+          "300",
+          "400",
+          "500",
+          "600",
+          "700",
+          "800",
+          "900",
+          "950",
+        ];
+        shades.forEach((shade) => {
+          document.documentElement.style.removeProperty(
+            `--ui-color-primary-${shade}`
+          );
+        });
+      }
     }
   }
 
