@@ -3,6 +3,7 @@
   import ThemeSelector from "~/components/app/settings/appearance/ThemeSelector.vue";
   import NeutralSelector from "~/components/app/settings/appearance/NeutralSelector.vue";
   import BorderSelector from "~/components/app/settings/appearance/BorderSelector.vue";
+  import MaxWidthSelector from "~/components/app/settings/appearance/MaxWidthSelector.vue";
   import OllamaURL from "~/components/app/settings/connection/OllamaURL.vue";
   import OllamaPort from "~/components/app/settings/connection/OllamaPort.vue";
   import AirplaneModeToggle from "~/components/app/settings/connection/AirplaneModeToggle.vue";
@@ -24,6 +25,7 @@
         <ThemeSelector />
         <NeutralSelector />
         <BorderSelector />
+        <MaxWidthSelector />
         <!-- todo: wrap in one accordion -->
         <OllamaURL />
         <OllamaPort />
