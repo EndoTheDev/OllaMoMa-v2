@@ -29,6 +29,9 @@
   let startY = 0;
   let startScrollTop = 0;
   let resizeObserver: ResizeObserver;
+  let mutationObserver: MutationObserver;
+  let thumbUpdatePending = false;
+  let dragUpdatePending = false;
 
   // Add function to check if content overflows
   const checkOverflow = () => {
@@ -110,7 +113,9 @@
         updateThumb();
         // Auto-scroll only if we were already near the bottom or autoScroll is enabled and user hasn't scrolled up
         if ((props.autoScroll && !userScrolledUp.value) || isNearBottom()) {
-          scrollToBottom();
+          requestAnimationFrame(() => {
+            scrollToBottom(false);
+          });
         }
       });
     });
@@ -119,7 +124,7 @@
       observeContent();
 
       // Create a MutationObserver to watch for DOM changes
-      const mutationObserver = new MutationObserver(() => {
+      mutationObserver = new MutationObserver(() => {
         // Re-observe all content when DOM changes
         nextTick(() => {
           observeContent();
@@ -127,7 +132,9 @@
           updateThumb();
           // Auto-scroll only if we were already near the bottom or autoScroll is enabled and user hasn't scrolled up
           if ((props.autoScroll && !userScrolledUp.value) || isNearBottom()) {
-            scrollToBottom();
+            requestAnimationFrame(() => {
+              scrollToBottom(false);
+            });
           }
         });
       });
@@ -141,8 +148,8 @@
       });
     }
 
-    // Add scroll event listener
-    container.value?.addEventListener("scroll", () => {
+    // Scroll event handler
+    const handleScroll = () => {
       if (!showScrollbar.value) return;
 
       // Check if user manually scrolled up
@@ -160,17 +167,34 @@
 
       isScrolling.value = true;
       clearTimeout(scrollTimeout);
-      updateThumb();
+
+      // Throttle thumb updates
+      if (!thumbUpdatePending) {
+        thumbUpdatePending = true;
+        requestAnimationFrame(() => {
+          updateThumb();
+          thumbUpdatePending = false;
+        });
+      }
 
       scrollTimeout = setTimeout(() => {
         isScrolling.value = false;
       }, 1000);
-    });
+    };
+
+    // Add scroll event listener
+    container.value?.addEventListener("scroll", handleScroll);
 
     // Cleanup observer
     onUnmounted(() => {
       if (resizeObserver) {
         resizeObserver.disconnect();
+      }
+      if (mutationObserver) {
+        mutationObserver.disconnect();
+      }
+      if (container.value) {
+        container.value.removeEventListener("scroll", handleScroll);
       }
     });
   });
@@ -191,12 +215,18 @@
     if (!isDragging.value || !container.value || !content.value || !thumb.value)
       return;
 
-    const deltaY = e.clientY - startY;
-    const scrollRatio =
-      (content.value.scrollHeight - container.value.clientHeight) /
-      (container.value.clientHeight - thumb.value.clientHeight);
+    if (!dragUpdatePending) {
+      dragUpdatePending = true;
+      requestAnimationFrame(() => {
+        const deltaY = e.clientY - startY;
+        const scrollRatio =
+          (content.value!.scrollHeight - container.value!.clientHeight) /
+          (container.value!.clientHeight - thumb.value!.clientHeight);
 
-    container.value.scrollTop = startScrollTop + deltaY * scrollRatio;
+        container.value!.scrollTop = startScrollTop + deltaY * scrollRatio;
+        dragUpdatePending = false;
+      });
+    }
   };
 
   const onMouseUp = () => {
