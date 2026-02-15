@@ -17,7 +17,7 @@
     "@pinia/nuxt": "^0.9.0",
     "@types/uuid": "^10.0.0",
     "@vueuse/nuxt": "^12.3.0",
-    "caniuse-lite": "^1.0.30001748",
+    "caniuse-lite": "^1.0.30001770",
     "nuxt": "^4.1.2",
     "ollama": "^0.5.11",
     "pinia": "^2.3.0",
