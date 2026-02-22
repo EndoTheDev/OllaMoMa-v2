@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@nuxt/ui": "^4.0.0",
-    "@pinia/nuxt": "^0.9.0",
+    "@pinia/nuxt": "^0.11.3",
     "@types/uuid": "^10.0.0",
     "@vueuse/nuxt": "^14.2.1",
     "caniuse-lite": "^1.0.30001748",
