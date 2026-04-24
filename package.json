@@ -13,27 +13,27 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@nuxt/ui": "^4.0.0",
+    "@nuxt/ui": "^4.6.1",
     "@pinia/nuxt": "^0.9.0",
     "@types/uuid": "^10.0.0",
     "@vueuse/nuxt": "^14.2.1",
-    "caniuse-lite": "^1.0.30001748",
-    "nuxt": "^4.1.2",
-    "ollama": "^0.5.11",
-    "pinia": "^2.3.0",
+    "caniuse-lite": "^1.0.30001790",
+    "nuxt": "^4.4.2",
+    "ollama": "^0.5.18",
+    "pinia": "^2.3.1",
     "uuid": "^11.0.5",
-    "vue": "latest",
+    "vue": "^3.5.33",
     "vue-router": "latest"
   },
   "devDependencies": {
-    "@iconify-json/lucide": "^1.2.68",
+    "@iconify-json/lucide": "^1.2.103",
     "@nuxt/eslint": "^0.7.4",
     "@nuxt/test-utils": "^4.0.0",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vitest/coverage-v8": "^4.0.18",
     "@vue/test-utils": "^2.4.6",
     "happy-dom": "^20.6.1",
-    "prettier": "^3.4.2",
+    "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.6.9",
     "vitest": "^4.0.18"
   }

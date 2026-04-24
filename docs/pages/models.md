@@ -21,6 +21,7 @@ Each model card shows:
 - Model name
 - Size information
 - Last modified date
+- Model capabilities (e.g. completion, vision, tools, thinking, embedding)
 - Model configuration details
 - Modelfile contents (when available)
 

@@ -111,6 +111,7 @@ export const useOllama = (config: Partial<OllamaConfig> = {}) => {
         families: response.details?.families || [],
         parameter_size: response.details?.parameter_size || "",
         quantization_level: response.details?.quantization_level || "",
+        capabilities: (response as Record<string, unknown>).capabilities as string[] || [],
       };
 
       return details;

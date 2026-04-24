@@ -1,5 +1,5 @@
 # Build stage
-FROM node:24-alpine as builder
+FROM node:24-alpine AS builder
 
 WORKDIR /app
 
@@ -25,7 +25,7 @@ COPY --from=builder /app/.output /app/.output
 COPY --from=builder /app/package*.json ./
 
 # Install production dependencies only
-RUN npm ci --only=production
+RUN npm ci --omit=dev
 
 # Start the application
 CMD ["node", ".output/server/index.mjs"] 

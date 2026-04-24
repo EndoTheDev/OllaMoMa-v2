@@ -13,6 +13,7 @@ export interface OllamaModelDetails extends ModelDetails {
 	parameters: string;
 	template: string;
 	system: string;
+	capabilities: string[];
 }
 
 export interface OllamaModel {

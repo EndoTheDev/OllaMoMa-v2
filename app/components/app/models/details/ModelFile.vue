@@ -80,6 +80,7 @@ async function fetchModelDetails(name?: string) {
 			families: response.details?.families || [],
 			parameter_size: response.details?.parameter_size || '',
 			quantization_level: response.details?.quantization_level || '',
+			capabilities: (response as Record<string, unknown>).capabilities as string[] || [],
 		};
 	} catch (err) {
 		console.error('Error fetching model details:', err);

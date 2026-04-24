@@ -1,12 +1,53 @@
 <script setup lang="ts">
+  import { Ollama } from "ollama/browser";
   import type { OllamaModel } from "~/types/ollama";
   const { radiusClasses } = useUIUtils();
   const { formatSize } = useUtils();
 
-  defineProps<{
+  const props = defineProps<{
     model: OllamaModel;
     isCloud: boolean;
   }>();
+
+  // Icon mapping for known capabilities
+  const CAPABILITY_ICONS: Record<string, string> = {
+    completion: "i-lucide-message-square",
+    vision: "i-lucide-eye",
+    tools: "i-lucide-wrench",
+    thinking: "i-lucide-brain",
+    embedding: "i-lucide-layers",
+  };
+
+  const getCapabilityIcon = (capability: string): string =>
+    CAPABILITY_ICONS[capability] ?? "i-lucide-sparkles";
+
+  const client = new Ollama({
+    host: `http://${useSettingsStore().ollamaHost}:${useSettingsStore().ollamaPort}`,
+  });
+
+  const capabilities = ref<string[]>([]);
+  const isLoadingCapabilities = ref(true);
+
+  async function fetchCapabilities(name: string) {
+    isLoadingCapabilities.value = true;
+    try {
+      const response = await client.show({ model: name });
+      capabilities.value =
+        (response as Record<string, unknown>).capabilities as string[] || [];
+    } catch {
+      capabilities.value = [];
+    } finally {
+      isLoadingCapabilities.value = false;
+    }
+  }
+
+  watch(
+    () => props.model.name,
+    (name) => {
+      if (name) fetchCapabilities(name);
+    },
+    { immediate: true }
+  );
 </script>
 
 <template>
@@ -21,6 +62,30 @@
         class="capitalize text-sm"
         variant="soft"
         color="primary" />
+    </div>
+
+    <div class="flex flex-wrap items-center gap-2">
+      <span class="text-base w-36">Capabilities:</span>
+      <template v-if="isLoadingCapabilities">
+        <span class="text-[var(--ui-text-muted)] text-sm">Loading...</span>
+      </template>
+      <template v-else-if="capabilities.length > 0">
+        <UBadge
+          v-for="cap in capabilities"
+          :key="cap"
+          :class="[radiusClasses]"
+          class="capitalize text-sm"
+          variant="subtle"
+          color="primary">
+          <UIcon
+            :name="getCapabilityIcon(cap)"
+            class="w-3.5 h-3.5" />
+          {{ cap }}
+        </UBadge>
+      </template>
+      <template v-else>
+        <span class="text-[var(--ui-text-muted)] text-sm">None reported</span>
+      </template>
     </div>
 
     <div class="grid lg:grid-cols-2 gap-y-2 gap-x-12">
